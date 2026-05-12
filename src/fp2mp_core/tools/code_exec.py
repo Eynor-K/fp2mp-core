@@ -22,7 +22,7 @@ from langchain_core.tools import tool
 
 from fp2mp_core.config import BASE_DIR, get_settings
 
-_EXEC_TIMEOUT = 60  # seconds — increased to allow network calls
+_EXEC_TIMEOUT = 120  # seconds — allow slow OSM/geocoding network calls
 _DATA_DIR = str(BASE_DIR / "data")
 
 # Абсолютно запрещено: побег из процесса и динамическое выполнение
@@ -43,6 +43,49 @@ _ALLOWED_DATA_LIBRARIES = [
     "pathlib", "re", "datetime",
     "networkx", "rtree",
 ]
+
+
+def _strip_markdown_code_fence(code: str) -> str:
+    """Allow agents to pass fenced code without breaking AST parsing."""
+    stripped = code.strip()
+    if not stripped.startswith("```"):
+        return code
+
+    lines = stripped.splitlines()
+    if lines and lines[0].startswith("```"):
+        lines = lines[1:]
+    if lines and lines[-1].strip() == "```":
+        lines = lines[:-1]
+    return "\n".join(lines)
+
+
+def _print_last_expression(code: str) -> str:
+    """Mirror notebook behavior: print a final bare expression in agent snippets."""
+    try:
+        tree = ast.parse(code)
+    except SyntaxError:
+        return code
+
+    if not tree.body or not isinstance(tree.body[-1], ast.Expr):
+        return code
+
+    last_expr = tree.body[-1]
+    if (
+        isinstance(last_expr.value, ast.Call)
+        and isinstance(last_expr.value.func, ast.Name)
+        and last_expr.value.func.id == "print"
+    ):
+        return code
+
+    tree.body[-1] = ast.Expr(
+        value=ast.Call(
+            func=ast.Name(id="print", ctx=ast.Load()),
+            args=[last_expr.value],
+            keywords=[],
+        )
+    )
+    ast.fix_missing_locations(tree)
+    return ast.unparse(tree)
 
 
 def _ast_safety_check(code: str) -> str | None:
@@ -140,6 +183,7 @@ def execute_python_tool(code: str) -> str:
     DATA_DIR variable is set to the local data directory.
     Returns output as string (up to 4000 characters).
     """
+    code = _print_last_expression(_strip_markdown_code_fence(code))
     error = _ast_safety_check(code)
     if error:
         return f"Security check failed: {error}"
@@ -161,10 +205,17 @@ def check_available_data_tool(pattern: str = "*") -> str:
     """
     data_path = BASE_DIR / "data"
     try:
-        files = list(data_path.rglob(pattern))
-        if not files:
+        if pattern in {None, "", "None"}:  # type: ignore[comparison-overlap]
+            pattern = "*"
+        paths = sorted(data_path.rglob(pattern), key=lambda p: str(p.relative_to(data_path)))
+        if not paths:
             return f"No files matching '{pattern}' in DATA_DIR ({data_path})."
-        return "\n".join(str(f.relative_to(data_path)) for f in files[:50])
+        result_lines = []
+        for path in paths[:50]:
+            rel = path.relative_to(data_path)
+            suffix = " [dir]" if path.is_dir() else f" [{path.suffix or 'file'}]"
+            result_lines.append(str(rel) + suffix)
+        return "\n".join(result_lines)
     except Exception as exc:
         return f"Error listing data: {exc}"
 

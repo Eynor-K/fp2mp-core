@@ -25,7 +25,13 @@ Rules:
 3. Assign each sub-query a search_modality:
    - "web"       → general factual information from the internet
    - "normative" → laws, regulations, standards, SNiP/GOST/SanPiN or similar
-   - "code"      → quantitative calculation, spatial analysis, numeric reasoning
+   - "code"      → quantitative calculation, spatial analysis, numeric reasoning, OR any
+                   question about which specific streets/objects/zones exist in a named
+                   geographic area. These are answerable via OpenStreetMap, not web search.
+                   Examples:
+                   "Which streets in district X are pedestrian?" → code
+                   "How many bike lanes exist in area Y?" → code
+                   "What is the walkable area within 500m of point Z?" → code
    - "any"       → the modality is unclear; Orchestrator will decide
 4. Assign an intent_aspect label (short phrase describing what dimension this covers).
 5. Output ONLY valid JSON matching the schema below — no markdown, no commentary.

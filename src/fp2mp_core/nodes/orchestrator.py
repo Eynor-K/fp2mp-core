@@ -66,6 +66,12 @@ Routing rule:
 - ReDI search_modality is a decomposer hint, not a binding constraint.
 - Choose the specialized agent whose capabilities best fit the sub-query.
 
+Spatial routing rule:
+- If the sub-query asks WHICH streets/buildings/zones/routes EXIST in a named city area,
+  or asks to COUNT, MEASURE, or CLASSIFY geographic features → choose CodeSpatialAgent.
+  These questions are answered by OpenStreetMap via osmnx, not by web search.
+- Only use WebSearchAgent for such questions if CodeSpatialAgent has already failed.
+
 Rules:
 1. Assign based on agent capabilities, using search_modality only as a hint.
 2. Choose the agent most likely to fill the coverage gap.

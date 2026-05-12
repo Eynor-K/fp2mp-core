@@ -101,7 +101,7 @@ MODALITY_TO_AGENT: dict[SearchModality, AgentName] = {
     SearchModality.WEB: AgentName.WEB_SEARCH,
     SearchModality.NORMATIVE: AgentName.NORMATIVE,
     SearchModality.CODE: AgentName.CODE_SPATIAL,
-    SearchModality.ANY: AgentName.WEB_SEARCH,  # default fallback
+    SearchModality.ANY: AgentName.CODE_SPATIAL,  # ambiguous spatial/open-data tasks need code first
 }
 
 AGENT_TO_NODE: dict[AgentName, str] = {

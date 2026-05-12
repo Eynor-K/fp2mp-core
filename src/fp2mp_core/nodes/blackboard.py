@@ -120,7 +120,8 @@ def _modality_to_agent(modality: str) -> str:
         "web": "WebSearchAgent",
         "normative": "NormativeAgent",
         "code": "CodeSpatialAgent",
-    }.get(modality, "WebSearchAgent")
+        "any": "CodeSpatialAgent",
+    }.get(modality, "CodeSpatialAgent")
 
 
 def wiki_briefing(state: BlackBoard, limit: int = 3000) -> str:

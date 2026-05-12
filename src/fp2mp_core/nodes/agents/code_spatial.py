@@ -45,21 +45,60 @@ MANDATORY chain-of-thought (follow this order):
 
 DATA SOURCE DECISION RULES:
 - Spatial / geographic question (distances, counts, routing, zones) → use osmnx
+- Questions asking WHICH streets, buildings, zones, routes, or geographic features exist
+  in a named area → ALWAYS start with osmnx.features_from_place(). Do NOT use requests
+  for these unless osmnx fails and a real documented API endpoint is known.
 - Address or place name → geocode first with geopy, then use coordinates with osmnx
 - Statistical public data → use requests to call a public API or download a dataset
 - Local file exists and is relevant → prefer local file
 - If execution fails, diagnose the error and retry ONCE with a corrected approach
 
+DATA CHECK interpretation:
+- check_available_data_tool marks directories as "[dir]". A path with "[dir]" or without
+  a file extension is a DIRECTORY, not a file. Do not read it with pandas/read_csv.
+- To inspect a directory, call check_available_data_tool("directory_name/**").
+
+NETWORK ERROR RECOVERY:
+- If execute_python_tool raises ConnectionError, timeout, SSL, proxy, or similar network error,
+  do NOT retry the same URL.
+- Switch to osmnx immediately if you were using requests/httpx.
+- If osmnx also fails, output a PLAN describing what the code would compute, set
+  CONFIDENCE: 0.3, and include LIMITATIONS about unavailable network/geodata.
+
+CODE EXECUTION FORMAT:
+- Action Input for execute_python_tool must be raw Python code only.
+- Do NOT wrap code in ```python fences or any other markdown.
+- Print all results you need to inspect; a final bare expression may not be visible.
+
 OSMNX USAGE PATTERNS:
 ```python
 import osmnx as ox
+
+# Find pedestrian streets/features in a named district
+place = "Петроградский район, Санкт-Петербург, Россия"
+tags = {{"highway": ["pedestrian", "footway", "living_street"]}}
+gdf = ox.features_from_place(place, tags=tags)
+cols = [c for c in ["name", "highway"] if c in gdf.columns]
+print(f"Pedestrian features: {{len(gdf)}}")
+named = gdf[cols].dropna(subset=["name"]).drop_duplicates().head(30)
+print(named.to_string(index=False))
+
+# Streets or areas with restricted car access
+gdf_no_cars = ox.features_from_place(place, tags={{"access": "no"}})
+print(f"No-access features: {{len(gdf_no_cars)}}")
+
+# Street network for walking in a named place.
+# graph_from_place does NOT accept dist; use only the place name and network_type.
+G = ox.graph_from_place(place, network_type="walk")
+print(f"Nodes: {{G.number_of_nodes()}}, edges: {{G.number_of_edges()}}")
 
 # Get features (buildings, roads, POIs) near a point
 point = (lat, lon)
 tags = {{"building": True}}
 gdf = ox.features_from_point(point, tags=tags, dist=500)
 
-# Get street network and compute distance
+# Get street network around a coordinate and compute distance.
+# graph_from_point accepts dist; graph_from_place does not.
 G = ox.graph_from_point(point, dist=1000, network_type="walk")
 nearest = ox.nearest_nodes(G, lon, lat)
 
@@ -160,6 +199,26 @@ def _parse_output(text: str) -> tuple[str, float, list[str]]:
     return result, confidence, limitations
 
 
+def _successful_execution_observation(steps: list[dict[str, str]]) -> str:
+    """Return the last useful code execution observation after ReAct parser failures."""
+    for step in reversed(steps):
+        if step.get("tool") != "execute_python_tool":
+            continue
+        observation = step.get("observation", "").strip()
+        if not observation or observation == "(no output)":
+            continue
+        failure_markers = (
+            "Security check failed:",
+            "Execution timed out",
+            "Subprocess error:",
+            "E2B error:",
+            "Traceback",
+        )
+        if not observation.startswith(failure_markers):
+            return observation
+    return ""
+
+
 def code_spatial_agent_node(state: BlackBoard) -> dict[str, Any]:
     """LangGraph node for CodeSpatialAgent."""
     directives = state.get("orchestrator_directives", [])
@@ -180,8 +239,15 @@ def code_spatial_agent_node(state: BlackBoard) -> dict[str, Any]:
         try:
             result = executor.invoke({"input": question})
             output_text = result.get("output", "")
-            answer, confidence, limitations = _parse_output(output_text)
             intermediate_steps = _format_steps(result.get("intermediate_steps", []))
+            answer, confidence, limitations = _parse_output(output_text)
+            fallback_observation = _successful_execution_observation(intermediate_steps)
+            if output_text.startswith("Agent stopped due to") and fallback_observation:
+                answer = f"Code executed successfully. Observation: {fallback_observation}"
+                confidence = max(confidence, 0.65)
+                limitations = [
+                    "The ReAct agent hit its iteration/parsing limit after a successful code execution; result is based on the last successful observation."
+                ]
 
             entry = board_message(
                 agent="CodeSpatialAgent",
