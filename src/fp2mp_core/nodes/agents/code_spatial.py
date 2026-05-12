@@ -56,7 +56,7 @@ import osmnx as ox
 
 # Get features (buildings, roads, POIs) near a point
 point = (lat, lon)
-tags = {"building": True}
+tags = {{"building": True}}
 gdf = ox.features_from_point(point, tags=tags, dist=500)
 
 # Get street network and compute distance

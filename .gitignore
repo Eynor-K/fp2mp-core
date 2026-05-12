@@ -51,10 +51,14 @@ $RECYCLE.BIN/
 # Normative vector DB (generated at runtime via build_normative_db)
 data/normative/
 
+# === Claude Code ===
+.claude/
+
 # === Runtime artifacts ===
 # Wiki pages persisted to disk (WIKI_PERSIST_DIR)
 wiki_output/
 wiki_persist/
+cache/
 
 # Run logs produced by the test runner / manual runs
 tests/logs/
