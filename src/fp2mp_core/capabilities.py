@@ -3,17 +3,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import StrEnum
+from enum import Enum
 
 
-class SearchModality(StrEnum):
+class SearchModality(str, Enum):
     WEB = "web"
     NORMATIVE = "normative"
     CODE = "code"
     ANY = "any"
 
 
-class AgentName(StrEnum):
+class AgentName(str, Enum):
     WEB_SEARCH = "WebSearchAgent"
     NORMATIVE = "NormativeAgent"
     CODE_SPATIAL = "CodeSpatialAgent"

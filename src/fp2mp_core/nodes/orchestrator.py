@@ -216,8 +216,6 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
         sq_id = task.get("sub_query_id", "")
         sq = sub_query_index.get(sq_id, {})
         tried_agents = _tried_agents_for_sub_query(all_tasks, raw_data, sq_id)
-        if task.get("assigned_agent") in _SPECIALIZED_AGENTS and task.get("status") == "pending":
-            tried_agents.discard(task.get("assigned_agent", ""))
         agent = _llm_choose_agent(sq, state, exclude_agents=tried_agents)
         pair = (agent, sq_id)
 

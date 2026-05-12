@@ -7,7 +7,7 @@ name = "fp2mp-core"
 version = "0.1.0"
 description = "Multi-agent open-ended QA: ReDI + BlackBoard + LLM-Wiki + LangGraph"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 
 dependencies = [
     # LangGraph + LangChain

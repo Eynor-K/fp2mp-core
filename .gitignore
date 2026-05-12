@@ -1,0 +1,66 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+
+# === Build / packaging ===
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+MANIFEST
+
+# === Virtual environments ===
+.venv/
+venv/
+env/
+ENV/
+.env.bak
+
+# === Environment & secrets ===
+.env
+!.env.example
+
+# === Testing ===
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.xml
+
+# === Ruff / linters ===
+.ruff_cache/
+
+# === IDEs ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# === Windows ===
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# === Data ===
+# Normative vector DB (generated at runtime via build_normative_db)
+data/normative/
+
+# === Runtime artifacts ===
+# Wiki pages persisted to disk (WIKI_PERSIST_DIR)
+wiki_output/
+wiki_persist/
+
+# Run logs produced by the test runner / manual runs
+tests/logs/
+
+# Stray wiki page files that land in project root
+*.meta.json
+
+# === LangChain / LangGraph cache ===
+.langchain.db
