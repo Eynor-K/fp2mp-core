@@ -1,0 +1,31 @@
+{
+  "page_id": "websearch_sq_005",
+  "title": "WebSearchAgent: Каковы примеры успешных пешеходных зон в других районах Санк",
+  "updated_by": "WebSearchAgent",
+  "updated_at_iteration": 6,
+  "confidence": 0.8,
+  "citations": [
+    {
+      "url": "https://peterburg.center/ln/gde-progulyatsya-v-severnoy-stolice-peshehodnye-ulicy-peterburga-i-chto-interesnogo.html"
+    },
+    {
+      "url": "https://kudago.com/spb/list/peshehodnye-ulicy-sankt-peterburga/"
+    },
+    {
+      "url": "https://www.shakhty.su/arts/samye-izvestnye-peshehodnye-ulicy-sankt-peterburga"
+    },
+    {
+      "url": "https://www.fiesta.ru/spb/live/peshehodnye-ulitsy-sankt-peterburga/"
+    },
+    {
+      "url": "https://www.championat.com/lifestyle/article-6040160-luchshie-peshehodnye-marshruty-po-sankt-peterburgu-kuda-shodit-v-sankt-peterburge.html"
+    }
+  ],
+  "tags": [
+    "успешные примеры",
+    "web",
+    "WebSearchAgent"
+  ],
+  "incoming_cross_refs": [],
+  "relevance_score": 1.2
+}

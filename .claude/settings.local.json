@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"P:\\\\AI_asistent\\\\ITMO\\\\fp2mp_core\\\\src\\\\fp2mp_core\\\\redi\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"P:\\\\AI_asistent\\\\ITMO\\\\fp2mp_core\\\\src\\\\fp2mp_core\\\\wiki\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"P:\\\\AI_asistent\\\\ITMO\\\\fp2mp_core\\\\src\\\\fp2mp_core\\\\nodes\\\\agents\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"P:\\\\AI_asistent\\\\ITMO\\\\fp2mp_core\\\\src\\\\fp2mp_core\\\\tools\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"P:\\\\AI_asistent\\\\ITMO\\\\fp2mp_core\\\\data\\\\normative\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"P:\\\\AI_asistent\\\\ITMO\\\\fp2mp_core\\\\tests\")",
+      "Bash(python -c ' *)"
+    ]
+  }
+}

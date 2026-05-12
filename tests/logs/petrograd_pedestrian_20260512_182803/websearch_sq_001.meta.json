@@ -1,0 +1,22 @@
+{
+  "page_id": "websearch_sq_001",
+  "title": "WebSearchAgent: Какие улицы Петроградского района Санкт-Петербурга имеют выс",
+  "updated_by": "WebSearchAgent",
+  "updated_at_iteration": 6,
+  "confidence": 0.8,
+  "citations": [
+    {
+      "url": "https://www.sputnik8.com/ru/st-petersburg/pages/chto-posmotret-na-petrogradke"
+    },
+    {
+      "url": "https://petersburg24.ru/route/kreativnaya-petrogradskaya-storona"
+    }
+  ],
+  "tags": [
+    "пешеходный трафик",
+    "web",
+    "WebSearchAgent"
+  ],
+  "incoming_cross_refs": [],
+  "relevance_score": 1.2
+}

@@ -1,0 +1,13 @@
+{
+  "page_id": "mediator",
+  "title": "MediatorAgent findings",
+  "updated_by": "MediatorAgent",
+  "updated_at_iteration": 3,
+  "confidence": 0.8,
+  "citations": [],
+  "tags": [
+    "MediatorAgent"
+  ],
+  "incoming_cross_refs": [],
+  "relevance_score": 0.8
+}

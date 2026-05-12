@@ -1,0 +1,34 @@
+Metadata-Version: 2.4
+Name: fp2mp-core
+Version: 0.1.0
+Summary: Multi-agent open-ended QA: ReDI + BlackBoard + LLM-Wiki + LangGraph
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: langgraph>=0.2.60
+Requires-Dist: langchain>=0.3.13
+Requires-Dist: langchain-core>=0.3.28
+Requires-Dist: langchain-openai>=0.2.0
+Requires-Dist: langchain-anthropic>=0.3.0
+Requires-Dist: langchain-community>=0.3.0
+Requires-Dist: anthropic>=0.40.0
+Requires-Dist: pydantic>=2.10.0
+Requires-Dist: python-dotenv>=1.0.1
+Requires-Dist: tavily-python>=0.5.0
+Requires-Dist: duckduckgo-search>=7.0.0
+Requires-Dist: httpx>=0.27.0
+Requires-Dist: beautifulsoup4>=4.12
+Requires-Dist: pypdf>=4.0
+Requires-Dist: chromadb>=0.5.0
+Requires-Dist: sentence-transformers>=3.0.0
+Requires-Dist: e2b-code-interpreter>=1.0.0
+Provides-Extra: spatial
+Requires-Dist: geopandas>=1.0.0; extra == "spatial"
+Requires-Dist: shapely>=2.0.0; extra == "spatial"
+Requires-Dist: networkx>=3.0; extra == "spatial"
+Requires-Dist: osmnx>=2.0.0; extra == "spatial"
+Requires-Dist: scikit-learn>=1.3; extra == "spatial"
+Provides-Extra: dev
+Requires-Dist: pytest>=8.3.0; extra == "dev"
+Requires-Dist: pytest-cov>=6.0.0; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.24.0; extra == "dev"
+Requires-Dist: ruff>=0.8.0; extra == "dev"

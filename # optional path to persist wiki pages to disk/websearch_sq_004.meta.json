@@ -1,0 +1,31 @@
+{
+  "page_id": "websearch_sq_004",
+  "title": "WebSearchAgent: Какие факторы влияют на выбор места для новой станции метро?",
+  "updated_by": "WebSearchAgent",
+  "updated_at_iteration": 2,
+  "confidence": 0.8,
+  "citations": [
+    {
+      "url": "https://cyberleninka.ru/article/n/o-stroitelstve-moskovskogo-metropolitena"
+    },
+    {
+      "url": "https://www.vedomosti.ru/gorod/ourcity/articles/pochemu-metro-nuzhno-ne-kazhdomu-megapolisu"
+    },
+    {
+      "url": "https://analmaz.ru/blogs/%D0%BA%D0%B0%D0%BA-%D0%BE%D1%82%D0%BA%D1%80%D1%8B%D0%B2%D0%B0%D1%8E%D1%82-%D0%BD%D0%BE%D0%B2%D1%8B%D0%B5-%D1%81%D1%82%D0%B0%D0%BD%D1%86%D0%B8%D0%B8-%D0%BC%D0%B5%D1%82%D1%80%D0%BE-%D1%8D%D1%82%D0%B0%D0%BF%D1%8B-%D0%B8-%D0%BE%D1%81%D0%BE%D0%B1%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8-%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%D0%B0"
+    },
+    {
+      "url": "https://dumka.media/rus/suspilstvo/1774883156-kak-menyaetsya-stoimost-arendy-zhilya-posle-stroitelstva-metro"
+    },
+    {
+      "url": "https://sovross.ru/advertisment/kak-vybrat-kvartiru-u-metro-sovety-pokupatelju/"
+    }
+  ],
+  "tags": [
+    "факторы выбора",
+    "web",
+    "WebSearchAgent"
+  ],
+  "incoming_cross_refs": [],
+  "relevance_score": 1.2
+}
