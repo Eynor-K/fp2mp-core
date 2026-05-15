@@ -75,11 +75,6 @@ copy .env.example .env        # Windows
 |---|---|---|
 | `FP2MP_CHAT_URL` | `https://routerai.ru/api/v1` | OpenAI-compatible Chat Completions base URL |
 | `FP2MP_API_KEY` | — | API-ключ для OpenAI-compatible backend |
-| `TAVILY_API_KEY` | — | Веб-поиск; при отсутствии используется DuckDuckGo |
-| `E2B_API_KEY` | — | Опциональная облачная песочница для CodeSpatialAgent; при отсутствии — subprocess |
-| `MAX_ITERATIONS` | `6` | Максимальное число итераций wiki-куратора до принудительной остановки |
-| `WIKI_PERSIST_DIR` | _(пусто)_ | Если задан — страницы вики сохраняются на диск по этому пути |
-| `NORMATIVE_DB_PATH` | `data/normative` | Путь к нормативной векторной базе данных |
 
 Минимальная конфигурация:
 ```
