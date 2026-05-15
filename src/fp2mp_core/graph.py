@@ -2,8 +2,8 @@
 LangGraph StateGraph assembly.
 
 Graph topology:
-  START → redi_decompose → init_blackboard → orchestrator
-                                               │
+  START → init → redi_decompose → init_blackboard → orchestrator
+                                                      │
           ┌────[Send]──► web_search_agent ─────┤
           ├────[Send]──► normative_agent ───────┤   → wiki_curator
           ├────[Send]──► code_spatial_agent ────┤
@@ -21,13 +21,11 @@ Graph topology:
 
 from __future__ import annotations
 
-import uuid
-
-from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
+from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
 
 from fp2mp_core.llm import set_active_model
-from fp2mp_core.nodes.blackboard import initialize_blackboard_node, redi_decompose_node
+from fp2mp_core.nodes.blackboard import init_node, initialize_blackboard_node, redi_decompose_node
 from fp2mp_core.nodes.agents.code_spatial import code_spatial_agent_node
 from fp2mp_core.nodes.agents.normative import normative_agent_node
 from fp2mp_core.nodes.agents.web_search import web_search_agent_node
@@ -44,6 +42,7 @@ def build_graph():
     graph = StateGraph(BlackBoard)
 
     # --- Nodes ---
+    graph.add_node("init", init_node)
     graph.add_node("redi_decompose", redi_decompose_node)
     graph.add_node("init_blackboard", initialize_blackboard_node)
     graph.add_node("orchestrator", orchestrator_node)
@@ -56,7 +55,8 @@ def build_graph():
     graph.add_node("final_synthesis", final_synthesis_node)
 
     # --- Linear start sequence ---
-    graph.add_edge(START, "redi_decompose")
+    graph.add_edge(START, "init")
+    graph.add_edge("init", "redi_decompose")
     graph.add_edge("redi_decompose", "init_blackboard")
     graph.add_edge("init_blackboard", "orchestrator")
 
@@ -107,7 +107,7 @@ def build_graph():
 
 
 def _build_log(input: str, raw_data: list, final_answer: str) -> list:
-    log = [HumanMessage(content=input)]
+    log: list = [HumanMessage(content=input)]
 
     entries = sorted(raw_data, key=lambda e: (e.get("iteration", 0), e.get("entry_id", "")))
 
@@ -119,37 +119,30 @@ def _build_log(input: str, raw_data: list, final_answer: str) -> list:
             directive = trace.get("directive") or {}
             question = directive.get("question") or directive.get("directive", "")
             if question:
-                log.append(AIMessage(content=question, name=agent))
+                log.append(HumanMessage(content=question))
 
             for step in trace.get("intermediate_steps") or []:
                 tool_name = step.get("tool", "tool")
-                tool_input = step.get("tool_input", "")
-                observation = step.get("observation", "")
-                call_id = str(uuid.uuid4())
-
-                log.append(
-                    AIMessage(
-                        content="",
-                        name=agent,
-                        tool_calls=[
-                            {"id": call_id, "name": tool_name, "args": {"input": tool_input}}
-                        ],
-                    )
-                )
-                log.append(ToolMessage(content=str(observation), tool_call_id=call_id))
+                tool_input = str(step.get("tool_input", ""))
+                observation = str(step.get("observation", ""))
+                log.append(HumanMessage(content=f"[{tool_name}] {tool_input}"))
+                if observation:
+                    log.append(AIMessage(content=observation, name=tool_name))
 
             raw_output = trace.get("raw_output", "")
             if raw_output:
                 log.append(AIMessage(content=raw_output, name=agent))
 
-        if not tool_trace and entry.get("content"):
-            log.append(AIMessage(content=entry["content"], name=agent))
+        if not tool_trace:
+            content = entry.get("content", "")
+            if content:
+                log.append(AIMessage(content=content, name=agent))
 
     log.append(AIMessage(content=final_answer, name="FinalSynthesis"))
     return log
 
 
-def run(input: str, model: str, max_iterations: int = 6) -> BaseState:
+def run(input: str, model: str, max_iterations: int | None = None) -> BaseState:
     """Run the graph and return the fp2mp-baselines/eval state format."""
     set_active_model(model)
     compiled = build_graph()
