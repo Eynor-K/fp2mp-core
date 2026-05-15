@@ -21,8 +21,12 @@ Graph topology:
 
 from __future__ import annotations
 
+import uuid
+
+from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langgraph.graph import END, START, StateGraph
 
+from fp2mp_core.llm import set_active_model
 from fp2mp_core.nodes.blackboard import initialize_blackboard_node, redi_decompose_node
 from fp2mp_core.nodes.agents.code_spatial import code_spatial_agent_node
 from fp2mp_core.nodes.agents.normative import normative_agent_node
@@ -32,7 +36,7 @@ from fp2mp_core.nodes.curator import route_from_curator, wiki_curator_node
 from fp2mp_core.nodes.mediator import mediator_node
 from fp2mp_core.nodes.orchestrator import orchestrator_node, route_from_orchestrator
 from fp2mp_core.nodes.synthesis import final_synthesis_node
-from fp2mp_core.state import BlackBoard
+from fp2mp_core.state import BaseState, BlackBoard, create_initial_state
 
 
 def build_graph():
@@ -102,11 +106,57 @@ def build_graph():
     return graph.compile()
 
 
-def run(question: str, max_iterations: int = 6) -> dict:
-    """Convenience entry point."""
-    from fp2mp_core.state import create_initial_state
+def _build_log(input: str, raw_data: list, final_answer: str) -> list:
+    log = [HumanMessage(content=input)]
 
+    entries = sorted(raw_data, key=lambda e: (e.get("iteration", 0), e.get("entry_id", "")))
+
+    for entry in entries:
+        agent = entry.get("agent", "agent")
+        tool_trace = entry.get("tool_trace") or []
+
+        for trace in tool_trace:
+            directive = trace.get("directive") or {}
+            question = directive.get("question") or directive.get("directive", "")
+            if question:
+                log.append(AIMessage(content=question, name=agent))
+
+            for step in trace.get("intermediate_steps") or []:
+                tool_name = step.get("tool", "tool")
+                tool_input = step.get("tool_input", "")
+                observation = step.get("observation", "")
+                call_id = str(uuid.uuid4())
+
+                log.append(
+                    AIMessage(
+                        content="",
+                        name=agent,
+                        tool_calls=[
+                            {"id": call_id, "name": tool_name, "args": {"input": tool_input}}
+                        ],
+                    )
+                )
+                log.append(ToolMessage(content=str(observation), tool_call_id=call_id))
+
+            raw_output = trace.get("raw_output", "")
+            if raw_output:
+                log.append(AIMessage(content=raw_output, name=agent))
+
+        if not tool_trace and entry.get("content"):
+            log.append(AIMessage(content=entry["content"], name=agent))
+
+    log.append(AIMessage(content=final_answer, name="FinalSynthesis"))
+    return log
+
+
+def run(input: str, model: str, max_iterations: int = 6) -> BaseState:
+    """Run the graph and return the fp2mp-baselines/eval state format."""
+    set_active_model(model)
     compiled = build_graph()
-    initial = create_initial_state(question, max_iterations=max_iterations)
+    initial = create_initial_state(input, max_iterations=max_iterations)
     result = compiled.invoke(initial)
-    return result
+
+    final_answer = result.get("final_answer") or ""
+    raw_data = result.get("raw_data", [])
+
+    return BaseState(input=input, output=final_answer, log=_build_log(input, raw_data, final_answer))

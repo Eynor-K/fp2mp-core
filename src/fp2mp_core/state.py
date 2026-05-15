@@ -12,6 +12,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Annotated, Any
 
+from langchain_core.messages import BaseMessage
 from typing_extensions import TypedDict
 
 # ---------------------------------------------------------------------------
@@ -256,6 +257,12 @@ def board_message(
         sub_query_id=sub_query_id,
         curated=False,
     )
+
+
+class BaseState(TypedDict):
+    input: str
+    output: str
+    log: list[BaseMessage]
 
 
 def now_iso() -> str:

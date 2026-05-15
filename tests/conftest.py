@@ -7,7 +7,7 @@ import os
 import pytest
 
 # Provide a dummy API key so config loading doesn't fail in tests
-os.environ.setdefault("ANTHROPIC_API_KEY", "sk-ant-test-key-for-testing-only")
+os.environ.setdefault("FP2MP_API_KEY", "sk-test-key-for-testing-only")
 os.environ.setdefault("TAVILY_API_KEY", "tvly-test")
 
 

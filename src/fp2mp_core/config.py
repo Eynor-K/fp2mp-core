@@ -22,16 +22,10 @@ class ConfigurationError(RuntimeError):
 
 @dataclass(frozen=True)
 class Settings:
-    llm_provider: str = "anthropic"
-    anthropic_api_key: str = ""
-    openrouter_api_key: str = ""
-    openrouter_base_url: str = "https://openrouter.ai/api/v1"
-    openai_api_key: str = ""
+    chat_url: str = "https://routerai.ru/api/v1"
+    api_key: str = ""
     tavily_api_key: str = ""
     e2b_api_key: str = ""
-
-    model_default: str = "claude-sonnet-4-6"
-    model_thinking: str = "claude-sonnet-4-6"
 
     max_iterations: int = 6
     normative_db_path: Path = field(default_factory=lambda: NORMATIVE_DIR)
@@ -41,19 +35,10 @@ class Settings:
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
-    provider = os.getenv("LLM_PROVIDER", "anthropic").strip().lower()
-    if provider not in {"anthropic", "openrouter"}:
-        raise ConfigurationError("LLM_PROVIDER must be either 'anthropic' or 'openrouter'.")
-
-    anthropic_key = os.getenv("ANTHROPIC_API_KEY", "")
-    openrouter_key = os.getenv("OPENROUTER_API_KEY", "")
-    if provider == "anthropic" and not anthropic_key:
+    api_key = os.getenv("FP2MP_API_KEY", "")
+    if not api_key:
         raise ConfigurationError(
-            "ANTHROPIC_API_KEY is not set. Copy .env.example to .env and fill in your keys."
-        )
-    if provider == "openrouter" and not openrouter_key:
-        raise ConfigurationError(
-            "OPENROUTER_API_KEY is not set. Copy .env.example to .env and fill in your keys."
+            "FP2MP_API_KEY is not set. Copy .env.example to .env and fill in your key."
         )
 
     wiki_dir_str = os.getenv("WIKI_PERSIST_DIR", "")
@@ -62,15 +47,10 @@ def get_settings() -> Settings:
     norm_path_str = os.getenv("NORMATIVE_DB_PATH", str(NORMATIVE_DIR))
 
     return Settings(
-        llm_provider=provider,
-        anthropic_api_key=anthropic_key,
-        openrouter_api_key=openrouter_key,
-        openrouter_base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
-        openai_api_key=os.getenv("OPENAI_API_KEY", ""),
+        chat_url=os.getenv("FP2MP_CHAT_URL", "https://routerai.ru/api/v1"),
+        api_key=api_key,
         tavily_api_key=os.getenv("TAVILY_API_KEY", ""),
         e2b_api_key=os.getenv("E2B_API_KEY", ""),
-        model_default=os.getenv("MODEL_DEFAULT", "claude-sonnet-4-6"),
-        model_thinking=os.getenv("MODEL_THINKING", "claude-sonnet-4-6"),
         max_iterations=int(os.getenv("MAX_ITERATIONS", "6")),
         normative_db_path=Path(norm_path_str),
         wiki_persist_dir=wiki_dir,
