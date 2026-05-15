@@ -1,5 +1,5 @@
 """
-CriticAgent — STOP/CONTINUE decision using Anthropic extended thinking.
+CriticAgent — STOP/CONTINUE decision.
 
 Force-stop conditions (no LLM needed):
 - iteration >= max_iterations

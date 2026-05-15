@@ -1,5 +1,5 @@
 """
-MediatorAgent — synthesis of cross-source knowledge using Anthropic extended thinking.
+MediatorAgent — synthesis of cross-source knowledge.
 
 Reads the full wiki and output facts, finds agreements and contradictions,
 writes a "synthesis" wiki page, and creates new ConfirmedFacts.
