@@ -189,7 +189,7 @@ class BlackBoard(TypedDict, total=False):
 
     # Loop control
     iteration: int
-    max_iterations: int
+    max_iterations: int | None
     stop_flag: bool
     critique: CritiqueResult
     final_answer: str | None
@@ -211,26 +211,10 @@ class BlackBoard(TypedDict, total=False):
 # ---------------------------------------------------------------------------
 
 
-def create_initial_state(question: str, max_iterations: int = 6) -> BlackBoard:
+def create_initial_state(question: str, max_iterations: int | None = None) -> BlackBoard:
     return BlackBoard(
         question=question,
-        redi_decomposition=[],
-        tasks=[],
-        raw_data=[],
-        wiki={},
-        output=[],
-        iteration=0,
         max_iterations=max_iterations,
-        stop_flag=False,
-        critique={},
-        final_answer=None,
-        orchestrator_directives=[],
-        next_action="dispatch",
-        current_stage="init",
-        agent_trace=[],
-        errors=[],
-        stagnation_count=0,
-        progress_delta=0,
     )
 
 

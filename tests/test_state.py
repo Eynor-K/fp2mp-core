@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from fp2mp_core.nodes.blackboard import init_node
 from fp2mp_core.state import (
     ConfirmedFact,
     RawEntry,
@@ -15,15 +16,21 @@ from fp2mp_core.state import (
 )
 
 
-def test_create_initial_state_has_all_fields(question):
+def test_create_initial_state_is_minimal(question):
     state = create_initial_state(question)
     assert state["question"] == question
-    assert state["raw_data"] == []
-    assert state["wiki"] == {}
-    assert state["output"] == []
-    assert state["iteration"] == 0
-    assert state["stop_flag"] is False
-    assert state["max_iterations"] == 6
+    assert state["max_iterations"] is None
+
+
+def test_init_node_sets_graph_defaults(question):
+    state = create_initial_state(question)
+    result = init_node(state)
+    assert result["raw_data"] == []
+    assert result["wiki"] == {}
+    assert result["output"] == []
+    assert result["iteration"] == 0
+    assert result["stop_flag"] is False
+    assert result["max_iterations"] == 6
 
 
 def test_merge_wiki_upserts_by_page_id():

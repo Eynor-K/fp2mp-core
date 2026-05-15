@@ -47,10 +47,10 @@ class ReDIEnricher:
         self._prompt = ChatPromptTemplate.from_messages(
             [("system", _SYSTEM), ("human", _USER)]
         )
+        self._chain = self._prompt | self._llm
 
     def enrich(self, sub_query: SubQuery) -> SubQuery:
-        chain = self._prompt | self._llm
-        response = chain.invoke(
+        response = self._chain.invoke(
             {
                 "sub_query_id": sub_query["sub_query_id"],
                 "text": sub_query["text"],

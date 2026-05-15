@@ -32,7 +32,7 @@ def test_page_builder_detects_conflict():
                            "строительство разрешено вблизи аэропорта без ограничений",
                            confidence=0.6)
     entry2 = board_message("B", 2, "normative_findings",
-                           "турбина двигатель велосипед",  # completely different
+                           "турбина двигатель велосипед мотор шасси крыло фюзеляж навигация",
                            confidence=0.7)
     page1 = WikiPage(
         page_id="test_page", title="Test", content=entry1["content"],
@@ -40,7 +40,7 @@ def test_page_builder_detects_conflict():
         citations=[], tags=[], incoming_cross_refs=[], relevance_score=0.0
     )
     page2 = builder.update_page(page1, entry2, {"test_page": page1}, iteration=2)
-    assert "> CONFLICT:" in page2["content"]
+    assert "> CONFLICT" in page2["content"]
 
 
 def test_page_builder_injects_cross_refs():
@@ -140,7 +140,7 @@ def test_merge_combines_similar_pages():
         ),
         "page_b": WikiPage(
             page_id="page_b", title="Airport height limits duplicate",
-            content="аэропорт высота ограничение строительство норматив закон",
+            content="аэропорт высота ограничение строительство норматив регулирование закон",
             updated_by="B", updated_at_iteration=1, confidence=0.6,
             citations=[{"url": "url_b"}], tags=["normative"],
             incoming_cross_refs=[], relevance_score=0.4

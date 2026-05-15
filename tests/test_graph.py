@@ -26,7 +26,7 @@ def test_graph_has_expected_nodes():
         graph = build_graph()
         node_names = set(graph.nodes)
         expected = {
-            "redi_decompose", "init_blackboard", "orchestrator",
+            "init", "redi_decompose", "init_blackboard", "orchestrator",
             "web_search_agent", "normative_agent", "code_spatial_agent",
             "mediator", "wiki_curator", "critic", "final_synthesis"
         }
@@ -56,7 +56,8 @@ def test_full_loop_terminates_at_max_iterations(sub_queries):
     with patch("fp2mp_core.nodes.blackboard.ReDIDecomposer", return_value=mock_decomposer), \
          patch("fp2mp_core.nodes.blackboard.ReDIEnricher", return_value=mock_enricher), \
          patch("fp2mp_core.nodes.agents.web_search._build_agent") as mock_web_agent, \
-         patch("fp2mp_core.nodes.critic.call_with_thinking") as mock_thinking:
+         patch("fp2mp_core.nodes.critic.call_with_thinking") as mock_thinking, \
+         patch("fp2mp_core.nodes.synthesis.get_chat_model") as mock_synth_llm:
 
         mock_executor = MagicMock()
         mock_executor.invoke.return_value = mock_agent_result
@@ -68,10 +69,14 @@ def test_full_loop_terminates_at_max_iterations(sub_queries):
             '"reasoning": "Need more info.", "new_tasks": [], "contradictions": []}'
         )
 
+        mock_synth = MagicMock()
+        mock_synth.invoke.return_value.content = "# Answer\nDone."
+        mock_synth_llm.return_value = mock_synth
+
         from fp2mp_core.graph import build_graph
         graph = build_graph()
 
-        initial = create_initial_state("Test question for loop termination?", max_iterations=2)
+        initial = create_initial_state("Test question for loop termination?", max_iterations=1)
         result = graph.invoke(initial)
 
         assert result["stop_flag"] is True

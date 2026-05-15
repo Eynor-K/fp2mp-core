@@ -6,7 +6,7 @@ from fp2mp_core.nodes.curator import route_from_curator, wiki_curator_node
 from fp2mp_core.state import ConfirmedFact, WikiPage, board_message, create_initial_state
 
 
-def _state_with_entries(sub_queries, raw_entries, iteration=0, max_iter=6):
+def _state_with_entries(sub_queries, raw_entries, iteration=1, max_iter=6):
     state = create_initial_state("test?", max_iterations=max_iter)
     state["redi_decomposition"] = sub_queries
     state["raw_data"] = raw_entries

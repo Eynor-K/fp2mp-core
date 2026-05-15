@@ -9,6 +9,7 @@ from __future__ import annotations
 import uuid
 from typing import Any
 
+from fp2mp_core.config import get_settings
 from fp2mp_core.redi import ReDIDecomposer, ReDIEnricher
 from fp2mp_core.state import (
     BlackBoard,
@@ -23,7 +24,36 @@ from fp2mp_core.wiki.log import make_initial_log_page
 
 
 # ---------------------------------------------------------------------------
-# ReDI decomposition node (START → redi_decompose → init_blackboard)
+# Initial state node (START -> init -> redi_decompose)
+# ---------------------------------------------------------------------------
+
+
+def init_node(state: BlackBoard) -> dict[str, Any]:
+    """Set graph defaults before any agent nodes run."""
+    settings = get_settings()
+    return {
+        "redi_decomposition": [],
+        "tasks": [],
+        "raw_data": [],
+        "wiki": {},
+        "output": [],
+        "iteration": 0,
+        "max_iterations": state.get("max_iterations") or settings.max_iterations,
+        "stop_flag": False,
+        "critique": {},
+        "final_answer": None,
+        "orchestrator_directives": [],
+        "next_action": "dispatch",
+        "current_stage": "init",
+        "agent_trace": [],
+        "errors": [],
+        "stagnation_count": 0,
+        "progress_delta": 0,
+    }
+
+
+# ---------------------------------------------------------------------------
+# ReDI decomposition node (init -> redi_decompose -> init_blackboard)
 # ---------------------------------------------------------------------------
 
 

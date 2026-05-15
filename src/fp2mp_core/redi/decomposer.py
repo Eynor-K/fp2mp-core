@@ -72,10 +72,10 @@ class ReDIDecomposer:
         self._prompt = ChatPromptTemplate.from_messages(
             [("system", _SYSTEM), ("human", _USER)]
         )
+        self._chain = self._prompt | self._llm
 
     def __call__(self, question: str) -> list[SubQuery]:
-        chain = self._prompt | self._llm
-        response = chain.invoke({"question": question})
+        response = self._chain.invoke({"question": question})
         text = response.content if hasattr(response, "content") else str(response)
 
         # Strip markdown code fences if present

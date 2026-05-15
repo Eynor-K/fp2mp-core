@@ -7,13 +7,14 @@ and returns a fusion summary placed into wiki["redi_fusion"].
 
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 
 from fp2mp_core.state import RawEntry, SubQuery, WikiPage
 
 
 def _tokenize(text: str) -> set[str]:
-    return set(text.lower().split())
+    return set(re.findall(r"\w+", text.lower()))
 
 
 def _jaccard(a: str, b: str) -> float:

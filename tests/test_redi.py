@@ -98,37 +98,15 @@ def test_decomposer_returns_sub_queries(question):
          "search_modality": "web", "independence": true}
     ]"""
 
-    with patch("fp2mp_core.redi.decomposer.get_chat_model") as mock_llm_factory:
-        mock_llm = MagicMock()
-        mock_llm.invoke = MagicMock(return_value=mock_response)
-        mock_chain = MagicMock()
-        mock_chain.invoke = MagicMock(return_value=mock_response)
-        mock_llm_factory.return_value = mock_llm
+    mock_chain = MagicMock()
+    mock_chain.invoke.return_value = mock_response
 
-        from fp2mp_core.redi.decomposer import ReDIDecomposer
-        decomposer = ReDIDecomposer.__new__(ReDIDecomposer)
-        decomposer._llm = mock_llm
+    from fp2mp_core.redi.decomposer import ReDIDecomposer
+    decomposer = ReDIDecomposer.__new__(ReDIDecomposer)
+    decomposer._chain = mock_chain
+    result = decomposer(question)
 
-        from langchain_core.prompts import ChatPromptTemplate
-        prompt = ChatPromptTemplate.from_messages([("human", "{question}")])
-        decomposer._prompt = prompt
-
-        # Patch the chain invoke
-        with patch.object(decomposer._prompt, "__or__", return_value=mock_chain):
-            result = decomposer(question)
-
-    # Just test parsing (mock chain produces correct output)
-    import json
-    sub_queries = [
-        SubQuery(sub_query_id="sq_001", text="Нормы?", intent_aspect="regulatory",
-                 search_modality="normative", independence=True,
-                 enriched_variants=[], keywords=[], domain_hints=[]),
-        SubQuery(sub_query_id="sq_002", text="Высота?", intent_aspect="empirical",
-                 search_modality="web", independence=True,
-                 enriched_variants=[], keywords=[], domain_hints=[]),
-    ]
-    # Validate the structure manually
-    for sq in sub_queries:
+    for sq in result:
         assert "sub_query_id" in sq
         assert sq["search_modality"] in {"web", "normative", "code", "any"}
 
@@ -147,23 +125,15 @@ def test_enricher_populates_variants(sub_queries):
         "domain_hints": ["СНиП", "ГОСТ"]
     }"""
 
-    with patch("fp2mp_core.redi.enricher.get_chat_model") as mock_factory:
-        mock_llm = MagicMock()
-        mock_chain = MagicMock()
-        mock_chain.invoke = MagicMock(return_value=mock_response)
-        mock_factory.return_value = mock_llm
+    mock_chain = MagicMock()
+    mock_chain.invoke.return_value = mock_response
 
-        from fp2mp_core.redi.enricher import ReDIEnricher
-        enricher = ReDIEnricher.__new__(ReDIEnricher)
-        enricher._llm = mock_llm
+    from fp2mp_core.redi.enricher import ReDIEnricher
+    enricher = ReDIEnricher.__new__(ReDIEnricher)
+    enricher._chain = mock_chain
+    result = enricher.enrich(sub_queries[0])
 
-        from langchain_core.prompts import ChatPromptTemplate
-        prompt = ChatPromptTemplate.from_messages([("human", "{text}")])
-        enricher._prompt = prompt
-
-        with patch.object(enricher._prompt, "__or__", return_value=mock_chain):
-            result = enricher.enrich(sub_queries[0])
-
-    # With mock chain, result will have original values
-    # Just test that enrich doesn't crash and returns SubQuery
     assert "sub_query_id" in result
+    assert result["enriched_variants"] == ["var1", "var2", "var3"]
+    assert result["keywords"] == ["keyword1", "keyword2"]
+    assert result["domain_hints"] == ["СНиП", "ГОСТ"]
