@@ -28,7 +28,10 @@ def _get_tavily_client():
 
 def _ddg_search(query: str, max_results: int = 5) -> list[dict]:
     try:
-        from duckduckgo_search import DDGS  # type: ignore[import-untyped]
+        try:
+            from ddgs import DDGS  # type: ignore[import-untyped]
+        except ImportError:
+            from duckduckgo_search import DDGS  # type: ignore[import-untyped]
         with DDGS() as ddgs:
             results = list(ddgs.text(query, max_results=max_results))
         return [
