@@ -21,7 +21,16 @@ Graph topology:
 
 from __future__ import annotations
 
+import tiktoken
+
 from langchain_core.messages import AIMessage, HumanMessage
+
+_enc = tiktoken.get_encoding("cl100k_base")
+
+
+def _ai_message(content: str, name: str) -> AIMessage:
+    n = len(_enc.encode(content))
+    return AIMessage(content=content, name=name, usage_metadata={"input_tokens": 0, "output_tokens": n, "total_tokens": n})
 from langgraph.graph import END, START, StateGraph
 
 from fp2mp_core.llm import set_active_model
@@ -127,18 +136,18 @@ def _build_log(input: str, raw_data: list, final_answer: str) -> list:
                 observation = str(step.get("observation", ""))
                 log.append(HumanMessage(content=f"[{tool_name}] {tool_input}"))
                 if observation:
-                    log.append(AIMessage(content=observation, name=tool_name))
+                    log.append(_ai_message(observation, tool_name))
 
             raw_output = trace.get("raw_output", "")
             if raw_output:
-                log.append(AIMessage(content=raw_output, name=agent))
+                log.append(_ai_message(raw_output, agent))
 
         if not tool_trace:
             content = entry.get("content", "")
             if content:
-                log.append(AIMessage(content=content, name=agent))
+                log.append(_ai_message(content, agent))
 
-    log.append(AIMessage(content=final_answer, name="FinalSynthesis"))
+    log.append(_ai_message(final_answer, "FinalSynthesis"))
     return log
 
 
