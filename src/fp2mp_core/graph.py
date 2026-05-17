@@ -35,6 +35,7 @@ from langgraph.graph import END, START, StateGraph
 
 from fp2mp_core.llm import set_active_model
 from fp2mp_core.nodes.blackboard import init_node, initialize_blackboard_node, redi_decompose_node
+from fp2mp_core.nodes.agents.blocksnet_agent import blocksnet_agent_node
 from fp2mp_core.nodes.agents.code_spatial import code_spatial_agent_node
 from fp2mp_core.nodes.agents.normative import normative_agent_node
 from fp2mp_core.nodes.agents.web_search import web_search_agent_node
@@ -58,6 +59,7 @@ def build_graph():
     graph.add_node("web_search_agent", web_search_agent_node)
     graph.add_node("normative_agent", normative_agent_node)
     graph.add_node("code_spatial_agent", code_spatial_agent_node)
+    graph.add_node("blocksnet_agent", blocksnet_agent_node)
     graph.add_node("mediator", mediator_node)
     graph.add_node("wiki_curator", wiki_curator_node)
     graph.add_node("critic", critic_node)
@@ -77,13 +79,14 @@ def build_graph():
             "web_search_agent": "web_search_agent",
             "normative_agent": "normative_agent",
             "code_spatial_agent": "code_spatial_agent",
+            "blocksnet_agent": "blocksnet_agent",
             "mediator": "mediator",
             "critic": "critic",
         },
     )
 
     # --- Fan-in: all active agents → wiki_curator ---
-    for node in ["web_search_agent", "normative_agent", "code_spatial_agent"]:
+    for node in ["web_search_agent", "normative_agent", "code_spatial_agent", "blocksnet_agent"]:
         graph.add_edge(node, "wiki_curator")
 
     # Mediator also feeds curator (mediator results need indexing)

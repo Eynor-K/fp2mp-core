@@ -29,6 +29,7 @@ _AGENT_NODES = {
     "WebSearchAgent": "web_search_agent",
     "NormativeAgent": "normative_agent",
     "CodeSpatialAgent": "code_spatial_agent",
+    "BlocksNetAgent": "blocksnet_agent",
     "MediatorAgent": "mediator",
 }
 
@@ -71,6 +72,10 @@ Spatial routing rule:
   or asks to COUNT, MEASURE, or CLASSIFY geographic features → choose CodeSpatialAgent.
   These questions are answered by OpenStreetMap via osmnx, not by web search.
 - Only use WebSearchAgent for such questions if CodeSpatialAgent has already failed.
+- If the sub-query requires BlocksNet urban indicators (accessibility, provision, density,
+  centrality, diversity) and city data has been loaded into data/ → choose BlocksNetAgent.
+  It operates on pre-loaded city data and is faster and more accurate than CodeSpatialAgent
+  for these metrics.
 
 Rules:
 1. Assign based on agent capabilities, using search_modality only as a hint.

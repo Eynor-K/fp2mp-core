@@ -10,8 +10,9 @@ START → redi_decompose → init_blackboard → orchestrator
         ┌────────────────────────────────────────┤
         │           [параллельный Send]          │
         ├──► web_search_agent ───────────────────┤
-        ├──► normative_agent  ───────────────────┤ → wiki_curator
-        ├──► code_spatial_agent ─────────────────┤
+        ├──► normative_agent  ───────────────────┤
+        ├──► code_spatial_agent ─────────────────┤ → wiki_curator
+        ├──► blocksnet_agent  ───────────────────┤
         └──► mediator ───────────────────────────┘
 
 wiki_curator ──continue──► orchestrator   (цикл)
@@ -30,6 +31,7 @@ critic ──continue──► orchestrator
 | **WebSearchAgent** | ReAct-агент — веб-поиск и загрузка страниц; обрабатывает фактические, эмпирические и описательные подзапросы |
 | **NormativeAgent** | ReAct-агент — локальная нормативная векторная БД + целевой веб-поиск; обрабатывает законы, стандарты, строительные нормы |
 | **CodeSpatialAgent** | ReAct-агент — пишет и выполняет Python-код; обрабатывает пространственные запросы (OpenStreetMap через osmnx), подсчёты, измерения, геокодирование |
+| **BlocksNetAgent** | ReAct-агент — городской анализ на основе библиотеки blocksnet; 23 инструмента для расчёта транспортной доступности, обеспеченности сервисами, плотности застройки (FSI/GSI/MXI) и централности кварталов; работает с любыми геоданными, загруженными в `data/` (данные для конкретного города могут быть подготовлены другим агентом) |
 | **MediatorAgent** | Кросс-источниковый синтез — объединяет находки нескольких агентов, выявляет противоречия |
 | **WikiCuratorAgent** | Узел fan-in — строит и ведёт общую вики, запускает ReDI Fusion, повышает факты с высокой уверенностью, обнаруживает стагнацию |
 | **CriticAgent** | Оценщик — принимает решение STOP / CONTINUE, инжектирует новые задачи при обнаружении пробелов в покрытии |
@@ -161,7 +163,8 @@ fp2mp_core/
 │   │   └── agents/
 │   │       ├── web_search.py
 │   │       ├── normative.py
-│   │       └── code_spatial.py
+│   │       ├── code_spatial.py
+│   │       └── blocksnet_agent.py  # BlocksNetAgent — городской анализ по данным из data/
 │   ├── redi/
 │   │   ├── decomposer.py     # Декомпозиция на подзапросы
 │   │   ├── enricher.py       # Генерация вариантов + извлечение ключевых слов
@@ -175,7 +178,30 @@ fp2mp_core/
 │       ├── web_search.py     # Инструмент поиска Tavily / DuckDuckGo
 │       ├── vector_store.py   # Нормативный RAG на ChromaDB
 │       ├── code_exec.py      # Выполнение Python + проверка библиотек и данных
-│       └── wiki_io.py        # Вспомогательные функции сохранения вики на диск
+│       ├── wiki_io.py        # Вспомогательные функции сохранения вики на диск
+│       └── blocksnet/        # Инструменты BlocksNetAgent (23 шт.)
+│           ├── data.py       #   Загрузка геоданных и кэш
+│           ├── network.py    #   Транспортная доступность
+│           ├── provision.py  #   Обеспеченность сервисами
+│           ├── services.py   #   Анализ сервисов и централность
+│           ├── indicators.py #   Плотность застройки (FSI/GSI/MXI)
+│           └── prompts.py    #   Системный промпт агента
+├── data/                     # Геоданные города (текущий пример — Екатеринбург)
+│   ├── blocks_with_services.gpkg  # Кварталы + ёмкости сервисов (требуется для BlocksNetAgent)
+│   ├── acc_mx.pickle              # Матрица доступности NxN (требуется для BlocksNetAgent)
+│   ├── building.gpkg              # Контуры зданий (31 МБ)
+│   ├── boundary.geojson           # Граница города
+│   ├── roads.geojson              # Дорожная сеть
+│   ├── railways.geojson           # Железные дороги
+│   ├── water.geojson              # Водные объекты
+│   ├── functional_zones.geojson   # Функциональные зоны (27 МБ)
+│   ├── platform/                  # 68 GeoJSON с объектами сервисов
+│   │   ├── school.geojson
+│   │   ├── hospital.geojson
+│   │   ├── kindergarten.geojson
+│   │   └── ...
+│   ├── normative/                 # Нормативные документы для NormativeAgent (RAG)
+│   └── outputs/                   # CSV-результаты BlocksNetAgent (создаётся автоматически)
 ├── tests/
 │   ├── conftest.py
 │   ├── test_state.py

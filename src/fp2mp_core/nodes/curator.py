@@ -61,7 +61,7 @@ def _should_promote(entry: RawEntry) -> bool:
         return False
     if agent_type == "normative_findings":
         return confidence >= _NORMATIVE_PROMOTE_THRESHOLD
-    if agent_type in {"web_findings", "code_result", "mediator_synthesis"}:
+    if agent_type in {"web_findings", "code_result", "mediator_synthesis", "urban_analysis"}:
         return confidence >= _PROMOTE_THRESHOLD
     return False
 

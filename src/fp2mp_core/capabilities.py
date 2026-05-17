@@ -17,6 +17,7 @@ class AgentName(str, Enum):
     WEB_SEARCH = "WebSearchAgent"
     NORMATIVE = "NormativeAgent"
     CODE_SPATIAL = "CodeSpatialAgent"
+    BLOCKS_NET = "BlocksNetAgent"
     MEDIATOR = "MediatorAgent"
     ORCHESTRATOR = "OrchestratorAgent"
     WIKI_CURATOR = "WikiCuratorAgent"
@@ -90,10 +91,37 @@ CODE_SPATIAL_CAPABILITY = AgentCapability(
 )
 
 
+BLOCKS_NET_CAPABILITY = AgentCapability(
+    name=AgentName.BLOCKS_NET.value,
+    description=(
+        "Urban analysis agent powered by the BlocksNet library. Operates on pre-loaded "
+        "geospatial city data: urban blocks, travel-time accessibility matrix, and service "
+        "capacities. Computes quantitative urban indicators: pedestrian accessibility, "
+        "service provision ratios, block density (FSI/GSI/MXI), network centrality, "
+        "Shannon diversity of services, and spatial clustering."
+    ),
+    handles=[
+        "transport accessibility — mean/median/max travel time from blocks to amenities",
+        "service provision ratios (schools, hospitals, parks, etc.) relative to population",
+        "block-level density indicators: FSI, GSI, MXI, OSR",
+        "network connectivity and centrality metrics for the loaded city",
+        "Shannon diversity index and service collocation analysis",
+        "identifying under-served or over-served zones in the city",
+        "any urban planning metric computable with the BlocksNet library on the loaded city data",
+    ],
+    cannot_do=[
+        "answer questions about a city whose data has not been loaded into data/",
+        "general web search or retrieve recent news",
+        "interpret regulatory requirements — use NormativeAgent for that",
+        "execute arbitrary Python code unrelated to BlocksNet analysis",
+    ],
+)
+
 AGENT_CAPABILITIES: dict[str, AgentCapability] = {
     WEB_CAPABILITY.name: WEB_CAPABILITY,
     NORMATIVE_CAPABILITY.name: NORMATIVE_CAPABILITY,
     CODE_SPATIAL_CAPABILITY.name: CODE_SPATIAL_CAPABILITY,
+    BLOCKS_NET_CAPABILITY.name: BLOCKS_NET_CAPABILITY,
 }
 
 
@@ -108,5 +136,6 @@ AGENT_TO_NODE: dict[AgentName, str] = {
     AgentName.WEB_SEARCH: "web_search_agent",
     AgentName.NORMATIVE: "normative_agent",
     AgentName.CODE_SPATIAL: "code_spatial_agent",
+    AgentName.BLOCKS_NET: "blocksnet_agent",
     AgentName.MEDIATOR: "mediator",
 }
