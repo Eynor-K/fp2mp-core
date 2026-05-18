@@ -412,13 +412,20 @@ def route_from_orchestrator(state: BlackBoard):
     if next_action == "critic" or not directives:
         return "critic"
 
-    # Build Send list for parallel execution
-    sends = []
+    # Build one Send per target agent. Agent nodes process all directives for
+    # their target; sending once per directive would duplicate expensive work.
+    directives_by_node: dict[str, list[OrchestratorDirective]] = {}
     for directive in directives[:_MAX_DISPATCHES_PER_ROUND]:
         target = directive.get("target_agent", "WebSearchAgent")
         node = _AGENT_NODES.get(target)
         if node:
-            sends.append(Send(node, dict(state)))
+            directives_by_node.setdefault(node, []).append(directive)
+
+    sends = []
+    for node, node_directives in directives_by_node.items():
+        node_state = dict(state)
+        node_state["orchestrator_directives"] = node_directives
+        sends.append(Send(node, node_state))
 
     if not sends:
         return "critic"

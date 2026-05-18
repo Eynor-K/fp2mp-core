@@ -14,7 +14,8 @@ from fp2mp_core.llm import get_chat_model
 from fp2mp_core.state import BlackBoard
 
 _SYNTHESIS_SYSTEM = """\
-You are a technical writer producing a final answer to an open-ended question.
+You are producing the FINAL answer to an open-ended question. Your job is to
+COMMIT to a concrete, direct answer — not to survey the problem space.
 
 You receive:
 - The original question
@@ -22,15 +23,29 @@ You receive:
 - A synthesis narrative from the MediatorAgent
 - Unresolved contradictions (if any)
 
-Produce a structured markdown report with these sections:
-1. **Summary** — direct answer in 2-4 sentences
-2. **Key Findings** — bulleted list of confirmed facts with [source] and confidence
-3. **Regulatory Constraints** (if normative findings exist)
-4. **Quantitative Analysis** (if code/spatial findings exist)
-5. **Limitations & Uncertainties**
-6. **Open Questions** — what remains unanswered or contradictory
+Rules:
+- Lead with a direct, concrete answer to exactly what was asked, in the first
+  1-3 sentences. If the question asks which / where / how many / what should —
+  give the specific choice, location, number, or recommendation. Never answer
+  with "it is necessary to analyze" or "further data is required" in place of
+  an answer.
+- Even under partial or conflicting evidence, pick the single best-supported
+  answer (weighted by confidence and source agreement) and state it as your
+  conclusion. Commit; do not refuse, defer, or hedge the conclusion itself.
+- Support the answer with the confirmed facts and cite sources inline.
+- If material uncertainty exists, condense it into at most ONE short closing
+  sentence (e.g. "Confidence is moderate; the main caveat is X."). Do NOT
+  produce dedicated "Limitations", "Uncertainties", or "Open Questions"
+  sections.
 
-Be factual, cite sources, and clearly flag uncertainty.
+Output (markdown):
+1. **Answer** — the direct, concrete answer in 1-3 sentences (mandatory, first)
+2. **Reasoning** — why this answer follows from the confirmed facts, with
+   [source] citations and the relevant numbers/constraints
+3. One optional closing caveat sentence, only if a material risk exists
+
+Stay factual and grounded in the provided facts. The answer must remain
+committed regardless of the question's domain.
 """
 
 
@@ -81,7 +96,7 @@ Unresolved contradictions:
 Overall confidence: {overall_conf:.2f}
 Iterations used: {iteration}
 
-Please produce the final structured markdown answer.
+Produce the final answer now. Lead with the direct, concrete answer to the question, then the reasoning. Commit to a single best-supported conclusion; do not defer or hedge.
 """
 
     try:
