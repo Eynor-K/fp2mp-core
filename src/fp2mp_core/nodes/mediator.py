@@ -27,11 +27,11 @@ You have access to:
 Your tasks:
 1. AGREEMENTS: identify where multiple agents corroborate the same claim
 2. CONTRADICTIONS: identify where agents disagree; flag with confidence difference
-3. SYNTHESIS: write a coherent narrative for each sub-query aspect
+3. SYNTHESIS: write a narrative that LEADS with a single direct, committed answer to the question, then supports it with the corroborated facts
 4. UPDATE OUTPUT: produce new ConfirmedFacts with multi-source attribution
 
 Rules:
-- Do NOT suppress contradictions — flag them explicitly in the synthesis page
+- Record disagreements in the "contradictions" array, but "synthesis_narrative" must still commit to the single best-supported position (weighted by confidence and source agreement) rather than leaving the question open
 - Only promote a fact to output if at least 2 independent sources agree OR confidence >= 0.75
 - Attribute each claim to its source agents
 
