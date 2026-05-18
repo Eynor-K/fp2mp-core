@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import operator
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Annotated, Any
 
 from langchain_core.messages import BaseMessage
@@ -33,6 +33,8 @@ class SubQuery(TypedDict, total=False):
     text: str
     intent_aspect: str       # e.g. "empirical data", "regulatory constraint"
     search_modality: str     # "web" | "normative" | "code" | "any"
+    evidence_type: str       # "factual" | "empirical" | "normative"
+    depends_on: list[str]    # sub_query_ids that must be answered first ([] = independent)
     independence: bool       # can be answered independently of other sub-queries?
     enriched_variants: list[str]
     keywords: list[str]
@@ -62,6 +64,7 @@ class RawEntry(TypedDict, total=False):
     citations: list[Citation]
     sub_query_id: str
     curated: bool            # True once WikiCurator has processed this entry
+    follow_up_suggestions: list[dict[str, str]]  # agent-proposed handoffs → tasks
 
 
 class WikiPage(TypedDict, total=False):
@@ -85,6 +88,8 @@ class ConfirmedFact(TypedDict, total=False):
     citations: list[Citation]
     limitations: list[str]
     sub_query_id: str
+    is_recommendation: bool
+    source_type: str         # "computed" | "web" | "normative" | "synthesis"
 
 
 class CritiqueResult(TypedDict, total=False):
@@ -171,6 +176,7 @@ def _merge_output(left: list[ConfirmedFact], right: list[ConfirmedFact]) -> list
 class BlackBoard(TypedDict, total=False):
     # Input
     question: str
+    question_intent: str     # "factual" | "analytical" | "planning" | "regulatory" | "spatial"
 
     # ReDI decomposition
     redi_decomposition: list[SubQuery]
@@ -192,6 +198,7 @@ class BlackBoard(TypedDict, total=False):
     max_iterations: int | None
     stop_flag: bool
     critique: CritiqueResult
+    draft_answer: str        # committed weighted answer drafted from the wiki
     final_answer: str | None
 
     # Orchestration
@@ -227,6 +234,7 @@ def board_message(
     confidence: float = 0.0,
     tool_trace: list[dict[str, Any]] | None = None,
     citations: list[Citation] | None = None,
+    follow_up_suggestions: list[dict[str, str]] | None = None,
 ) -> RawEntry:
     """Factory for RawEntry — the standard way agents write to raw_data."""
     return RawEntry(
@@ -240,6 +248,7 @@ def board_message(
         citations=citations or [],
         sub_query_id=sub_query_id,
         curated=False,
+        follow_up_suggestions=follow_up_suggestions or [],
     )
 
 
@@ -250,4 +259,4 @@ class BaseState(TypedDict):
 
 
 def now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+    return datetime.now(UTC).isoformat(timespec="seconds")

@@ -68,8 +68,8 @@ def test_wiki_briefing_includes_confirmed_facts():
 
 def test_initialize_blackboard_creates_wiki_skeleton(sub_queries):
     """integration: init node creates index.md and log.md."""
-    with patch("fp2mp_core.nodes.blackboard.ReDIDecomposer"), \
-         patch("fp2mp_core.nodes.blackboard.ReDIEnricher"):
+    with patch("fp2mp_core.nodes.setup.ReDIDecomposer"), \
+         patch("fp2mp_core.nodes.setup.ReDIEnricher"):
 
         from fp2mp_core.nodes.blackboard import initialize_blackboard_node
         state = create_initial_state("test question")

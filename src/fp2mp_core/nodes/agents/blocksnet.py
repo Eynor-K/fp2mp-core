@@ -20,11 +20,13 @@ from typing import Any
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langgraph.prebuilt import create_react_agent
 
-from fp2mp_core.config import DATA_DIR, get_settings
+from fp2mp_core.config import DATA_DIR
+from fp2mp_core.failure import assess_confidence
 from fp2mp_core.llm import get_chat_model
-from fp2mp_core.tools.blocksnet import make_tools
-from fp2mp_core.tools.blocksnet.prompts import SYSTEM_PROMPT
+from fp2mp_core.nodes.context import parse_follow_ups
 from fp2mp_core.state import BlackBoard, RawEntry, board_message
+from fp2mp_core.tools.blocksnet import make_tools
+from fp2mp_core.tools.blocksnet.prompts import build_system_prompt
 
 _OUTPUT_DIR = DATA_DIR / "outputs"
 
@@ -40,21 +42,20 @@ class _BlocksNetRunner:
         _OUTPUT_DIR.mkdir(exist_ok=True)
         llm = get_chat_model(temperature=0, max_tokens=4096)
         tools = make_tools(self._state, DATA_DIR, _OUTPUT_DIR)
-        self._graph = create_react_agent(model=llm, tools=tools, prompt=SYSTEM_PROMPT)
+        self._graph = create_react_agent(model=llm, tools=tools, prompt=build_system_prompt(tools))
 
     def run(self, task: str) -> dict[str, Any]:
         try:
             result = self._graph.invoke({"messages": [HumanMessage(content=task)]})
         except Exception as exc:
-            output = f"Ошибка при запуске агента: {exc}"
-            return {"input": task, "output": output, "log": []}
+            return {"input": task, "output": f"Ошибка при запуске агента: {exc}", "messages": []}
 
         messages = result.get("messages", [])
         output = next(
             (str(m.content) for m in reversed(messages) if isinstance(m, AIMessage) and m.content),
             "Ответ не получен.",
         )
-        return {"input": task, "output": output, "log": messages}
+        return {"input": task, "output": output, "messages": messages}
 
     def reset(self) -> None:
         self._state.clear()
@@ -71,12 +72,12 @@ def _get_runner() -> _BlocksNetRunner:
     return _runner
 
 
-def _extract_tool_trace(log: list) -> list[dict[str, Any]]:
+def _extract_tool_trace(messages: list) -> list[dict[str, Any]]:
     """Конвертирует лог сообщений blocksnet-агента в формат tool_trace fp2mp_core."""
     steps: list[dict[str, Any]] = []
     raw_output = ""
 
-    for msg in log:
+    for msg in messages:
         if isinstance(msg, AIMessage):
             for tc in (getattr(msg, "tool_calls", None) or []):
                 steps.append({
@@ -117,20 +118,31 @@ def blocksnet_agent_node(state: BlackBoard) -> dict[str, Any]:
         try:
             result = runner.run(question)
             output_text: str = result.get("output", "")
-            confidence = 0.2 if output_text.startswith("Ошибка") else 0.75
 
-            tool_trace = _extract_tool_trace(result.get("log", []))
+            tool_trace = _extract_tool_trace(result.get("messages", []))
             if tool_trace:
                 tool_trace[0]["directive"] = directive
+
+            confidence, failed = assess_confidence(output_text, tool_trace, parsed_confidence=0.75)
+            content = output_text
+            follow_ups: list[dict[str, str]] = []
+            if failed:
+                content = (
+                    "[FAILED] BlocksNetAgent did not produce a reliable result. "
+                    f"Raw output: {output_text[:500]}"
+                )
+            else:
+                follow_ups = parse_follow_ups(output_text)
 
             new_entries.append(board_message(
                 agent="BlocksNetAgent",
                 iteration=iteration,
                 msg_type="urban_analysis",
-                content=output_text,
+                content=content,
                 sub_query_id=sq_id,
                 confidence=confidence,
                 tool_trace=tool_trace,
+                follow_up_suggestions=follow_ups,
             ))
             trace.append({"agent": "BlocksNetAgent", "sq_id": sq_id, "confidence": confidence})
 

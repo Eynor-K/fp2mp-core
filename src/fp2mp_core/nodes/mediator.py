@@ -13,8 +13,7 @@ import uuid
 from typing import Any
 
 from fp2mp_core.llm import call_with_thinking
-from fp2mp_core.nodes.blackboard import wiki_briefing
-from fp2mp_core.state import BlackBoard, Citation, ConfirmedFact, RawEntry, WikiPage, board_message
+from fp2mp_core.state import BlackBoard, Citation, ConfirmedFact, WikiPage, board_message
 
 _SYSTEM = """\
 You are the MediatorAgent. Your role is to synthesize knowledge from multiple agents
@@ -29,6 +28,13 @@ Your tasks:
 2. CONTRADICTIONS: identify where agents disagree; flag with confidence difference
 3. SYNTHESIS: write a coherent narrative for each sub-query aspect
 4. UPDATE OUTPUT: produce new ConfirmedFacts with multi-source attribution
+5. RECOMMENDATION: based on the synthesized evidence, derive at least one actionable
+   recommendation that directly answers the original question.
+   - If evidence is conclusive, state the recommendation directly.
+   - If evidence is partial, provide a conditional recommendation:
+     "If [condition], then [action] is recommended because [rationale]."
+   - Mark provisional recommendations explicitly.
+   Do NOT skip this step even if the data is incomplete.
 
 Rules:
 - Do NOT suppress contradictions — flag them explicitly in the synthesis page
@@ -44,6 +50,7 @@ Output format (JSON only):
       "source_agents": ["AgentA", "AgentB"],
       "confidence": 0.0,
       "sub_query_id": "sq_001",
+      "is_recommendation": true,
       "limitations": ["limitation1"],
       "citations": [{"url": "...", "document": "..."}]
     }
@@ -72,7 +79,8 @@ def mediator_node(state: BlackBoard) -> dict[str, Any]:
     wiki_summary = "\n\n".join(wiki_content_parts[:12])  # cap context
 
     facts_summary = "\n".join(
-        f"- [{f.get('sub_query_id','?')} conf={f.get('confidence',0):.2f}] {f.get('claim','')[:200]}"
+        f"- [{f.get('sub_query_id','?')} conf={f.get('confidence',0):.2f}] "
+        f"{f.get('claim','')[:200]}"
         for f in output_facts[:20]
     )
 
@@ -131,6 +139,8 @@ and produce new confirmed facts where multiple sources agree.
             citations=citations,
             limitations=rf.get("limitations", []),
             sub_query_id=rf.get("sub_query_id", ""),
+            is_recommendation=bool(rf.get("is_recommendation", False)),
+            source_type="synthesis",
         )
         new_facts.append(fact)
 

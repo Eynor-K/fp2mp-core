@@ -11,8 +11,8 @@ from fp2mp_core.state import create_initial_state
 
 def test_graph_compiles():
     """Smoke test: graph compiles without errors."""
-    with patch("fp2mp_core.nodes.blackboard.ReDIDecomposer"), \
-         patch("fp2mp_core.nodes.blackboard.ReDIEnricher"):
+    with patch("fp2mp_core.nodes.setup.ReDIDecomposer"), \
+         patch("fp2mp_core.nodes.setup.ReDIEnricher"):
         from fp2mp_core.graph import build_graph
         graph = build_graph()
         assert graph is not None
@@ -20,8 +20,8 @@ def test_graph_compiles():
 
 def test_graph_has_expected_nodes():
     """Check that all required nodes are present in the compiled graph."""
-    with patch("fp2mp_core.nodes.blackboard.ReDIDecomposer"), \
-         patch("fp2mp_core.nodes.blackboard.ReDIEnricher"):
+    with patch("fp2mp_core.nodes.setup.ReDIDecomposer"), \
+         patch("fp2mp_core.nodes.setup.ReDIEnricher"):
         from fp2mp_core.graph import build_graph
         graph = build_graph()
         node_names = set(graph.nodes)
@@ -53,8 +53,8 @@ def test_full_loop_terminates_at_max_iterations(sub_queries):
         "output": "ANSWER: Some answer\nCONFIDENCE: 0.6\nSOURCES: https://example.com"
     }
 
-    with patch("fp2mp_core.nodes.blackboard.ReDIDecomposer", return_value=mock_decomposer), \
-         patch("fp2mp_core.nodes.blackboard.ReDIEnricher", return_value=mock_enricher), \
+    with patch("fp2mp_core.nodes.setup.ReDIDecomposer", return_value=mock_decomposer), \
+         patch("fp2mp_core.nodes.setup.ReDIEnricher", return_value=mock_enricher), \
          patch("fp2mp_core.nodes.agents.web_search._build_agent") as mock_web_agent, \
          patch("fp2mp_core.nodes.critic.call_with_thinking") as mock_thinking, \
          patch("fp2mp_core.nodes.synthesis.get_chat_model") as mock_synth_llm:
@@ -102,8 +102,8 @@ def test_final_answer_is_not_none_after_run(sub_queries):
         "output": "ANSWER: Complete answer here with sufficient detail.\nCONFIDENCE: 0.8\nSOURCES: "
     }
 
-    with patch("fp2mp_core.nodes.blackboard.ReDIDecomposer", return_value=mock_decomposer), \
-         patch("fp2mp_core.nodes.blackboard.ReDIEnricher", return_value=mock_enricher), \
+    with patch("fp2mp_core.nodes.setup.ReDIDecomposer", return_value=mock_decomposer), \
+         patch("fp2mp_core.nodes.setup.ReDIEnricher", return_value=mock_enricher), \
          patch("fp2mp_core.nodes.agents.web_search._build_agent") as mock_web_agent, \
          patch("fp2mp_core.nodes.critic.call_with_thinking") as mock_thinking, \
          patch("fp2mp_core.nodes.synthesis.get_chat_model") as mock_llm_factory:

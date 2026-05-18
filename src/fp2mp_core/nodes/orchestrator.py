@@ -13,17 +13,29 @@ Key behaviors:
 from __future__ import annotations
 
 import json
+import logging
 import uuid
 from typing import Any
+
+logger = logging.getLogger("fp2mp_core.orchestrator")
 
 from langgraph.types import Send
 
 from fp2mp_core.capabilities import AGENT_CAPABILITIES, AgentCapability
+from fp2mp_core.config import DATA_DIR, get_settings
+from fp2mp_core.failure import entry_failed
 from fp2mp_core.llm import get_chat_model
-from fp2mp_core.nodes.blackboard import wiki_briefing
+from fp2mp_core.nodes.context import wiki_briefing
 from fp2mp_core.state import BlackBoard, OrchestratorDirective, RawEntry, Task, board_message
 
-_MAX_DISPATCHES_PER_ROUND = 3
+_MAX_DISPATCHES_PER_ROUND = get_settings().max_dispatches_per_round
+
+
+def _dispatch_cap(pending_count: int) -> int:
+    """Adaptive cap: scale up with pending work, bounded by a ceiling so a
+    round with many ready tasks is not starved by a fixed limit of 3."""
+    s = get_settings()
+    return max(1, min(s.max_dispatches_ceiling, max(s.max_dispatches_per_round, pending_count)))
 
 _AGENT_NODES = {
     "WebSearchAgent": "web_search_agent",
@@ -67,15 +79,33 @@ Routing rule:
 - ReDI search_modality is a decomposer hint, not a binding constraint.
 - Choose the specialized agent whose capabilities best fit the sub-query.
 
+Evidence-type routing rules:
+- Sub-queries with evidence_type="empirical": assign BlocksNetAgent or CodeSpatialAgent.
+  WebSearchAgent may only be assigned to empirical sub-queries if both quantitative
+  agents have already failed or been tried.
+- Sub-queries with evidence_type="factual": assign WebSearchAgent by default.
+- Sub-queries with evidence_type="normative": assign NormativeAgent by default.
+- An empirical sub-query already answered by WebSearchAgent with source_type="web"
+  is still OPEN for quantitative agents — do NOT skip it.
+
 Spatial routing rule:
 - If the sub-query asks WHICH streets/buildings/zones/routes EXIST in a named city area,
   or asks to COUNT, MEASURE, or CLASSIFY geographic features → choose CodeSpatialAgent.
   These questions are answered by OpenStreetMap via osmnx, not by web search.
 - Only use WebSearchAgent for such questions if CodeSpatialAgent has already failed.
-- If the sub-query requires BlocksNet urban indicators (accessibility, provision, density,
-  centrality, diversity) and city data has been loaded into data/ → choose BlocksNetAgent.
-  It operates on pre-loaded city data and is faster and more accurate than CodeSpatialAgent
-  for these metrics.
+- Choose BlocksNetAgent when the sub-query requires computing urban block-level metrics
+  from the city dataset already loaded into data/: travel-time accessibility,
+  service provision ratios, density indicators (FSI/GSI/MXI), network centrality,
+  Shannon diversity, or identifying under-/over-served zones.
+  BlocksNetAgent does NOT do OSM queries or geocoding — for those use CodeSpatialAgent.
+- Choose CodeSpatialAgent when the sub-query needs OpenStreetMap data, geocoding,
+  arbitrary Python computation, or data NOT in data/ (e.g., fetching specific POIs,
+  route geometry, building counts from OSM).
+- Both agents can be dispatched to the SAME or RELATED sub-queries when the question
+  benefits from both: e.g., CodeSpatialAgent gets OSM geometry, BlocksNetAgent
+  computes accessibility metrics from the block dataset.
+- Do NOT replace BlocksNetAgent with WebSearchAgent for quantitative urban metrics —
+  web search cannot compute block-level indicators.
 
 Rules:
 1. Assign based on agent capabilities, using search_modality only as a hint.
@@ -99,8 +129,10 @@ def _get_done_pairs(tasks: list[Task]) -> set[tuple[str, str]]:
 
 
 def _raw_entry_failed(entry: RawEntry) -> bool:
-    content = entry.get("content", "").strip()
-    return entry.get("confidence", 1.0) < 0.4 or content.startswith("Agent stopped due to")
+    return entry_failed(entry)
+
+
+_QUANT_AGENTS = {"BlocksNetAgent", "CodeSpatialAgent"}
 
 
 def _tried_agents_for_sub_query(
@@ -126,6 +158,11 @@ def _detect_and_reassign_failed(state: BlackBoard) -> list[Task]:
     iteration = state.get("iteration", 0)
     new_tasks: list[Task] = []
 
+    evidence_by_sq = {
+        sq.get("sub_query_id", ""): sq.get("evidence_type", "factual")
+        for sq in state.get("redi_decomposition", [])
+    }
+
     pending_sq_ids = {t.get("sub_query_id", "") for t in tasks if t.get("status") == "pending"}
     reassigned_sq_ids: set[str] = set()
 
@@ -147,9 +184,16 @@ def _detect_and_reassign_failed(state: BlackBoard) -> list[Task]:
         if not matching_entries or not any(_raw_entry_failed(entry) for entry in matching_entries):
             continue
 
+        # For empirical sub-queries a web/normative stub does NOT count as
+        # success — only a non-failed quantitative (computed) entry does.
+        if evidence_by_sq.get(sq_id, "factual") == "empirical":
+            success_agents = _QUANT_AGENTS
+        else:
+            success_agents = _SPECIALIZED_AGENTS
+
         has_success = any(
             entry.get("sub_query_id") == sq_id
-            and entry.get("agent") in _SPECIALIZED_AGENTS
+            and entry.get("agent") in success_agents
             and not _raw_entry_failed(entry)
             for entry in raw_data
         )
@@ -176,12 +220,52 @@ def _detect_and_reassign_failed(state: BlackBoard) -> list[Task]:
     return new_tasks
 
 
+def _deps_satisfied(sq: dict, state: BlackBoard) -> bool:
+    """A sub-query is dispatchable once each dependency has at least one
+    confirmed fact or a non-failed raw entry."""
+    deps = sq.get("depends_on") or []
+    if not deps:
+        return True
+    output = state.get("output", [])
+    raw_data = state.get("raw_data", [])
+    for dep_id in deps:
+        has_fact = any(f.get("sub_query_id") == dep_id for f in output)
+        has_raw = any(
+            e.get("sub_query_id") == dep_id and not entry_failed(e)
+            for e in raw_data
+        )
+        if not (has_fact or has_raw):
+            return False
+    return True
+
+
 def _count_results_by_type(raw_data: list[RawEntry]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for entry in raw_data:
         t = entry.get("type", "other")
         counts[t] = counts.get(t, 0) + 1
     return counts
+
+
+def _shared_context(state: BlackBoard) -> str:
+    """Compact, domain-neutral briefing of knowledge accumulated so far.
+
+    Lets specialized agents build on each other's work instead of running
+    in isolation. Bounded so it never blows up the agent context window.
+    """
+    parts: list[str] = []
+    brief = wiki_briefing(state, limit=900)
+    if brief.strip():
+        parts.append(brief)
+
+    outputs_dir = DATA_DIR / "outputs"
+    if outputs_dir.exists():
+        files = sorted(outputs_dir.glob("*.geojson")) + sorted(outputs_dir.glob("*.csv"))
+        if files:
+            names = ", ".join(p.name for p in files[-8:])
+            parts.append(f"\n## Files produced by earlier steps (data/outputs/)\n{names}")
+
+    return "\n".join(parts).strip()
 
 
 def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
@@ -220,14 +304,32 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
     # --- Determine dispatches ---
     dispatches: list[OrchestratorDirective] = []
 
+    # Dependency gating: prefer tasks whose deps are met. Disable the gate
+    # entirely if NOTHING is ready (avoids deadlock on unmet/cyclic deps).
+    any_ready = any(
+        _deps_satisfied(sub_query_index.get(t.get("sub_query_id", ""), {}), state)
+        for t in pending_tasks
+    )
+    dispatch_cap = _dispatch_cap(len(pending_tasks))
+
     for task in pending_tasks:
-        if len(dispatches) >= _MAX_DISPATCHES_PER_ROUND:
+        if len(dispatches) >= dispatch_cap:
             break
 
         sq_id = task.get("sub_query_id", "")
         sq = sub_query_index.get(sq_id, {})
+        if any_ready and not _deps_satisfied(sq, state):
+            continue
         tried_agents = _tried_agents_for_sub_query(all_tasks, raw_data, sq_id)
-        agent = _llm_choose_agent(sq, state, exclude_agents=tried_agents)
+        ev_type = sq.get("evidence_type", "factual")
+        extra_exclude: set[str] = set()
+        if ev_type == "empirical":
+            quant_agents = {"BlocksNetAgent", "CodeSpatialAgent"}
+            quant_tried = tried_agents & quant_agents
+            if quant_tried < quant_agents:
+                extra_exclude.add("WebSearchAgent")
+
+        agent = _llm_choose_agent(sq, state, exclude_agents=tried_agents | extra_exclude)
         pair = (agent, sq_id)
 
         if pair in done_pairs:
@@ -236,16 +338,30 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
         modality = sq.get("search_modality", "web")
         assigned_agents_by_task_id[task.get("task_id", "")] = agent
 
-        # Build directive text
+        # Build directive text — original question + sub-task + shared context
         sq_text = sq.get("text", task.get("directive", ""))
         enriched_variants = sq.get("enriched_variants", [])
-        directive_text = sq_text
+        original_q = state.get("question", "")
+
+        text_parts: list[str] = []
+        if original_q:
+            text_parts.append(f"ORIGINAL QUESTION: {original_q}")
+        text_parts.append(f"YOUR SUB-TASK: {sq_text}")
         if enriched_variants:
-            directive_text += f"\n\nSearch hints: {'; '.join(enriched_variants[:2])}"
+            text_parts.append(f"Search hints: {'; '.join(enriched_variants[:2])}")
 
         domain_hints = sq.get("domain_hints", [])
         if domain_hints and agent == "NormativeAgent":
-            directive_text += f"\n\nFocus on: {', '.join(domain_hints)}"
+            text_parts.append(f"Focus on: {', '.join(domain_hints)}")
+
+        context = _shared_context(state)
+        if context:
+            text_parts.append(
+                "--- CONTEXT: shared knowledge from earlier steps. "
+                "Build on it; do NOT repeat work already done. ---\n" + context
+            )
+
+        directive_text = "\n\n".join(text_parts)
 
         dispatches.append(
             OrchestratorDirective(
@@ -275,6 +391,11 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
         updated_tasks.append(t)
 
     target_agents = [d.get("target_agent") for d in dispatches]
+    logger.info(
+        "iter=%d dispatch → %s",
+        iteration,
+        ", ".join(str(a) for a in target_agents),
+    )
     orch_msg = board_message(
         agent="OrchestratorAgent",
         iteration=iteration,
@@ -344,6 +465,61 @@ def _dispatch_mediator(state: BlackBoard, iteration: int) -> dict[str, Any]:
     }
 
 
+def _validate_directive(directive: OrchestratorDirective, state: BlackBoard) -> bool:
+    """Lightweight pre-dispatch sanity check — no LLM call."""
+    question = directive.get("question", "").strip()
+    if len(question) < 10:
+        return False
+    target = directive.get("target_agent", "")
+    if target not in _AGENT_NODES:
+        return False
+    # BlocksNetAgent requires block data to be present
+    if target == "BlocksNetAgent":
+        blocks_file = DATA_DIR / "blocks_with_services.gpkg"
+        if not blocks_file.exists():
+            return False
+    return True
+
+
+_MEDIATOR_AGENTS = {"MediatorAgent"}
+_LIGHT_AGENTS = {"WebSearchAgent", "NormativeAgent", "CodeSpatialAgent", "BlocksNetAgent"}
+
+
+def _filter_state_for_agent(state: BlackBoard, agent_name: str) -> dict[str, Any]:
+    """Return a minimal state copy for specialized agents.
+
+    Mediator needs full wiki + output + raw_data for synthesis.
+    All other agents only need their directive and minimal metadata —
+    they never read wiki pages or historical raw_data themselves.
+    """
+    if agent_name in _MEDIATOR_AGENTS:
+        return dict(state)
+
+    return {
+        "question": state.get("question", ""),
+        "question_intent": state.get("question_intent", ""),
+        "iteration": state.get("iteration", 0),
+        "max_iterations": state.get("max_iterations"),
+        "redi_decomposition": state.get("redi_decomposition", []),
+        "orchestrator_directives": state.get("orchestrator_directives", []),
+        "stagnation_count": state.get("stagnation_count", 0),
+        "stop_flag": False,
+        # Heavy fields kept empty to bound agent context — the accumulated
+        # knowledge reaches agents via the CONTEXT block in the directive.
+        "tasks": [],
+        "wiki": {},
+        "raw_data": [],
+        "output": [],
+        "agent_trace": [],
+        "errors": [],
+        "critique": {},
+        "final_answer": None,
+        "next_action": "dispatch",
+        "current_stage": state.get("current_stage", ""),
+        "progress_delta": 0,
+    }
+
+
 def _parse_json_object(text: str) -> dict[str, Any]:
     stripped = text.strip()
     if stripped.startswith("```"):
@@ -375,6 +551,7 @@ def _llm_choose_agent(sq: dict, state: BlackBoard, exclude_agents: set[str] | No
 Task: {sq.get('text', '')}
 Intent: {sq.get('intent_aspect', '')}
 Initial modality hint from decomposer: {sq.get('search_modality', 'any')}
+Evidence type: {sq.get('evidence_type', 'factual')}
 
 Current wiki state:
 {brief[:800]}
@@ -417,13 +594,16 @@ def route_from_orchestrator(state: BlackBoard):
     if next_action == "critic" or not directives:
         return "critic"
 
-    # Build Send list for parallel execution
+    # Build Send list for parallel execution (directives already capped upstream)
     sends = []
-    for directive in directives[:_MAX_DISPATCHES_PER_ROUND]:
+    for directive in directives[: _dispatch_cap(len(directives))]:
+        if not _validate_directive(directive, state):
+            continue
         target = directive.get("target_agent", "WebSearchAgent")
         node = _AGENT_NODES.get(target)
         if node:
-            sends.append(Send(node, dict(state)))
+            filtered = _filter_state_for_agent(state, target)
+            sends.append(Send(node, filtered))
 
     if not sends:
         return "critic"

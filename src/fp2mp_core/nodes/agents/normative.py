@@ -13,7 +13,9 @@ from typing import Any
 from langchain_classic.agents import AgentExecutor, create_react_agent
 from langchain_core.prompts import PromptTemplate
 
+from fp2mp_core.failure import assess_confidence
 from fp2mp_core.llm import get_chat_model
+from fp2mp_core.nodes.context import parse_follow_ups
 from fp2mp_core.state import BlackBoard, Citation, RawEntry, board_message
 from fp2mp_core.tools.vector_store import normative_vector_search_tool
 from fp2mp_core.tools.web_search import fetch_url_tool, normative_web_search_tool
@@ -34,6 +36,15 @@ Confidence:
 - 0.9: found in local normative DB with exact quote
 - 0.7: found via web search with document name and section
 - 0.5: indirect reference, document not directly accessible
+
+CONTEXT USAGE:
+- The input may contain ORIGINAL QUESTION, YOUR SUB-TASK and a CONTEXT block with
+  findings from other agents. Focus on YOUR SUB-TASK, but use the CONTEXT to build
+  on prior findings and avoid repeating work already done. Keep the ORIGINAL
+  QUESTION in mind so your answer is actually useful for it.
+- OPTIONAL: if another agent should do a specific concrete next step, add one
+  line after your final answer:
+  FOLLOW_UP: <WebSearchAgent|NormativeAgent|CodeSpatialAgent|BlocksNetAgent> | <task>
 
 You must use the ReAct format exactly. Do not write a final answer until you have called normative_vector_search_tool at least once.
 If the local vector search has insufficient evidence, call normative_web_search_tool.
@@ -156,6 +167,17 @@ def normative_agent_node(state: BlackBoard) -> dict[str, Any]:
             answer, confidence, citations = _parse_output(output_text)
             intermediate_steps = _format_steps(result.get("intermediate_steps", []))
 
+            tool_trace = [{"directive": directive, "raw_output": output_text[:300], "intermediate_steps": intermediate_steps}]
+            confidence, failed = assess_confidence(output_text, tool_trace, confidence)
+            follow_ups: list[dict[str, str]] = []
+            if failed:
+                answer = (
+                    "[FAILED] NormativeAgent did not produce a reliable answer. "
+                    f"Raw output: {output_text[:400]}"
+                )
+            else:
+                follow_ups = parse_follow_ups(output_text)
+
             entry = board_message(
                 agent="NormativeAgent",
                 iteration=iteration,
@@ -164,7 +186,8 @@ def normative_agent_node(state: BlackBoard) -> dict[str, Any]:
                 sub_query_id=sq_id,
                 confidence=confidence,
                 citations=citations,
-                tool_trace=[{"directive": directive, "raw_output": output_text[:300], "intermediate_steps": intermediate_steps}],
+                tool_trace=tool_trace,
+                follow_up_suggestions=follow_ups,
             )
             new_entries.append(entry)
             trace.append({"agent": "NormativeAgent", "sq_id": sq_id, "confidence": confidence})

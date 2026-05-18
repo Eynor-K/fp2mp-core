@@ -8,24 +8,16 @@ from __future__ import annotations
 
 import re
 
+from fp2mp_core.config import get_settings
 from fp2mp_core.state import SubQuery, WikiPage
+from fp2mp_core.text_utils import jaccard as _jaccard
 
 _PROTECTED = {"index.md", "log.md", "redi_fusion", "synthesis", "task_context"}
 
-_PRUNE_CONFIDENCE_THRESHOLD = 0.35
-_PRUNE_MIN_ITERATIONS = 2
-_MERGE_JACCARD_THRESHOLD = 0.75
-
-
-def _tokenize(text: str) -> set[str]:
-    return set(re.findall(r"\w+", text.lower()))
-
-
-def _jaccard(a: str, b: str) -> float:
-    ta, tb = _tokenize(a), _tokenize(b)
-    if not ta or not tb:
-        return 0.0
-    return len(ta & tb) / len(ta | tb)
+_s = get_settings()
+_PRUNE_CONFIDENCE_THRESHOLD = _s.prune_confidence_threshold
+_PRUNE_MIN_ITERATIONS = _s.prune_min_iterations
+_MERGE_JACCARD_THRESHOLD = _s.merge_jaccard_threshold
 
 
 # ---------------------------------------------------------------------------

@@ -30,7 +30,8 @@ def test_init_node_sets_graph_defaults(question):
     assert result["output"] == []
     assert result["iteration"] == 0
     assert result["stop_flag"] is False
-    assert result["max_iterations"] == 6
+    from fp2mp_core.config import get_settings
+    assert result["max_iterations"] == get_settings().max_iterations
 
 
 def test_merge_wiki_upserts_by_page_id():

@@ -6,7 +6,6 @@ Documents in data/normative/ (.pdf, .txt) are ingested lazily on first call.
 
 from __future__ import annotations
 
-import hashlib
 from functools import lru_cache
 from pathlib import Path
 
@@ -45,7 +44,10 @@ def _load_documents(normative_path: Path) -> list:
 def _get_vector_store():
     """Build or load the Chroma vector store (cached for process lifetime)."""
     import chromadb  # type: ignore
-    from langchain_chroma import Chroma  # type: ignore
+    try:
+        from langchain_chroma import Chroma  # type: ignore
+    except ImportError:
+        from langchain_community.vectorstores import Chroma  # type: ignore
     from langchain_community.embeddings import HuggingFaceEmbeddings  # type: ignore
     from langchain_text_splitters import RecursiveCharacterTextSplitter  # type: ignore
 

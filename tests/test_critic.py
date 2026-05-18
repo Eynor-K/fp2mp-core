@@ -42,11 +42,35 @@ def test_critic_force_stops_on_stagnation(sub_queries):
     assert "stagnation" in result["critique"]["reasoning"].lower()
 
 
-def test_critic_stops_when_all_sub_queries_covered(sub_queries):
+def test_critic_stops_when_covered_and_integrative_answer_present(sub_queries):
+    """P2.2 holistic contract: covered sub-queries STOP only when an
+    integrative answer/recommendation for the original question exists."""
     state = _state_with_high_conf_facts(sub_queries)
+    state["output"].append(
+        ConfirmedFact(
+            fact_id="rec", claim="Recommended option X", source_agents=["Mediator"],
+            confidence=0.8, citations=[], limitations=[],
+            sub_query_id=sub_queries[0]["sub_query_id"], is_recommendation=True,
+        )
+    )
     result = critic_node(state)
     assert result["stop_flag"] is True
     assert result["critique"]["action"] == "STOP"
+
+
+def test_critic_continues_when_covered_but_no_integrative_answer(sub_queries):
+    """P2.2: per-sub-query coverage alone is NOT a STOP reason."""
+    state = _state_with_high_conf_facts(sub_queries)  # facts, but no recommendation
+    with patch("fp2mp_core.nodes.critic.call_with_thinking") as mock_thinking:
+        mock_thinking.return_value = (
+            "thinking...",
+            '{"action": "STOP", "question_answered": false, '
+            '"overall_confidence": 0.8, "reasoning": "covered", '
+            '"new_tasks": [], "contradictions": []}'
+        )
+        result = critic_node(state)
+    assert result["critique"]["action"] == "CONTINUE"
+    assert result["stop_flag"] is False
 
 
 def test_critic_continues_when_no_output(sub_queries):
@@ -130,8 +154,9 @@ def test_critic_boundary_confidence_at_threshold(sub_queries):
             confidence=0.7, citations=[], limitations=[], sub_query_id="sq_001"
         ),
         ConfirmedFact(
-            fact_id="f2", claim="Claim at threshold", source_agents=["B"],
-            confidence=0.7, citations=[], limitations=[], sub_query_id="sq_002"
+            fact_id="f2", claim="Recommended option at threshold", source_agents=["B"],
+            confidence=0.7, citations=[], limitations=[], sub_query_id="sq_002",
+            is_recommendation=True,
         ),
     ]
     result = critic_node(state)

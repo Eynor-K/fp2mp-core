@@ -1,7 +1,8 @@
 """
 CodeSpatialAgent — ReAct agent for quantitative and spatial analysis.
 
-Enforces mandatory chain-of-thought: HYPOTHESIS → LIBRARIES CHECK → PLAN → CODE → EXECUTE → INTERPRET.
+Enforces mandatory chain-of-thought: HYPOTHESIS → LIBRARIES CHECK → PLAN → CODE
+→ EXECUTE → INTERPRET.
 Can fetch data from OpenStreetMap via osmnx, public APIs via requests/httpx,
 and geocode addresses via geopy — no local data required.
 """
@@ -13,7 +14,9 @@ from typing import Any
 from langchain_classic.agents import AgentExecutor, create_react_agent
 from langchain_core.prompts import PromptTemplate
 
+from fp2mp_core.failure import assess_confidence
 from fp2mp_core.llm import get_chat_model
+from fp2mp_core.nodes.context import parse_follow_ups
 from fp2mp_core.state import BlackBoard, RawEntry, board_message
 from fp2mp_core.tools.code_exec import (
     check_available_data_tool,
@@ -57,6 +60,12 @@ DATA CHECK interpretation:
 - check_available_data_tool marks directories as "[dir]". A path with "[dir]" or without
   a file extension is a DIRECTORY, not a file. Do not read it with pandas/read_csv.
 - To inspect a directory, call check_available_data_tool("directory_name/**").
+
+RESULT SHARING:
+- After executing code that produces useful intermediate results (coordinates,
+  GeoDataFrame, computed values), save them to data/outputs/<relevant_name>.geojson
+  or .csv using gdf.to_file(...) or df.to_csv(..., index=False).
+- Other agents can read these files in later steps.
 
 NETWORK ERROR RECOVERY:
 - If execute_python_tool raises ConnectionError, timeout, SSL, proxy, or similar network error,
@@ -114,6 +123,15 @@ loc = geolocator.geocode("Pulkovo Airport, Saint Petersburg, Russia")
 lat, lon = loc.latitude, loc.longitude
 ```
 
+CONTEXT USAGE:
+- The input may contain ORIGINAL QUESTION, YOUR SUB-TASK and a CONTEXT block with
+  findings from other agents (including files in data/outputs/). Focus on YOUR
+  SUB-TASK, but use the CONTEXT to build on prior findings and avoid repeating
+  work. Keep the ORIGINAL QUESTION in mind so your result is useful for it.
+- OPTIONAL: if another agent should do a specific concrete next step, add one
+  line after your final answer:
+  FOLLOW_UP: <WebSearchAgent|NormativeAgent|CodeSpatialAgent|BlocksNetAgent> | <task>
+
 You must use the ReAct format exactly. Your first action must be list_available_libraries_tool.
 
 Use exactly this format:
@@ -156,7 +174,12 @@ def _build_agent() -> AgentExecutor:
         agent=agent,
         tools=_TOOLS,
         max_iterations=12,
-        handle_parsing_errors="Use exactly one ReAct step: Thought, Action, Action Input. Do not write Observation yourself.",
+        handle_parsing_errors=(
+            "Use exactly one ReAct step: Thought, Action, Action Input. "
+            "Do not write Observation yourself. "
+            "If you already have enough data from previous Observations, "
+            "write: Thought: I now know the final answer\nFinal Answer: ..."
+        ),
         return_intermediate_steps=True,
         verbose=False,
     )
@@ -191,7 +214,11 @@ def _parse_output(text: str) -> tuple[str, float, list[str]]:
             except ValueError:
                 pass
         elif line.startswith("LIMITATIONS:"):
-            limitations = [lim.strip() for lim in line[len("LIMITATIONS:"):].split(";") if lim.strip()]
+            limitations = [
+                lim.strip()
+                for lim in line[len("LIMITATIONS:"):].split(";")
+                if lim.strip()
+            ]
 
     if not result:
         result = text[:500]
@@ -242,20 +269,41 @@ def code_spatial_agent_node(state: BlackBoard) -> dict[str, Any]:
             intermediate_steps = _format_steps(result.get("intermediate_steps", []))
             answer, confidence, limitations = _parse_output(output_text)
             fallback_observation = _successful_execution_observation(intermediate_steps)
+            tool_trace = [{"intermediate_steps": intermediate_steps}]
             if output_text.startswith("Agent stopped due to") and fallback_observation:
                 answer = f"Code executed successfully. Observation: {fallback_observation}"
                 confidence = max(confidence, 0.65)
                 limitations = [
-                    "The ReAct agent hit its iteration/parsing limit after a successful code execution; result is based on the last successful observation."
+                    "The ReAct agent hit its iteration/parsing limit after a successful "
+                    "code execution; result is based on the last successful observation."
                 ]
+            else:
+                confidence, failed = assess_confidence(output_text, tool_trace, confidence)
+                if failed:
+                    answer = (
+                        "[FAILED] CodeSpatialAgent did not produce a reliable result. "
+                        f"Raw output: {output_text[:400]}"
+                    )
+                    limitations = limitations or [
+                        "Run did not complete successfully (parser / iteration / tool error)."
+                    ]
+
+            content = answer
+            if limitations:
+                content += f"\nLimitations: {'; '.join(limitations)}"
+
+            follow_ups = (
+                [] if answer.startswith("[FAILED]") else parse_follow_ups(output_text)
+            )
 
             entry = board_message(
                 agent="CodeSpatialAgent",
                 iteration=iteration,
                 msg_type="code_result",
-                content=answer + (f"\nLimitations: {'; '.join(limitations)}" if limitations else ""),
+                content=content,
                 sub_query_id=sq_id,
                 confidence=confidence,
+                follow_up_suggestions=follow_ups,
                 tool_trace=[{
                     "directive": directive,
                     "raw_output": output_text[:400],

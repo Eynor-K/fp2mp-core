@@ -86,6 +86,7 @@ def fetch_url_tool(url: str) -> str:
     Fetch and return the text content of a web page (first 3000 characters).
     Use to verify quotes or get full document context after a search.
     """
+    url = url.strip("'\"").strip()
     try:
         resp = httpx.get(url, timeout=_FETCH_TIMEOUT, follow_redirects=True)
         resp.raise_for_status()

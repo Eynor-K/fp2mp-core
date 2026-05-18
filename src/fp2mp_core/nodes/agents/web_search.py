@@ -12,7 +12,9 @@ from typing import Any
 from langchain_classic.agents import AgentExecutor, create_react_agent
 from langchain_core.prompts import PromptTemplate
 
+from fp2mp_core.failure import assess_confidence
 from fp2mp_core.llm import get_chat_model
+from fp2mp_core.nodes.context import parse_follow_ups
 from fp2mp_core.state import BlackBoard, Citation, RawEntry, board_message
 from fp2mp_core.tools.web_search import fetch_url_tool, web_search_tool
 
@@ -31,6 +33,15 @@ Confidence scoring:
 - 0.8+: multiple corroborating sources with direct evidence
 - 0.6-0.8: single credible source or indirect evidence
 - below 0.6: uncertain or proxy evidence
+
+CONTEXT USAGE:
+- The input may contain ORIGINAL QUESTION, YOUR SUB-TASK and a CONTEXT block with
+  findings from other agents. Focus on YOUR SUB-TASK, but use the CONTEXT to build
+  on prior findings and avoid repeating work already done. Keep the ORIGINAL
+  QUESTION in mind so your answer is actually useful for it.
+- OPTIONAL: if another agent should do a specific concrete next step, add one
+  line after your final answer:
+  FOLLOW_UP: <WebSearchAgent|NormativeAgent|CodeSpatialAgent|BlocksNetAgent> | <task>
 
 You must use the ReAct format exactly. Do not write a final answer until you have called web_search_tool at least once.
 
@@ -140,6 +151,17 @@ def web_search_agent_node(state: BlackBoard) -> dict[str, Any]:
             answer, confidence, citations = _parse_output(output_text)
             intermediate_steps = _format_steps(result.get("intermediate_steps", []))
 
+            tool_trace = [{"directive": directive, "raw_output": output_text[:300], "intermediate_steps": intermediate_steps}]
+            confidence, failed = assess_confidence(output_text, tool_trace, confidence)
+            follow_ups: list[dict[str, str]] = []
+            if failed:
+                answer = (
+                    "[FAILED] WebSearchAgent did not produce a reliable answer. "
+                    f"Raw output: {output_text[:400]}"
+                )
+            else:
+                follow_ups = parse_follow_ups(output_text)
+
             entry = board_message(
                 agent="WebSearchAgent",
                 iteration=iteration,
@@ -148,7 +170,8 @@ def web_search_agent_node(state: BlackBoard) -> dict[str, Any]:
                 sub_query_id=sq_id,
                 confidence=confidence,
                 citations=citations,
-                tool_trace=[{"directive": directive, "raw_output": output_text[:300], "intermediate_steps": intermediate_steps}],
+                tool_trace=tool_trace,
+                follow_up_suggestions=follow_ups,
             )
             new_entries.append(entry)
             trace.append({"agent": "WebSearchAgent", "sq_id": sq_id, "confidence": confidence})

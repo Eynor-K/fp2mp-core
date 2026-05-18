@@ -7,29 +7,11 @@ and returns a fusion summary placed into wiki["redi_fusion"].
 
 from __future__ import annotations
 
-import re
 from collections import defaultdict
 
 from fp2mp_core.state import RawEntry, SubQuery, WikiPage
-
-
-def _tokenize(text: str) -> set[str]:
-    return set(re.findall(r"\w+", text.lower()))
-
-
-def _jaccard(a: str, b: str) -> float:
-    ta, tb = _tokenize(a), _tokenize(b)
-    if not ta or not tb:
-        return 0.0
-    return len(ta & tb) / len(ta | tb)
-
-
-def _keyword_overlap(content: str, keywords: list[str]) -> float:
-    if not keywords:
-        return 0.5
-    tokens = _tokenize(content)
-    hits = sum(1 for kw in keywords if kw.lower() in tokens)
-    return hits / len(keywords)
+from fp2mp_core.text_utils import jaccard as _jaccard
+from fp2mp_core.text_utils import keyword_overlap as _keyword_overlap
 
 
 def _deduplicate(entries: list[RawEntry], threshold: float = 0.7) -> list[RawEntry]:
