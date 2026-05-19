@@ -103,19 +103,27 @@ def format_capability_cards(cards: list[dict[str, Any]]) -> str:
     """Format capability cards compactly for prompt injection."""
     blocks = []
     for card in cards:
-        pitfalls = "; ".join(card.get("pitfalls", []))
-        libs = ", ".join(card.get("libs", []))
+        pitfalls = _escape_prompt_braces("; ".join(card.get("pitfalls", [])))
+        libs = _escape_prompt_braces(", ".join(card.get("libs", [])))
         blocks.append(
             "\n".join([
-                f"CARD {card.get('id', '')}: {card.get('name', '')}",
-                f"When: {card.get('when_to_use', '')}",
+                (
+                    f"CARD {_escape_prompt_braces(card.get('id', ''))}: "
+                    f"{_escape_prompt_braces(card.get('name', ''))}"
+                ),
+                f"When: {_escape_prompt_braces(card.get('when_to_use', ''))}",
                 f"Libs: {libs}",
-                f"Snippet:\n{card.get('verified_snippet', '')}",
-                f"I/O: {card.get('io_contract', '')}",
+                f"Snippet:\n{_escape_prompt_braces(card.get('verified_snippet', ''))}",
+                f"I/O: {_escape_prompt_braces(card.get('io_contract', ''))}",
                 f"Pitfalls: {pitfalls}",
             ])
         )
     return "\n\n".join(blocks)
+
+
+def _escape_prompt_braces(value: Any) -> str:
+    """Prevent capability-card examples from becoming prompt template variables."""
+    return str(value).replace("{", "{{").replace("}", "}}")
 
 
 @tool

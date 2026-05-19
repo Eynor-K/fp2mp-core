@@ -13,8 +13,7 @@ import uuid
 from typing import Any
 
 from fp2mp_core.llm import call_with_thinking
-from fp2mp_core.nodes.blackboard import wiki_briefing
-from fp2mp_core.state import BlackBoard, Citation, ConfirmedFact, RawEntry, WikiPage, board_message
+from fp2mp_core.state import BlackBoard, Citation, ConfirmedFact, WikiPage, board_message
 
 _SYSTEM = """\
 You are the MediatorAgent. Your role is to synthesize knowledge from multiple agents
@@ -27,11 +26,14 @@ You have access to:
 Your tasks:
 1. AGREEMENTS: identify where multiple agents corroborate the same claim
 2. CONTRADICTIONS: identify where agents disagree; flag with confidence difference
-3. SYNTHESIS: write a narrative that LEADS with a single direct, committed answer to the question, then supports it with the corroborated facts
+3. SYNTHESIS: write a narrative that LEADS with a single direct, committed
+   answer to the question, then supports it with the corroborated facts
 4. UPDATE OUTPUT: produce new ConfirmedFacts with multi-source attribution
 
 Rules:
-- Record disagreements in the "contradictions" array, but "synthesis_narrative" must still commit to the single best-supported position (weighted by confidence and source agreement) rather than leaving the question open
+- Record disagreements in the "contradictions" array, but "synthesis_narrative"
+  must still commit to the single best-supported position (weighted by confidence
+  and source agreement) rather than leaving the question open
 - Only promote a fact to output if at least 2 independent sources agree OR confidence >= 0.75
 - Attribute each claim to its source agents
 
@@ -72,7 +74,8 @@ def mediator_node(state: BlackBoard) -> dict[str, Any]:
     wiki_summary = "\n\n".join(wiki_content_parts[:12])  # cap context
 
     facts_summary = "\n".join(
-        f"- [{f.get('sub_query_id','?')} conf={f.get('confidence',0):.2f}] {f.get('claim','')[:200]}"
+        f"- [{f.get('sub_query_id','?')} conf={f.get('confidence',0):.2f}] "
+        f"{f.get('claim','')[:200]}"
         for f in output_facts[:20]
     )
 
@@ -94,6 +97,7 @@ Please synthesize the above into a coherent understanding, identify agreements a
 and produce new confirmed facts where multiple sources agree.
 """
 
+    answer_text = ""
     try:
         _thinking, answer_text = call_with_thinking(
             prompt=prompt,
@@ -113,7 +117,7 @@ and produce new confirmed facts where multiple sources agree.
         raw_facts = data.get("new_facts", [])
         contradictions = data.get("contradictions", [])
 
-    except (json.JSONDecodeError, Exception) as exc:
+    except Exception as exc:
         synthesis_narrative = f"Mediator synthesis (parse error: {exc})\n\n{answer_text[:1000]}"
         raw_facts = []
         contradictions = []

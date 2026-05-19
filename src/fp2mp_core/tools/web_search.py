@@ -7,6 +7,7 @@ Fallback: DuckDuckGo (no key required).
 
 from __future__ import annotations
 
+import re
 from functools import lru_cache
 
 import httpx
@@ -17,6 +18,14 @@ from fp2mp_core.llm import get_chat_model
 
 _FETCH_TIMEOUT = 15
 _DISTILL_CHARS = 9000
+_CYRILLIC_RE = re.compile(r"[А-Яа-яЁё]")
+_BAD_SEARCH_MARKERS = (
+    "Search error",
+    "unsupported_country_region_territory",
+    "request_forbidden",
+    "error code: 403",
+    "403",
+)
 
 
 def _get_tavily_client():
@@ -62,6 +71,11 @@ def web_search_tool(query: str, max_results: int = 5) -> str:
     else:
         results = _ddg_search(query, max_results)
 
+    if _looks_like_bad_results(results):
+        rewritten = _rewrite_query(query)
+        if rewritten != query:
+            results = _ddg_search(rewritten, max_results)
+
     if not results:
         return "No results found."
 
@@ -86,8 +100,41 @@ def normative_web_search_tool(query: str, max_results: int = 5) -> str:
     Search for regulatory documents, standards, laws, and normative literature.
     Automatically appends domain hints to improve precision.
     """
-    enriched_query = query + " нормативный документ стандарт закон требование"
+    if _is_cyrillic_query(query):
+        enriched_query = query + " нормативный документ стандарт закон требование"
+    else:
+        enriched_query = query + " official regulation standard guidance policy requirements"
     return web_search_tool.invoke({"query": enriched_query, "max_results": max_results})  # type: ignore[arg-type]
+
+
+def _is_cyrillic_query(query: str) -> bool:
+    return bool(_CYRILLIC_RE.search(query or ""))
+
+
+def _looks_like_bad_results(results: list[dict]) -> bool:
+    if not results:
+        return True
+    useful = 0
+    for result in results:
+        title = str(result.get("title", ""))
+        url = str(result.get("url") or result.get("href") or "")
+        content = str(result.get("content") or result.get("body") or "")
+        haystack = f"{title}\n{url}\n{content}".lower()
+        if any(marker.lower() in haystack for marker in _BAD_SEARCH_MARKERS):
+            continue
+        if url.startswith("http") and (title.strip() or content.strip()):
+            useful += 1
+    return useful == 0
+
+
+def _rewrite_query(query: str) -> str:
+    """Fallback rewrite that avoids locale drift and adds official-source intent."""
+    cleaned = " ".join(str(query or "").split())
+    if not cleaned:
+        return cleaned
+    if _is_cyrillic_query(cleaned):
+        return f"{cleaned} официальные источники документы данные"
+    return f"{cleaned} official sources data policy"
 
 
 @tool

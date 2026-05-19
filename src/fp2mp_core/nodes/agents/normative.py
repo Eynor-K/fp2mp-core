@@ -35,7 +35,8 @@ Confidence:
 - 0.7: found via web search with document name and section
 - 0.5: indirect reference, document not directly accessible
 
-You must use the ReAct format exactly. Do not write a final answer until you have called normative_vector_search_tool at least once.
+You must use the ReAct format exactly. Do not write a final answer until you have
+called normative_vector_search_tool at least once.
 If the local vector search has insufficient evidence, call normative_web_search_tool.
 
 Use exactly this format:
@@ -77,7 +78,10 @@ def _build_agent() -> AgentExecutor:
         agent=agent,
         tools=_TOOLS,
         max_iterations=8,
-        handle_parsing_errors="Use exactly one ReAct step: Thought, Action, Action Input. Do not write Observation yourself.",
+        handle_parsing_errors=(
+            "Use exactly one ReAct step: Thought, Action, Action Input. "
+            "Do not write Observation yourself."
+        ),
         return_intermediate_steps=True,
         verbose=False,
     )
@@ -164,7 +168,11 @@ def normative_agent_node(state: BlackBoard) -> dict[str, Any]:
                 sub_query_id=sq_id,
                 confidence=confidence,
                 citations=citations,
-                tool_trace=[{"directive": directive, "raw_output": output_text[:300], "intermediate_steps": intermediate_steps}],
+                tool_trace=[{
+                    "directive": directive,
+                    "raw_output": output_text[:300],
+                    "intermediate_steps": intermediate_steps,
+                }],
             )
             new_entries.append(entry)
             trace.append({"agent": "NormativeAgent", "sq_id": sq_id, "confidence": confidence})
@@ -173,7 +181,7 @@ def normative_agent_node(state: BlackBoard) -> dict[str, Any]:
                 agent="NormativeAgent",
                 iteration=iteration,
                 msg_type="normative_findings",
-                content=f"Normative search failed: {exc}",
+                content=f"NormativeAgent did not produce usable evidence: {exc}",
                 sub_query_id=sq_id,
                 confidence=0.1,
             )

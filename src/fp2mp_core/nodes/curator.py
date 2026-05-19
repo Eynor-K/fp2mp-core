@@ -38,18 +38,38 @@ _PROMOTE_THRESHOLD = 0.65
 _NORMATIVE_PROMOTE_THRESHOLD = 0.7
 _MIN_CONTENT_LENGTH = 50
 _SKIP_TYPES = {"init", "orchestrator_directive", "critique", "curator_summary"}
+_FAILED_CONTENT_PREFIXES = (
+    "Vector search error",
+    "Search failed",
+    "WebSearchAgent did not produce usable evidence",
+    "Failed to fetch",
+    "Failed to research",
+    "Research fetch failed",
+    "Normative search failed",
+    "NormativeAgent did not produce usable evidence",
+    "CodeSpatialAgent did not complete",
+    "CodeSpatialAgent low-confidence augmentation only",
+)
 
 _builder = WikiPageBuilder()
 _fusion = ReDIFusion()
 
 
 def _get_processable(raw_data: list[RawEntry], current_iteration: int) -> list[RawEntry]:
-    """Return entries eligible for curation: not system messages, from current or prior iterations."""
+    """Return non-system, non-failed entries eligible for curation."""
     return [
         e for e in raw_data
         if e.get("type") not in _SKIP_TYPES
         and e.get("iteration", 0) <= current_iteration
+        and not _is_failed_entry(e)
     ]
+
+
+def _is_failed_entry(entry: RawEntry) -> bool:
+    content = entry.get("content", "").strip()
+    if not content:
+        return True
+    return content.startswith(_FAILED_CONTENT_PREFIXES)
 
 
 def _should_promote(entry: RawEntry) -> bool:
@@ -57,6 +77,8 @@ def _should_promote(entry: RawEntry) -> bool:
     confidence = entry.get("confidence", 0.0)
     content = entry.get("content", "")
 
+    if _is_failed_entry(entry):
+        return False
     if len(content) < _MIN_CONTENT_LENGTH:
         return False
     if agent_type == "normative_findings":
@@ -67,8 +89,13 @@ def _should_promote(entry: RawEntry) -> bool:
 
 
 def _entry_to_fact(entry: RawEntry) -> ConfirmedFact:
+    fact_suffix = "_".join([
+        entry.get("agent", "x"),
+        entry.get("sub_query_id", "x"),
+        uuid.uuid4().hex[:6],
+    ])
     return ConfirmedFact(
-        fact_id=f"fact_{entry.get('agent', 'x')}_{entry.get('sub_query_id', 'x')}_{uuid.uuid4().hex[:6]}",
+        fact_id=f"fact_{fact_suffix}",
         claim=entry.get("content", "")[:500],
         source_agents=[entry.get("agent", "unknown")],
         confidence=entry.get("confidence", 0.0),
@@ -117,7 +144,10 @@ def wiki_curator_node(state: BlackBoard) -> dict[str, Any]:
                 agent="WikiCurator",
                 action=action,
                 page_id=page_id,
-                summary=f"conf={new_page.get('confidence', 0.0):.2f} | {entry.get('content', '')[:100]}",
+                summary=(
+                    f"conf={new_page.get('confidence', 0.0):.2f} | "
+                    f"{entry.get('content', '')[:100]}"
+                ),
             )
         )
 

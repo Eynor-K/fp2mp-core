@@ -209,7 +209,7 @@ def web_search_agent_node(state: BlackBoard) -> dict[str, Any]:
                 agent="WebSearchAgent",
                 iteration=iteration,
                 msg_type="web_findings",
-                content=f"Search failed: {exc}",
+                content=f"WebSearchAgent did not produce usable evidence: {exc}",
                 sub_query_id=sq_id,
                 confidence=0.1,
             )

@@ -6,7 +6,6 @@ Documents in data/normative/ (.pdf, .txt) are ingested lazily on first call.
 
 from __future__ import annotations
 
-import hashlib
 from functools import lru_cache
 from pathlib import Path
 
@@ -44,10 +43,13 @@ def _load_documents(normative_path: Path) -> list:
 @lru_cache(maxsize=1)
 def _get_vector_store():
     """Build or load the Chroma vector store (cached for process lifetime)."""
-    import chromadb  # type: ignore
-    from langchain_chroma import Chroma  # type: ignore
-    from langchain_community.embeddings import HuggingFaceEmbeddings  # type: ignore
-    from langchain_text_splitters import RecursiveCharacterTextSplitter  # type: ignore
+    try:
+        import chromadb  # type: ignore
+        from langchain_chroma import Chroma  # type: ignore
+        from langchain_community.embeddings import HuggingFaceEmbeddings  # type: ignore
+        from langchain_text_splitters import RecursiveCharacterTextSplitter  # type: ignore
+    except ImportError as exc:
+        raise RuntimeError(f"local normative vector backend unavailable: {exc}") from exc
 
     settings = get_settings()
     norm_path = settings.normative_db_path
@@ -108,5 +110,10 @@ def normative_vector_search_tool(query: str, k: int = 4) -> str:
                 f"{i}. [Score: {score:.3f}] **{source}{page_str}**\n{doc.page_content[:500]}\n"
             )
         return "\n".join(lines)
+    except RuntimeError as exc:
+        return (
+            "No relevant normative documents found in local database. "
+            f"Local vector backend unavailable ({exc}); continue with web search."
+        )
     except Exception as exc:
         return f"Vector search error: {exc}"

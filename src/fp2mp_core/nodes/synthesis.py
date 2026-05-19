@@ -13,6 +13,19 @@ from fp2mp_core.config import get_settings
 from fp2mp_core.llm import get_chat_model
 from fp2mp_core.state import BlackBoard
 
+_FAILED_CLAIM_PREFIXES = (
+    "Vector search error",
+    "Search failed",
+    "WebSearchAgent did not produce usable evidence",
+    "Failed to fetch",
+    "Failed to research",
+    "Research fetch failed",
+    "Normative search failed",
+    "NormativeAgent did not produce usable evidence",
+    "CodeSpatialAgent did not complete",
+    "CodeSpatialAgent low-confidence augmentation only",
+)
+
 _SYNTHESIS_SYSTEM = """\
 You are producing the FINAL answer to an open-ended question. Your job is to
 COMMIT to a concrete, direct answer while showing high-quality reasoning.
@@ -45,15 +58,20 @@ Output (markdown):
 7. **Uncertainty** — material uncertainty, confidence, and what remains unstable
 8. **Knowledge Integration** — connect facts, constraints, and domain knowledge
    into a robust answer; this is about robustness of the answer itself
-9. **Reflection** — reasoning-level self-assessment, not domain hedging. Include:
-   alternative framings: 1-2 frames considered and rejected, and how the conclusion
-   would change if a rejected frame were correct; calibrated confidence: 2-3 load-
-   bearing claims, each with confidence and exactly where it may be wrong; method
-   or pipeline bias: biases introduced by the evidence-generation method itself
-   (for example source-type skew, supply-vs-demand skew, measurement/proxy skew),
-   not only domain uncertainty; weakest link and highest-leverage gap: the weakest
-   reasoning link and the one item of work or information most likely to change
-   the conclusion; residual risks if acting on the answer as written.
+9. **Reflection** — reasoning-level self-assessment, not domain hedging and not
+   another uncertainty section. It must explicitly include: rejected alternative
+   framings and what would break/change if one were true; calibrated confidence
+   for 2-3 load-bearing claims plus exactly where each may be wrong; method or
+   pipeline bias introduced by evidence generation/selection itself (source-type
+   skew, search/retrieval skew, measurement/proxy skew, agent-routing skew), not
+   only subject-matter uncertainty; weakest reasoning link and the highest-leverage
+   missing work or information; residual risks if acting on the answer as written.
+
+Rubric alignment: maximize all eight benchmark dimensions without adding filler:
+framing, decomposition, diversity of candidate views, coherence, justification,
+uncertainty handling, knowledge integration, and metacognition. Do not let the
+Reflection section replace the answer; it should inspect the reasoning that led
+to the committed answer.
 
 Stay factual and grounded in the provided facts. The answer must remain
 committed regardless of the question's domain. Use neutral, substantive language;
@@ -65,6 +83,16 @@ You are a strict critic of a final-answer draft. Evaluate whether the draft
 maximizes these dimensions without weakening commitment: framing, decomposition,
 diversity of candidate views, coherence, justification, uncertainty, knowledge
 integration, and metacognition.
+
+Inspect every dimension explicitly:
+- framing: the decision/problem frame is precise and fits the question.
+- decomposition: the answer breaks the problem into useful analytical parts.
+- diversity: it compares genuinely different candidate views/options/paths.
+- coherence: sections connect into one non-contradictory answer.
+- justification: recommendations follow from evidence, trade-offs, numbers, and constraints.
+- uncertainty handling: uncertainty is material, bounded, and linked to actions.
+- knowledge integration: facts, constraints, and domain knowledge are synthesized.
+- metacognition: section 9 evaluates the reasoning process itself.
 
 Metacognition is a hard gate. Explicitly inspect section 9, **Reflection**,
 against this checklist:
@@ -81,12 +109,17 @@ against this checklist:
 Flag any failure as a metacognition defect. Do not relax the other dimensions;
 the answer must remain committed, direct, and evidence-grounded.
 
-Return concise, actionable critique bullets only.
+Return concise, actionable critique bullets only. Name weak dimensions using the
+dimension names above so the refiner can target them.
 """
 
 _REFINE_SYSTEM = """\
 You are refining the final answer after critique. Preserve the committed direct
 answer and improve the draft against the critique.
+
+Treat the critique as a rubric repair list across the eight dimensions: framing,
+decomposition, diversity, coherence, justification, uncertainty handling,
+knowledge integration, and metacognition. Strengthen every flagged weak dimension.
 
 If the critique flags metacognition, deepen section 9, **Reflection**, by adding
 the missing checklist elements: alternative framings, calibrated confidence for
@@ -104,7 +137,7 @@ Return only the final markdown answer with all nine sections.
 def final_synthesis_node(state: BlackBoard) -> dict[str, Any]:
     """LangGraph node — produces the final answer."""
     question = state.get("question", "")
-    output_facts = state.get("output", [])
+    output_facts = [f for f in state.get("output", []) if not _is_failed_claim(f.get("claim", ""))]
     wiki = state.get("wiki", {})
     critique = state.get("critique", {})
 
@@ -181,6 +214,10 @@ def _response_text(response: Any) -> str:
     return response.content if hasattr(response, "content") else str(response)
 
 
+def _is_failed_claim(text: str) -> bool:
+    return str(text or "").strip().startswith(_FAILED_CLAIM_PREFIXES)
+
+
 def _run_synthesis_chain(llm: Any, synthesis_prompt: str) -> str:
     draft_response = llm.invoke([
         {"role": "system", "content": _SYNTHESIS_SYSTEM},
@@ -195,7 +232,9 @@ Original synthesis prompt:
 Draft answer:
 {draft}
 
-Critique the draft. Treat metacognition as a strict gate: if **Reflection** is
+Critique the draft against all eight benchmark dimensions: framing, decomposition,
+diversity, coherence, justification, uncertainty handling, knowledge integration,
+and metacognition. Treat metacognition as a strict gate: if **Reflection** is
 domain reflection rather than reasoning-level self-assessment, lacks rejected
 framings, lacks calibrated confidence for each load-bearing claim, lacks
 method/pipeline bias, or lacks weakest-link/highest-leverage-gap analysis, flag
@@ -221,7 +260,9 @@ Critique:
 Refine the draft into the final answer. If metacognition was flagged, deepen
 only section 9, **Reflection**, with the missing reasoning-level elements. Do
 not trim the other eight sections; this is a Pareto improvement, not a
-rebalancing. Keep the Direct Answer committed and avoid fail-closed language.
+rebalancing. If any of the other seven dimensions were flagged, strengthen the
+corresponding section while preserving its role. Keep the Direct Answer committed
+and avoid fail-closed language.
 """
     refine_response = llm.invoke([
         {"role": "system", "content": _REFINE_SYSTEM},
@@ -236,6 +277,7 @@ def _fallback_answer(
     contradictions: list[str],
     overall_conf: float,
 ) -> str:
+    facts = [f for f in facts if not _is_failed_claim(f.get("claim", ""))]
     best_fact = max(facts, key=lambda x: x.get("confidence", 0), default={})
     best_claim = (
         best_fact.get("claim")

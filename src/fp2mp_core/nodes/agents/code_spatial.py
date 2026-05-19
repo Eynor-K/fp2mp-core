@@ -53,7 +53,7 @@ Workflow:
 Location guardrail:
 - If the task names a place, use only that explicit place as spatial scope.
 - If the task does not name a place, do not substitute placeholders such as
-  "region X", "{place}", or examples from cards. Either infer a real location
+  "region X", "<place>", or examples from cards. Either infer a real location
   from the task text or finish with LIMITATIONS: location not specified.
 - NUMERIC SELF-CHECK is mandatory and must state what place/scope and units the
   number belongs to. CONFIDENCE is mandatory.

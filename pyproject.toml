@@ -29,6 +29,7 @@ dependencies = [
     "pypdf>=4.0",
     # Vector store (normative RAG)
     "chromadb>=0.5.0",
+    "langchain-chroma>=0.1.0",
     "sentence-transformers>=3.0.0",
     # Spatial analysis and OSM data (required for CodeSpatialAgent)
     "osmnx>=2.0.0",
