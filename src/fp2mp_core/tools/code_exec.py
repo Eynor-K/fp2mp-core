@@ -12,9 +12,12 @@ Security model:
 from __future__ import annotations
 
 import ast
+import difflib
 import importlib
+import inspect
 import subprocess
 import sys
+import tempfile
 import textwrap
 from pathlib import Path
 
@@ -43,6 +46,18 @@ _ALLOWED_DATA_LIBRARIES = [
     "pathlib", "re", "datetime",
     "networkx", "rtree",
 ]
+
+_API_CHECK_MODULES = {
+    "osmnx",
+    "geopandas",
+    "pandas",
+    "networkx",
+    "shapely",
+    "numpy",
+    "geopy",
+    "requests",
+    "httpx",
+}
 
 
 def _strip_markdown_code_fence(code: str) -> str:
@@ -125,6 +140,94 @@ def _ast_safety_check(code: str) -> str | None:
     return None
 
 
+def _import_aliases(tree: ast.AST) -> dict[str, str]:
+    aliases: dict[str, str] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                root = alias.name.split(".")[0]
+                if root in _API_CHECK_MODULES:
+                    aliases[alias.asname or root] = alias.name
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            root = node.module.split(".")[0]
+            if root in _API_CHECK_MODULES:
+                for alias in node.names:
+                    if alias.name != "*":
+                        aliases[alias.asname or alias.name] = f"{node.module}.{alias.name}"
+    return aliases
+
+
+def _resolve_dotted_name(dotted_name: str) -> object:
+    parts = dotted_name.split(".")
+    module = importlib.import_module(parts[0])
+    obj: object = module
+    for part in parts[1:]:
+        obj = getattr(obj, part)
+    return obj
+
+
+def _api_existence_check(code: str) -> str | None:
+    """Catch hallucinated module.attr calls before executing code."""
+    try:
+        tree = ast.parse(code)
+    except SyntaxError as exc:
+        return f"Syntax error: {exc}"
+
+    aliases = _import_aliases(tree)
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Attribute) or not isinstance(node.value, ast.Name):
+            continue
+        alias = node.value.id
+        if alias not in aliases:
+            continue
+        dotted_base = aliases[alias]
+        root = dotted_base.split(".")[0]
+        if root not in _API_CHECK_MODULES:
+            continue
+        try:
+            obj = _resolve_dotted_name(dotted_base)
+        except Exception:
+            continue
+        if hasattr(obj, node.attr):
+            continue
+        suggestions = difflib.get_close_matches(node.attr, dir(obj), n=3)
+        hint = f" Did you mean: {', '.join(suggestions)}?" if suggestions else ""
+        return f"API check failed: '{dotted_base}.{node.attr}' does not exist.{hint}"
+    return None
+
+
+def _ruff_pyflakes_check(code: str) -> str | None:
+    """Run ruff F rules when available; skip if ruff is not installed."""
+    wrapped = f"DATA_DIR = {_DATA_DIR!r}\n" + code
+    try:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "snippet.py"
+            path.write_text(wrapped, encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, "-m", "ruff", "check", "--select", "F", str(path)],
+                capture_output=True,
+                text=True,
+                timeout=20,
+            )
+    except Exception:
+        return None
+
+    combined = (result.stdout + result.stderr).strip()
+    if result.returncode == 0:
+        return None
+    if "No module named ruff" in combined:
+        return None
+    return "Pyflakes check failed before execution:\n" + combined[:1200]
+
+
+def _pre_execution_check(code: str) -> str | None:
+    for check in (_ast_safety_check, _api_existence_check, _ruff_pyflakes_check):
+        error = check(code)
+        if error:
+            return error
+    return None
+
+
 def _execute_subprocess(code: str) -> str:
     """Execute code in a subprocess with network access."""
     wrapped = textwrap.dedent(f"""\
@@ -184,9 +287,9 @@ def execute_python_tool(code: str) -> str:
     Returns output as string (up to 4000 characters).
     """
     code = _print_last_expression(_strip_markdown_code_fence(code))
-    error = _ast_safety_check(code)
+    error = _pre_execution_check(code)
     if error:
-        return f"Security check failed: {error}"
+        return f"Validation failed: {error}"
 
     settings = get_settings()
     if settings.e2b_api_key:
@@ -195,6 +298,34 @@ def execute_python_tool(code: str) -> str:
             return result
 
     return _execute_subprocess(code)
+
+
+@tool
+def run_validated_python(code: str) -> str:
+    """
+    Validate a Python snippet with safety, API-existence, and pyflakes checks,
+    then execute it. Prefer this over execute_python_tool for CodeSpatialAgent.
+    """
+    return execute_python_tool.invoke({"code": code})
+
+
+@tool
+def inspect_api_tool(dotted_name: str) -> str:
+    """
+    Inspect an installed Python object by dotted name, returning signature and docstring.
+    Example: inspect_api_tool("osmnx.features_from_place").
+    """
+    try:
+        obj = _resolve_dotted_name(dotted_name.strip())
+    except Exception as exc:
+        return f"Inspection failed: {exc}"
+
+    try:
+        signature = str(inspect.signature(obj))
+    except Exception:
+        signature = "(signature unavailable)"
+    doc = inspect.getdoc(obj) or ""
+    return f"{dotted_name}{signature}\n\n{doc[:1200]}"
 
 
 @tool
@@ -239,8 +370,9 @@ def list_available_libraries_tool() -> str:
         available = []
         for lib in libs:
             try:
-                importlib.import_module(lib)
-                available.append(lib)
+                module = importlib.import_module(lib)
+                version = getattr(module, "__version__", "version unknown")
+                available.append(f"{lib} ({version})")
             except ImportError:
                 available.append(f"{lib} [NOT INSTALLED]")
         lines.append(f"{category}: {', '.join(available)}")

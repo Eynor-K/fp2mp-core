@@ -1,0 +1,10 @@
+{
+  "id": "wikidata_sparql_public_stats",
+  "name": "Wikidata SPARQL public statistics",
+  "when_to_use": "Fetch keyless public facts such as population, area, country, coordinates, or administrative relationships when OSM is not the right source.",
+  "libs": ["requests", "pandas"],
+  "verified_snippet": "import requests\n\nquery = '''\nSELECT ?population WHERE {\n  wd:Q656 wdt:P1082 ?population .\n}\nLIMIT 1\n'''\nurl = 'https://query.wikidata.org/sparql'\nparams = {'query': query, 'format': 'json'}\nheaders = {'User-Agent': 'fp2mp-core/0.1'}\nr = requests.get(url, params=params, headers=headers, timeout=30)\nr.raise_for_status()\ndata = r.json()\nvalues = data['results']['bindings']\nprint(values[0]['population']['value'] if values else 'no_result')\nprint('source_url=' + r.url)",
+  "io_contract": "Input: SPARQL query. Output: values plus source_url for provenance. Always print the URL used.",
+  "pitfalls": ["Use a User-Agent header.", "Wikidata identifiers must be known or discovered first.", "Treat values as secondary-source public data."],
+  "lib_versions": {"requests": ">=2.32"}
+}

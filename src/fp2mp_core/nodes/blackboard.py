@@ -6,22 +6,15 @@ All agents read from the BlackBoard via the helper functions defined here.
 
 from __future__ import annotations
 
+import re
 import uuid
 from typing import Any
 
 from fp2mp_core.config import get_settings
 from fp2mp_core.redi import ReDIDecomposer, ReDIEnricher
-from fp2mp_core.state import (
-    BlackBoard,
-    RawEntry,
-    SubQuery,
-    Task,
-    WikiPage,
-    board_message,
-)
+from fp2mp_core.state import BlackBoard, SubQuery, Task, WikiPage, board_message
 from fp2mp_core.wiki.index import build_index
 from fp2mp_core.wiki.log import make_initial_log_page
-
 
 # ---------------------------------------------------------------------------
 # Initial state node (START -> init -> redi_decompose)
@@ -49,6 +42,7 @@ def init_node(state: BlackBoard) -> dict[str, Any]:
         "errors": [],
         "stagnation_count": 0,
         "progress_delta": 0,
+        "synthesis_refine": state.get("synthesis_refine", settings.synthesis_refine),
     }
 
 
@@ -66,6 +60,7 @@ def redi_decompose_node(state: BlackBoard) -> dict[str, Any]:
 
     sub_queries = decomposer(question)
     sub_queries = enricher.enrich_all(sub_queries)
+    sub_queries = _ensure_code_spatial_sub_query(question, sub_queries)
 
     return {
         "redi_decomposition": sub_queries,
@@ -152,6 +147,94 @@ def _modality_to_agent(modality: str) -> str:
         "code": "CodeSpatialAgent",
         "any": "CodeSpatialAgent",
     }.get(modality, "CodeSpatialAgent")
+
+
+def _ensure_code_spatial_sub_query(question: str, sub_queries: list[SubQuery]) -> list[SubQuery]:
+    """Ensure the pipeline gets at least one quantitative spatial augmentation attempt."""
+    if any(sq.get("search_modality") == "code" for sq in sub_queries):
+        return sub_queries
+
+    place = _extract_named_place(question)
+    if place:
+        text = (
+            f"Compute one or more quantitative/spatial indicators for {place} "
+            "and explain how they should inform the answer. Use only this explicit "
+            f"place as the spatial scope. Original question: {question}"
+        )
+    else:
+        text = (
+            "Identify quantitative indicators relevant to the question, but do not "
+            "invent a concrete place. If a calculation requires a location, state "
+            "LIMITATIONS: location not specified and provide a low-confidence generic "
+            f"measurement plan instead. Original question: {question}"
+        )
+
+    code_sq = SubQuery(
+        sub_query_id="sq_code_support",
+        text=text,
+        intent_aspect="quantitative spatial support",
+        search_modality="code",
+        independence=True,
+        enriched_variants=[],
+        keywords=[],
+        domain_hints=[],
+    )
+    return [code_sq, *sub_queries]
+
+
+def _extract_named_place(question: str) -> str | None:
+    """Extract benchmark-style leading place: '<location>. <question>' conservatively."""
+    first, sep, rest = question.strip().partition(".")
+    if not sep or not rest.strip():
+        return None
+
+    candidate = first.strip(" \t\n\r'\"")
+    if not candidate or len(candidate) > 80 or "?" in candidate:
+        return None
+
+    lower = candidate.lower()
+    question_starts = (
+        "what ",
+        "how ",
+        "why ",
+        "when ",
+        "where ",
+        "which ",
+        "should ",
+        "can ",
+        "is ",
+        "are ",
+        "какие ",
+        "как ",
+        "почему ",
+        "где ",
+        "нужно ",
+    )
+    if lower.startswith(question_starts):
+        return None
+
+    words = re.findall(r"[\wА-Яа-яЁё-]+", candidate)
+    if not words or len(words) > 8:
+        return None
+
+    has_location_hint = "," in candidate or any(
+        token in lower
+        for token in (
+            "city",
+            "district",
+            "region",
+            "oblast",
+            "район",
+            "город",
+            "область",
+            "край",
+            "республика",
+        )
+    )
+    has_capitalized_word = any(word[:1].isupper() for word in words)
+    if has_location_hint or (has_capitalized_word and len(words) <= 5):
+        return candidate
+    return None
 
 
 def wiki_briefing(state: BlackBoard, limit: int = 3000) -> str:

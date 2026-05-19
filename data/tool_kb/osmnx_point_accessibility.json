@@ -1,0 +1,10 @@
+{
+  "id": "osmnx_point_accessibility_v2",
+  "name": "Point-based accessibility and nearby POIs",
+  "when_to_use": "Estimate what is reachable around a geocoded address or point, count nearby POIs/buildings, or make a small-radius fallback when place-wide OSM queries are too slow.",
+  "libs": ["osmnx", "networkx", "geopy"],
+  "verified_snippet": "import osmnx as ox\n\nox.settings.use_cache = True\nox.settings.requests_timeout = 60\nquery = '{place_or_address}'\nlat, lon = ox.geocode(query)\npoint = (lat, lon)\nG = ox.graph_from_point(point, dist=1000, network_type='walk', simplify=True)\ntags = {'amenity': True}\npois = ox.features_from_point(point, tags=tags, dist=1000)\nprint(f'lat={lat:.6f}, lon={lon:.6f}')\nprint(f'walk_nodes_1km={G.number_of_nodes()}')\nprint(f'walk_edges_1km={G.number_of_edges()}')\nprint(f'amenities_1km={len(pois)}')",
+  "io_contract": "Input: address/place query and radius in meters. Output: geocoded coordinate, network node/edge counts, nearby feature count.",
+  "pitfalls": ["osmnx.geocode returns (lat, lon); nearest_nodes expects lon, lat.", "Use graph_from_point for dist; graph_from_place has no dist parameter.", "Counts are OSM-derived and should be described as approximate."],
+  "lib_versions": {"osmnx": ">=2.0"}
+}

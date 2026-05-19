@@ -86,6 +86,16 @@ def critic_node(state: BlackBoard) -> dict[str, Any]:
         critique = _build_force_stop_critique(state, f"max_iterations={max_iterations} reached")
     elif stagnation >= 2:
         critique = _build_force_stop_critique(state, f"stagnation_count={stagnation} >= 2")
+    elif _code_support_pending(state):
+        critique = CritiqueResult(
+            action="CONTINUE",
+            coverage=coverage_from_sub_queries(state),
+            overall_confidence=0.3,
+            reasoning="Quantitative code support has not run yet; continue before stopping.",
+            new_tasks=[],
+            contradictions=[],
+            force_stop=False,
+        )
     else:
         critique = _run_thinking_critique(state, iteration)
 
@@ -139,6 +149,17 @@ def critic_node(state: BlackBoard) -> dict[str, Any]:
     }
 
 
+def _code_support_pending(state: BlackBoard) -> bool:
+    sub_queries = state.get("redi_decomposition", [])
+    if not any(sq.get("sub_query_id") == "sq_code_support" for sq in sub_queries):
+        return False
+    return not any(
+        entry.get("agent") == "CodeSpatialAgent"
+        and entry.get("sub_query_id") == "sq_code_support"
+        for entry in state.get("raw_data", [])
+    )
+
+
 def _run_thinking_critique(state: BlackBoard, iteration: int) -> CritiqueResult:
     coverage = coverage_from_sub_queries(state)
     output = state.get("output", [])
@@ -162,7 +183,8 @@ def _run_thinking_critique(state: BlackBoard, iteration: int) -> CritiqueResult:
         f"- {sq_id}: {status}" for sq_id, status in coverage.items()
     )
     facts_summary = "\n".join(
-        f"- [{f.get('sub_query_id','?')} conf={f.get('confidence',0):.2f}] {f.get('claim','')[:200]}"
+        f"- [{f.get('sub_query_id','?')} conf={f.get('confidence',0):.2f}] "
+        f"{f.get('claim','')[:200]}"
         for f in output[:15]
     )
     sq_texts = "\n".join(

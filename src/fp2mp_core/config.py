@@ -28,6 +28,7 @@ class Settings:
     e2b_api_key: str = ""
 
     max_iterations: int = 6
+    synthesis_refine: bool = True
     normative_db_path: Path = field(default_factory=lambda: NORMATIVE_DIR)
     wiki_persist_dir: Path | None = None
     log_level: str = "INFO"
@@ -52,6 +53,8 @@ def get_settings() -> Settings:
         tavily_api_key=os.getenv("TAVILY_API_KEY", ""),
         e2b_api_key=os.getenv("E2B_API_KEY", ""),
         max_iterations=int(os.getenv("MAX_ITERATIONS", "6")),
+        synthesis_refine=os.getenv("SYNTHESIS_REFINE", "1").strip().lower()
+        not in {"0", "false", "no", "off"},
         normative_db_path=Path(norm_path_str),
         wiki_persist_dir=wiki_dir,
         log_level=os.getenv("LOG_LEVEL", "INFO"),

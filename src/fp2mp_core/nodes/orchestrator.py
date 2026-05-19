@@ -195,7 +195,10 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
         return _route_to_critic(state, iteration, reason="stagnation")
 
     # --- Get pending tasks ---
-    pending_tasks = [t for t in all_tasks if t.get("status") == "pending"]
+    pending_tasks = sorted(
+        [t for t in all_tasks if t.get("status") == "pending"],
+        key=lambda t: (0 if t.get("sub_query_id") == "sq_code_support" else 1),
+    )
     if not pending_tasks:
         # All tasks done — trigger Mediator if enough results, else go to Critic
         result_counts = _count_results_by_type(raw_data)
@@ -222,7 +225,10 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
         sq_id = task.get("sub_query_id", "")
         sq = sub_query_index.get(sq_id, {})
         tried_agents = _tried_agents_for_sub_query(all_tasks, raw_data, sq_id)
-        agent = _llm_choose_agent(sq, state, exclude_agents=tried_agents)
+        if sq.get("search_modality") == "code" and "CodeSpatialAgent" not in tried_agents:
+            agent = "CodeSpatialAgent"
+        else:
+            agent = _llm_choose_agent(sq, state, exclude_agents=tried_agents)
         pair = (agent, sq_id)
 
         if pair in done_pairs:

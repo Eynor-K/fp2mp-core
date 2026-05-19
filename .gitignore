@@ -50,6 +50,7 @@ $RECYCLE.BIN/
 # === Data ===
 # Normative vector DB (generated at runtime via build_normative_db)
 data/normative/
+overlief/
 
 # === Claude Code ===
 .claude/

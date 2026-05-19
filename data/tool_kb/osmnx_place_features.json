@@ -1,0 +1,10 @@
+{
+  "id": "osmnx_place_features_v2",
+  "name": "OSM features by named place",
+  "when_to_use": "Count or list OSM POIs, buildings, pedestrian streets, green spaces, amenities, or other tagged features inside a named city, district, or neighborhood.",
+  "libs": ["osmnx", "geopandas", "pandas"],
+  "verified_snippet": "import osmnx as ox\n\nox.settings.use_cache = True\nox.settings.requests_timeout = 60\nplace = '{place}'\ntags = {'amenity': True}\ngdf = ox.features_from_place(place, tags=tags)\nprint(f'features_count={len(gdf)}')\ncols = [c for c in ['name', 'amenity'] if c in gdf.columns]\nif cols and len(gdf):\n    print(gdf[cols].drop_duplicates().head(20).to_string(index=False))",
+  "io_contract": "Input: named place string and OSM tags dict. Output: count and optional table of matching features. Use printed values as measured OSM observations.",
+  "pitfalls": ["Use osmnx.features_from_place, not deprecated geometries_from_place.", "OSM coverage varies by place; absence in OSM is not proof of real absence.", "Large places can be slow; narrow tags or switch to features_from_point with dist."],
+  "lib_versions": {"osmnx": ">=2.0"}
+}

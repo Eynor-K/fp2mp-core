@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import operator
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Annotated, Any
 
 from langchain_core.messages import BaseMessage
@@ -193,6 +193,7 @@ class BlackBoard(TypedDict, total=False):
     stop_flag: bool
     critique: CritiqueResult
     final_answer: str | None
+    synthesis_refine: bool
 
     # Orchestration
     orchestrator_directives: list[OrchestratorDirective]
@@ -250,4 +251,4 @@ class BaseState(TypedDict):
 
 
 def now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+    return datetime.now(UTC).isoformat(timespec="seconds")

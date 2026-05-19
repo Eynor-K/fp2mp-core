@@ -1,0 +1,10 @@
+{
+  "id": "osmnx_network_metrics_v2",
+  "name": "Street network metrics for named place",
+  "when_to_use": "Measure walk or drive network size, intersection density proxy, connectivity, node/edge counts, or circuity for a named place.",
+  "libs": ["osmnx", "networkx"],
+  "verified_snippet": "import osmnx as ox\n\nox.settings.use_cache = True\nox.settings.requests_timeout = 60\nplace = '{place}'\nG = ox.graph_from_place(place, network_type='walk', simplify=True)\nG_proj = ox.project_graph(G)\narea = ox.geocode_to_gdf(place).to_crs(G_proj.graph['crs']).geometry.area.iloc[0]\nnodes = G.number_of_nodes()\nedges = G.number_of_edges()\narea_km2 = area / 1_000_000\nprint(f'nodes={nodes}')\nprint(f'edges={edges}')\nprint(f'area_km2={area_km2:.2f}')\nprint(f'nodes_per_km2={nodes / area_km2:.1f}')",
+  "io_contract": "Input: named place and network_type. Output: node count, edge count, area_km2, nodes_per_km2. Interpret nodes_per_km2 as a rough walk-network connectivity proxy.",
+  "pitfalls": ["graph_from_place does not accept dist; use graph_from_point for distance buffers.", "Project before area calculations.", "Boundary geocoding can fail for ambiguous place names; add city/country."],
+  "lib_versions": {"osmnx": ">=2.0", "networkx": ">=3.0"}
+}
