@@ -1,0 +1,483 @@
+{
+  "40620398de495d51964c9da13cc67a4e": {
+    "solution_id": "6c9fc2d263fe5ff0a40617df016d10c5",
+    "model": "deepseek/deepseek-v4-flash",
+    "content": [
+      {
+        "framing": {
+          "score": 1,
+          "evidence": "The solution does not develop a regional mobility strategy as requested. It explicitly states that no data could be retrieved and no analysis performed, resulting in no actionable strategy. This constitutes a failure to address the problem, making the solution very poor or effectively missing.",
+          "commentary": "The solution is essentially a report of failure rather than a strategic proposal. Even acknowledging limitations is insufficient; the task requires a concrete strategy. Hence, the lowest score is appropriate."
+        },
+        "decomposition": {
+          "score": 1,
+          "evidence": "The solution lacks any substantive content: no evidence-based findings, no quantitative analysis, no regulatory constraints, and no proposed actions. It only lists open questions and recommends a new investigation. This is a complete absence of the required output.",
+          "commentary": "A mobility strategy must include at least some recommendations or trade-offs. The provided text is a meta-commentary on the inability to produce a strategy, which does not fulfill the problem statement."
+        },
+        "diversity": {
+          "score": 1,
+          "evidence": "No diverse perspectives or alternative solutions are considered. The solution is a single narrative of failure with no attempt to propose any strategy, even a hypothetical one.",
+          "commentary": "The problem asks for a strategy balancing multiple factors. The solution does not even attempt to balance them; it simply states that no information is available."
+        },
+        "coherence": {
+          "score": 1,
+          "evidence": "The solution is coherent in its description of failure, but that coherence does not serve the problem. It is internally consistent but irrelevant to the task.",
+          "commentary": "Coherence alone is insufficient; the content must be relevant. Here, the coherence is about why the strategy cannot be developed, which is not the same as developing a strategy."
+        },
+        "justification": {
+          "score": 1,
+          "evidence": "The solution provides no justification for any strategic choices because no choices are made. It only justifies why no strategy could be produced, which is not a justification for a strategy.",
+          "commentary": "The problem expects a reasoned strategy; the solution fails to provide any reasoning for trade-offs or decisions."
+        },
+        "uncertainty_handling": {
+          "score": 1,
+          "evidence": "The solution handles uncertainty by acknowledging it and recommending further investigation, but it does not propose any provisional or robust strategy that accounts for uncertainty. The problem requires a strategy despite ill-definition; the solution gives up entirely.",
+          "commentary": "A good solution would propose a strategy with caveats, not simply refuse to propose anything. This is a failure to handle uncertainty constructively."
+        },
+        "knowledge_integration": {
+          "score": 1,
+          "evidence": "No knowledge is integrated. The solution explicitly states that no data or verified information was retrieved, so no integration of knowledge occurs.",
+          "commentary": "Even without external data, one could integrate general knowledge about mobility strategies (e.g., promoting cycling, electrification, etc.). The solution does not attempt this."
+        },
+        "metacognition": {
+          "score": 1,
+          "evidence": "The solution demonstrates awareness of its own limitations (metacognition), but this does not compensate for the lack of a substantive answer. The problem is to produce a strategy, not to reflect on the inability to do so.",
+          "commentary": "Metacognition is valuable, but the primary requirement is a solution. Here, the metacognitive content replaces the solution, which is insufficient."
+        }
+      }
+    ]
+  },
+  "b2932e9e196b5e408c01bc30da5bd546": {
+    "solution_id": "86f4e7e4d2d159549f57dc44715427b2",
+    "model": "gpt-4o-mini",
+    "content": [
+      {
+        "framing": {
+          "score": 3,
+          "evidence": "The solution identifies key elements like public transport efficiency, suburban accessibility, and environmental sustainability, but lacks a clear articulation of specific goals or a comprehensive understanding of the problem's context.",
+          "commentary": "The framing could benefit from a more thorough exploration of the interactions between the identified elements and a clearer definition of what 'balancing' means in this context."
+        },
+        "decomposition": {
+          "score": 3,
+          "evidence": "The solution breaks down the problem into sections addressing public transport options, efficiency, connectivity, and sustainability initiatives, but it does not sufficiently analyze how these components interrelate or prioritize them based on their impact.",
+          "commentary": "The decomposition lacks depth in exploring how each component can be optimized together, which is crucial for developing a cohesive strategy."
+        },
+        "diversity": {
+          "score": 2,
+          "evidence": "The solution presents a limited range of strategies focused primarily on existing public transport systems and sustainability projects without exploring alternative mobility solutions or innovative approaches.",
+          "commentary": "There is a notable absence of diverse solutions or alternatives considered, such as active transport (cycling/walking) or emerging technologies that could enhance mobility."
+        },
+        "coherence": {
+          "score": 3,
+          "evidence": "The structure of the solution is logical, moving from findings to regulatory constraints and limitations, but the transitions between sections could be clearer and more connected to the overall strategy.",
+          "commentary": "While the reasoning is generally clear, the logical flow between the components and how they contribute to a cohesive strategy needs improvement."
+        },
+        "justification": {
+          "score": 2,
+          "evidence": "The solution mentions ongoing initiatives and some quantitative data but lacks a detailed analysis of trade-offs or the rationale behind proposed measures.",
+          "commentary": "The argumentation is weak, with insufficient evidence provided to support the proposed strategies, and no thorough trade-off analysis."
+        },
+        "uncertainty_handling": {
+          "score": 3,
+          "evidence": "The solution acknowledges limitations and uncertainties related to station density and the effectiveness of sustainability initiatives, indicating an awareness of potential issues.",
+          "commentary": "While some uncertainties are identified, the solution does not explore how these uncertainties could impact the proposed strategies or how they might be mitigated."
+        },
+        "knowledge_integration": {
+          "score": 3,
+          "evidence": "The solution integrates relevant knowledge about Amsterdam's existing transport systems and sustainability initiatives but does not effectively leverage broader mobility trends or best practices from other cities.",
+          "commentary": "The integration of knowledge could be enhanced by including comparisons to successful strategies in similar urban environments."
+        },
+        "metacognition": {
+          "score": 2,
+          "evidence": "The solution reflects on limitations and uncertainties but does not adequately discuss the reasoning process behind the proposed strategies or acknowledge potential biases.",
+          "commentary": "There is a lack of critical reflection on the reasoning process, which diminishes the overall quality of the strategic proposal."
+        }
+      },
+      {
+        "framing": {
+          "score": 3,
+          "evidence": "The solution identifies key elements such as public transport efficiency, suburban accessibility, and environmental sustainability but lacks clear goals and specific assumptions.",
+          "commentary": "The problem framing is somewhat acceptable but could be improved by explicitly stating the goals for each key element and the assumptions underlying the current strategies."
+        },
+        "decomposition": {
+          "score": 3,
+          "evidence": "The solution addresses three main areas: public transport options, efficiency, and sustainability, but does not break down the strategies into actionable subproblems or specific initiatives.",
+          "commentary": "While the main components are identified, there is a lack of structured subproblems or detailed strategies that could guide implementation."
+        },
+        "diversity": {
+          "score": 2,
+          "evidence": "The solution mentions existing initiatives but does not explore alternative strategies or solutions that could address the identified challenges.",
+          "commentary": "There is a significant lack of diversity in the proposed solutions, with no consideration of alternative approaches or innovative ideas that could enhance the mobility strategy."
+        },
+        "coherence": {
+          "score": 4,
+          "evidence": "The solution is logically structured and flows from identifying key findings to discussing limitations and uncertainties.",
+          "commentary": "While the reasoning is generally clear, the coherence could be improved by better linking the findings to specific recommendations or actions."
+        },
+        "justification": {
+          "score": 2,
+          "evidence": "The solution does not provide a strong argumentation or trade-off analysis regarding the proposed strategies and their potential impacts.",
+          "commentary": "There is a notable absence of justification for the choices made in the strategy, particularly in terms of evaluating the trade-offs between efficiency, accessibility, and sustainability."
+        },
+        "uncertainty_handling": {
+          "score": 3,
+          "evidence": "The solution acknowledges limitations and uncertainties regarding public transport accessibility and the effectiveness of sustainability initiatives.",
+          "commentary": "While some uncertainty is recognized, the handling is superficial; more depth in addressing how these uncertainties could be mitigated or researched further is needed."
+        },
+        "knowledge_integration": {
+          "score": 3,
+          "evidence": "The solution references relevant data and existing initiatives in Amsterdam but does not deeply integrate broader knowledge or best practices from other cities.",
+          "commentary": "There is a moderate level of knowledge integration, but it lacks a comparative analysis with other successful regional mobility strategies that could provide valuable insights."
+        },
+        "metacognition": {
+          "score": 2,
+          "evidence": "The solution reflects on limitations and uncertainties but lacks a deeper reflection on the reasoning process behind the proposed strategies.",
+          "commentary": "There is minimal reflection on the reasoning process or the limitations of the proposed solutions, which could help identify areas for improvement."
+        }
+      },
+      {
+        "framing": {
+          "score": 3,
+          "evidence": "The solution identifies key elements such as public transport efficiency, suburban accessibility, and environmental sustainability, but does not clearly define specific goals or assumptions underlying the strategy.",
+          "commentary": "The problem framing could be improved by articulating clear goals for each key element and assumptions about the current situation."
+        },
+        "decomposition": {
+          "score": 3,
+          "evidence": "The solution breaks down the mobility strategy into public transport options, efficiency, suburban connectivity, and sustainability initiatives, but lacks a structured approach to addressing each component comprehensively.",
+          "commentary": "While some subproblems are identified, the solution does not adequately explore how these components interrelate or how to prioritize them."
+        },
+        "diversity": {
+          "score": 2,
+          "evidence": "The solution primarily lists existing transport options and sustainability initiatives without exploring alternative strategies or solutions that could be considered.",
+          "commentary": "There is a lack of exploration of diverse approaches or innovative ideas that could enhance the mobility strategy, limiting the breadth of potential solutions."
+        },
+        "coherence": {
+          "score": 3,
+          "evidence": "The solution presents information in a logical sequence but lacks detailed connections between findings and the overall strategy.",
+          "commentary": "While the reasoning is generally clear, the connections between the various components of the strategy could be more explicitly articulated to enhance coherence."
+        },
+        "justification": {
+          "score": 2,
+          "evidence": "The solution mentions some initiatives and statistics but does not provide a strong argumentation or trade-off analysis between different strategies or options.",
+          "commentary": "The justification for the proposed strategies is weak, lacking a thorough analysis of potential trade-offs or impacts of the suggested measures."
+        },
+        "uncertainty_handling": {
+          "score": 3,
+          "evidence": "The solution acknowledges limitations and uncertainties related to station density and the effectiveness of sustainability initiatives.",
+          "commentary": "While some uncertainties are identified, there is insufficient discussion on how these uncertainties could be addressed or mitigated in the strategy."
+        },
+        "knowledge_integration": {
+          "score": 3,
+          "evidence": "The solution references relevant data and initiatives but does not fully integrate broader knowledge about mobility strategies from other cities or case studies.",
+          "commentary": "The use of domain knowledge is present, but the integration of best practices or lessons learned from other regions is lacking."
+        },
+        "metacognition": {
+          "score": 2,
+          "evidence": "The solution reflects on some limitations and uncertainties but does not demonstrate a thorough reflection on the reasoning process or the implications of the proposed strategy.",
+          "commentary": "There is minimal reflection on the reasoning process, and the solution could benefit from a deeper analysis of its own limitations and potential biases."
+        }
+      },
+      {
+        "framing": {
+          "score": 3,
+          "evidence": "The solution identifies key elements such as public transport efficiency, suburban accessibility, and environmental sustainability but lacks a clear articulation of specific goals or priorities within these elements.",
+          "commentary": "The problem framing is somewhat vague; it does not establish a comprehensive vision or strategy for balancing these elements effectively."
+        },
+        "decomposition": {
+          "score": 3,
+          "evidence": "The solution outlines various aspects of public transport, suburban connectivity, and sustainability initiatives but does not break down these elements into actionable subproblems or strategies.",
+          "commentary": "While the solution touches on relevant topics, it fails to adequately decompose the problem into specific, manageable components or strategies."
+        },
+        "diversity": {
+          "score": 2,
+          "evidence": "The solution primarily discusses existing transport options and initiatives without proposing alternative strategies or solutions that could enhance mobility in Amsterdam.",
+          "commentary": "There is a lack of diversity in the proposed solutions, with no consideration of potential innovative or alternative approaches to improve mobility."
+        },
+        "coherence": {
+          "score": 3,
+          "evidence": "The solution presents information in a structured manner, but the logical flow between sections is weak, particularly in linking findings to actionable strategies.",
+          "commentary": "The coherence could be improved by ensuring a clearer connection between findings and the strategic recommendations for addressing the identified issues."
+        },
+        "justification": {
+          "score": 2,
+          "evidence": "The solution mentions limitations and uncertainties but does not provide a strong argumentation or analysis of trade-offs related to the proposed strategies.",
+          "commentary": "The justification for the proposed strategies is weak, lacking a thorough analysis of potential impacts and trade-offs involved in implementing the strategies."
+        },
+        "uncertainty_handling": {
+          "score": 3,
+          "evidence": "The solution acknowledges limitations and uncertainties regarding station density and the effectiveness of sustainability initiatives but does not address how these uncertainties might be mitigated.",
+          "commentary": "While uncertainties are recognized, there is insufficient exploration of how to handle these uncertainties in planning and decision-making."
+        },
+        "knowledge_integration": {
+          "score": 4,
+          "evidence": "The solution effectively integrates relevant domain knowledge about Amsterdam's transport system and sustainability initiatives, citing credible sources.",
+          "commentary": "The integration of knowledge is strong, but it could benefit from more in-depth analysis or examples of best practices from other regions."
+        },
+        "metacognition": {
+          "score": 2,
+          "evidence": "The solution reflects on its limitations but does not demonstrate a critical examination of the reasoning process behind the proposed strategies.",
+          "commentary": "There is a lack of reflection on the reasoning process and how the limitations identified could affect the overall strategy."
+        }
+      },
+      {
+        "framing": {
+          "score": 3,
+          "evidence": "The solution identifies key elements such as public transport efficiency, suburban accessibility, and environmental sustainability, but lacks a clear articulation of specific goals or a comprehensive overview of the current state of mobility in Amsterdam.",
+          "commentary": "The problem framing is acceptable but could be improved by explicitly stating the objectives of the strategy and how they will be measured."
+        },
+        "decomposition": {
+          "score": 3,
+          "evidence": "The solution breaks the problem into elements like public transport options, efficiency, connectivity, and sustainability initiatives, yet does not provide a structured approach to address each element systematically.",
+          "commentary": "While some aspects are identified, the solution does not effectively decompose the problem into actionable subproblems or strategies."
+        },
+        "diversity": {
+          "score": 2,
+          "evidence": "The solution offers a limited range of strategies and focuses mainly on existing public transport options without exploring alternative modes of transport or innovative solutions.",
+          "commentary": "There is a lack of consideration for diverse transportation methods or innovative approaches that could enhance the mobility strategy."
+        },
+        "coherence": {
+          "score": 3,
+          "evidence": "The solution presents information in a logical order, but the connections between the findings and the proposed strategies are not clearly articulated, leading to some confusion.",
+          "commentary": "While the reasoning is somewhat clear, the flow and connection between different sections could be improved for better coherence."
+        },
+        "justification": {
+          "score": 2,
+          "evidence": "The solution lacks a strong argumentation for the proposed strategies and does not analyze trade-offs or potential impacts of the initiatives mentioned.",
+          "commentary": "There is insufficient justification for the recommendations made, and trade-off analyses are missing, which weakens the overall argument."
+        },
+        "uncertainty_handling": {
+          "score": 3,
+          "evidence": "The solution acknowledges limitations and uncertainties regarding station density and the effectiveness of sustainability initiatives, but does not propose how to address these uncertainties.",
+          "commentary": "While uncertainties are identified, the lack of concrete steps to mitigate these uncertainties is a notable gap."
+        },
+        "knowledge_integration": {
+          "score": 3,
+          "evidence": "The solution references relevant data and sources regarding Amsterdam's transport system and sustainability initiatives, but does not integrate this knowledge into actionable recommendations.",
+          "commentary": "The use of domain knowledge is present but lacks depth and application in formulating specific strategies."
+        },
+        "metacognition": {
+          "score": 2,
+          "evidence": "The solution briefly mentions limitations but does not reflect on the reasoning process or the limitations of the proposed strategies.",
+          "commentary": "There is a lack of critical reflection on the reasoning process and the potential shortcomings of the proposed solutions."
+        }
+      }
+    ]
+  },
+  "56d8da77974958a8b3c6b65883fdfb34": {
+    "solution_id": "86f4e7e4d2d159549f57dc44715427b2",
+    "model": "openai/gpt-4.1",
+    "solution_content_sig": "aade440c4ba3",
+    "content": [
+      {
+        "framing": {
+          "score": 5,
+          "evidence": "The solution clearly identifies the three key goals (public transport efficiency, suburban accessibility, environmental sustainability), articulates success criteria for each, and recognizes the trade-offs and tensions involved.",
+          "commentary": "Problem framing is comprehensive and explicit, with clear goals and metrics."
+        },
+        "decomposition": {
+          "score": 5,
+          "evidence": "The solution breaks the problem into measurable sub-questions and addresses each major objective with targeted recommendations and subcomponents.",
+          "commentary": "The decomposition is systematic and covers all major aspects relevant to the problem."
+        },
+        "diversity": {
+          "score": 4,
+          "evidence": "Three alternative strategies are considered (cycling focus, road expansion, high-speed rail), with pros and cons for each.",
+          "commentary": "Some alternatives are covered, but the analysis could be richer with more unconventional or blended approaches."
+        },
+        "coherence": {
+          "score": 5,
+          "evidence": "The reasoning follows a logical structure from framing through alternatives, recommendations, trade-offs, and reflection.",
+          "commentary": "No major gaps in logic or flow."
+        },
+        "justification": {
+          "score": 4,
+          "evidence": "Trade-offs are discussed, and recommendations are justified with reference to best practices and examples from other cities.",
+          "commentary": "Justification is strong but would benefit from more specific supporting data or quantitative analysis."
+        },
+        "uncertainty_handling": {
+          "score": 4,
+          "evidence": "Assumptions are explicitly stated, and the need for adaptive monitoring is acknowledged. Limitations due to missing data are discussed.",
+          "commentary": "Handling of uncertainty is robust, but the solution could propose more concrete measures for dealing with unknowns."
+        },
+        "knowledge_integration": {
+          "score": 4,
+          "evidence": "References to best practices, regulatory frameworks, and case studies from other cities demonstrate knowledge integration.",
+          "commentary": "Could be improved with more Amsterdam-specific data or more detailed references."
+        },
+        "metacognition": {
+          "score": 4,
+          "evidence": "The reflection section acknowledges limitations, assumptions, and the need for stakeholder engagement.",
+          "commentary": "Reflection is present and thoughtful, but could probe more deeply into potential cognitive biases or alternative framings."
+        }
+      },
+      {
+        "framing": {
+          "score": 4,
+          "evidence": "The solution clearly identifies the three key elements (public transport efficiency, suburban accessibility, environmental sustainability), sets measurable targets, and discusses success criteria.",
+          "commentary": "Framing is strong but could be improved by more explicitly identifying key stakeholders and their priorities."
+        },
+        "decomposition": {
+          "score": 4,
+          "evidence": "The solution breaks the problem into subproblems (efficiency, accessibility, sustainability) and further into actionable steps under each.",
+          "commentary": "Some subproblems (e.g., governance, funding, stakeholder engagement) are only briefly mentioned or implied."
+        },
+        "diversity": {
+          "score": 4,
+          "evidence": "Three alternative solutions are discussed (cycling focus, road expansion, high-speed rail), with pros and cons for each.",
+          "commentary": "Alternatives are reasonable, but more creative or hybrid approaches could have been considered."
+        },
+        "coherence": {
+          "score": 5,
+          "evidence": "The reasoning is stepwise, logical, and each section follows from the previous. Trade-offs and justifications are clearly linked to earlier points.",
+          "commentary": "No major weaknesses in logical flow."
+        },
+        "justification": {
+          "score": 4,
+          "evidence": "The solution provides trade-off analysis (e.g., public transport vs. road expansion), references best practices, and justifies recommendations with evidence from other cities.",
+          "commentary": "Justification would be stronger with more specific, localized data."
+        },
+        "uncertainty_handling": {
+          "score": 4,
+          "evidence": "Assumptions are listed, and the solution acknowledges uncertainty in data and policy impacts. Monitoring and adaptation are recommended.",
+          "commentary": "Could expand on how to collect missing data or manage unexpected stakeholder resistance."
+        },
+        "knowledge_integration": {
+          "score": 4,
+          "evidence": "References to best practices, regulatory frameworks, and examples from other cities demonstrate domain knowledge.",
+          "commentary": "Integration is good but could be enhanced by more direct reference to Amsterdam-specific data or local constraints."
+        },
+        "metacognition": {
+          "score": 4,
+          "evidence": "The reflection section discusses limitations, assumptions, and possible biases, and suggests further data collection.",
+          "commentary": "Reflection is present but could include more on how the reasoning process might be improved or adapted in future iterations."
+        }
+      },
+      {
+        "framing": {
+          "score": 4,
+          "evidence": "The solution clearly identifies the three key objectives (public transport efficiency, suburban accessibility, and environmental sustainability), and sets out measurable success criteria.",
+          "commentary": "While the framing is comprehensive and explicit, it could have included more nuance on the specific challenges unique to Amsterdam and its region, and more detail on baseline conditions."
+        },
+        "decomposition": {
+          "score": 4,
+          "evidence": "The problem is broken down into sub-questions and structured sections: efficiency, accessibility, and sustainability. The solution further breaks down each area with concrete recommendations.",
+          "commentary": "Decomposition is strong but could be improved with more granular subproblems (e.g., equity of access, integration with national networks, or addressing freight)."
+        },
+        "diversity": {
+          "score": 4,
+          "evidence": "Three alternative strategies are considered (cycling focus, road expansion, high-speed rail), with pros and cons for each.",
+          "commentary": "Alternatives are well described, but the range could be expanded to include demand management, telecommuting, or innovative mobility services."
+        },
+        "coherence": {
+          "score": 5,
+          "evidence": "The reasoning is logically structured, with each recommendation tied to the objectives and trade-offs made explicit. Steps flow clearly from framing to solution.",
+          "commentary": "No major weaknesses; the narrative is clear and logical."
+        },
+        "justification": {
+          "score": 4,
+          "evidence": "Recommendations are justified with reference to evidence from other cities, trade-offs are discussed, and the rationale for the chosen approach is clear.",
+          "commentary": "Justification could be improved with more specific quantitative or local evidence, and more explicit discussion of why some alternatives were not chosen."
+        },
+        "uncertainty_handling": {
+          "score": 4,
+          "evidence": "Assumptions are listed, confidence is rated as moderate, and the need for ongoing adjustment is noted. Limitations and uncertainties are acknowledged.",
+          "commentary": "Could be stronger with explicit contingency planning or exploration of what happens under different scenarios (e.g., policy failure, funding cuts)."
+        },
+        "knowledge_integration": {
+          "score": 4,
+          "evidence": "References to best practices, regulatory frameworks, and experiences from other cities are used to support recommendations.",
+          "commentary": "Integration is good, but more local specificity and data would strengthen the argument."
+        },
+        "metacognition": {
+          "score": 5,
+          "evidence": "The solution reflects on the reasoning process, acknowledges assumptions and limitations, and suggests ways the analysis could be improved.",
+          "commentary": "Self-reflection is thorough and demonstrates awareness of the solution's boundaries."
+        }
+      },
+      {
+        "framing": {
+          "score": 5,
+          "evidence": "The solution clearly identifies the three key elements (public transport efficiency, suburban accessibility, environmental sustainability), articulates goals, and enumerates success criteria (ridership increase, travel time reduction, emissions reduction, user satisfaction).",
+          "commentary": "Problem framing is comprehensive and explicit, with clear goals and criteria."
+        },
+        "decomposition": {
+          "score": 5,
+          "evidence": "The solution breaks the problem into subproblems (efficiency, accessibility, sustainability), and further decomposes each into actionable areas (e.g., real-time tracking, park-and-ride, electric fleets).",
+          "commentary": "Subproblems are well-structured and logically organized."
+        },
+        "diversity": {
+          "score": 4,
+          "evidence": "Three alternative strategies are considered (cycling focus, road expansion, high-speed rail), with pros and cons.",
+          "commentary": "Alternatives are relevant and discussed, but could include more innovative or hybrid options."
+        },
+        "coherence": {
+          "score": 5,
+          "evidence": "The reasoning is stepwise and logically structured, with clear connections between analysis, recommendations, and justifications.",
+          "commentary": "Reasoning is clear and consistent throughout."
+        },
+        "justification": {
+          "score": 4,
+          "evidence": "Trade-offs are articulated (infrastructure vs. roads), and recommendations are justified with reference to evidence from other cities and alignment with goals.",
+          "commentary": "Justification is strong, but could be enhanced with more specific data or case studies."
+        },
+        "uncertainty_handling": {
+          "score": 4,
+          "evidence": "Assumptions are explicitly stated, sources of uncertainty are acknowledged, and the need for monitoring and adjustment is noted.",
+          "commentary": "Uncertainty is addressed, but quantification or scenario analysis is missing."
+        },
+        "knowledge_integration": {
+          "score": 4,
+          "evidence": "References to best practices, regulatory frameworks, and examples from other cities are used to support recommendations.",
+          "commentary": "Integration is good, but could be deeper with more local data or specific regulatory details."
+        },
+        "metacognition": {
+          "score": 4,
+          "evidence": "The solution reflects on limitations (data gaps, assumptions, stakeholder engagement) and suggests further data collection and community involvement.",
+          "commentary": "Reflection is present, but could include more explicit discussion of reasoning pitfalls or alternative framings."
+        }
+      },
+      {
+        "framing": {
+          "score": 4,
+          "evidence": "The solution clearly identifies the three key objectives (public transport efficiency, suburban accessibility, and environmental sustainability), sets explicit success criteria, and recognizes key tensions such as cost versus immediate improvements.",
+          "commentary": "While the framing is strong and goals are explicit, it could be improved by more deeply exploring stakeholder perspectives and the current state of the Amsterdam region's mobility system."
+        },
+        "decomposition": {
+          "score": 5,
+          "evidence": "The solution breaks the problem into subproblems: measuring/improving public transport efficiency, enhancing suburban options, and implementing sustainability practices. Each is addressed in detail.",
+          "commentary": "No major weaknesses. The decomposition is logical and comprehensive."
+        },
+        "diversity": {
+          "score": 4,
+          "evidence": "Three alternative solutions are considered: focus on cycling, expansion of road infrastructure, and investment in high-speed rail, with pros and cons discussed for each.",
+          "commentary": "Could be improved by considering more unconventional or innovative strategies, or hybrid approaches."
+        },
+        "coherence": {
+          "score": 5,
+          "evidence": "The reasoning flows logically from problem framing to alternatives, recommendations, trade-offs, and reflection. Each step is clearly linked to the previous.",
+          "commentary": "No major weaknesses in logical flow or clarity."
+        },
+        "justification": {
+          "score": 4,
+          "evidence": "Trade-offs are explicitly discussed, and the chosen approach is justified with reference to both goals and evidence from comparable cities.",
+          "commentary": "The justification would be stronger with more specific data or modeling to support the recommended balance."
+        },
+        "uncertainty_handling": {
+          "score": 4,
+          "evidence": "Assumptions are listed, the level of confidence is stated, and the need for monitoring and adjustment is acknowledged.",
+          "commentary": "Could be improved by suggesting concrete methods for managing uncertainty or collecting missing data."
+        },
+        "knowledge_integration": {
+          "score": 4,
+          "evidence": "References to best practices, regulatory frameworks, and examples from other cities are provided.",
+          "commentary": "Integration would be stronger with more detailed, Amsterdam-specific knowledge or quantitative benchmarking."
+        },
+        "metacognition": {
+          "score": 4,
+          "evidence": "The solution includes a reflection section, recognizes limitations and biases, and suggests further data collection and stakeholder engagement.",
+          "commentary": "Reflection could be deepened by discussing how different reasoning approaches could alter the solution, or by more critically challenging the initial framing."
+        }
+      }
+    ]
+  }
+}
