@@ -47,31 +47,37 @@ Rules:
 - Support the answer with the confirmed facts and cite sources inline.
 - Keep all sections domain-neutral and factual.
 
-Output (markdown):
-1. **Direct Answer** — the committed answer in 1-3 sentences (mandatory, first)
-2. **Framing** — define the decision/problem frame and why it fits the question
-3. **Decomposition** — break the answer into the main analytical components
-4. **Candidate Views** — compare plausible alternatives, perspectives, or paths
-5. **Evidence And Justification** — explain why the chosen answer follows from
-   the confirmed facts, with [source] citations and relevant numbers/constraints
-6. **Coherence Check** — show how the parts fit together and resolve tensions
-7. **Uncertainty** — material uncertainty, confidence, and what remains unstable
-8. **Knowledge Integration** — connect facts, constraints, and domain knowledge
-   into a robust answer; this is about robustness of the answer itself
-9. **Reflection** — reasoning-level self-assessment, not domain hedging and not
-   another uncertainty section. It must explicitly include: rejected alternative
-   framings and what would break/change if one were true; calibrated confidence
-   for 2-3 load-bearing claims plus exactly where each may be wrong; method or
-   pipeline bias introduced by evidence generation/selection itself (source-type
+Write as a thoughtful expert would — a decision memo, not a graded checklist.
+Use these section headers (markdown):
+1. **Answer** — the committed conclusion in 1-3 sentences (mandatory, first)
+2. **How I'm reading the question** — the problem frame and why it fits
+3. **What it hinges on** — the main components the answer depends on
+4. **Options I weighed** — the genuine alternatives, perspectives, or paths, and
+   why the chosen one wins over them
+5. **The case for it** — why the conclusion follows from the confirmed facts,
+   with [source] citations and the relevant numbers/constraints; show how the
+   parts fit together and how facts, constraints, and knowledge combine into one
+   robust answer (do not split this into separate "coherence" or "knowledge"
+   sections — weave them in)
+6. **What's still uncertain** — material uncertainty, confidence, and what
+   remains unstable
+7. **Where this reasoning could be wrong** — a reasoning-level self-assessment,
+   not domain hedging and not a second uncertainty section. Include: rejected
+   alternative framings and what would break/change if one were true; calibrated
+   confidence for 2-3 load-bearing claims plus exactly where each may be wrong;
+   bias introduced by how the evidence itself was gathered or selected (source-type
    skew, search/retrieval skew, measurement/proxy skew, agent-routing skew), not
-   only subject-matter uncertainty; weakest reasoning link and the highest-leverage
-   missing work or information; residual risks if acting on the answer as written.
+   only subject-matter uncertainty; the weakest reasoning link and the
+   highest-leverage missing work or information; residual risks if acting on the
+   answer as written.
 
-Rubric alignment: maximize all eight benchmark dimensions without adding filler:
-framing, decomposition, diversity of candidate views, coherence, justification,
-uncertainty handling, knowledge integration, and metacognition. Do not let the
-Reflection section replace the answer; it should inspect the reasoning that led
-to the committed answer.
+These are properties of strong reasoning and should emerge through substance,
+not as labeled sections: a precise problem frame, a clear breakdown, honest
+treatment of real alternatives, evidence-backed commitment, internal consistency,
+candid uncertainty, integration of what is known, and a genuine self-critique of
+the reasoning itself. Do not write to a checklist or name sections after these
+qualities. The final section must inspect the reasoning that led to the answer —
+it must not replace or weaken the committed Answer.
 
 Stay factual and grounded in the provided facts. The answer must remain
 committed regardless of the question's domain. Use neutral, substantive language;
@@ -79,58 +85,58 @@ do not use hedging as a substitute for analysis.
 """
 
 _CRITIQUE_SYSTEM = """\
-You are a strict critic of a final-answer draft. Evaluate whether the draft
-maximizes these dimensions without weakening commitment: framing, decomposition,
-diversity of candidate views, coherence, justification, uncertainty, knowledge
-integration, and metacognition.
+You are a strict critic of a final-answer draft. Your single question: does this
+read as genuine, committed expert reasoning — or as a hedge, a checklist, or a
+restated question?
 
-Inspect every dimension explicitly:
-- framing: the decision/problem frame is precise and fits the question.
-- decomposition: the answer breaks the problem into useful analytical parts.
-- diversity: it compares genuinely different candidate views/options/paths.
-- coherence: sections connect into one non-contradictory answer.
-- justification: recommendations follow from evidence, trade-offs, numbers, and constraints.
-- uncertainty handling: uncertainty is material, bounded, and linked to actions.
-- knowledge integration: facts, constraints, and domain knowledge are synthesized.
-- metacognition: section 9 evaluates the reasoning process itself.
+Judge the draft against the marks of strong reasoning (as substance, not as
+labeled sections):
+- The problem frame is precise and fits the question.
+- The reasoning breaks the problem into useful parts.
+- It weighs genuinely different alternatives, not strawmen.
+- The conclusion follows from evidence, trade-offs, numbers, and constraints.
+- The parts connect into one non-contradictory answer.
+- Uncertainty is material, bounded, and tied to what to do about it.
+- Facts, constraints, and knowledge are synthesized, not just listed.
+- The final section critiques the reasoning process itself.
 
-Metacognition is a hard gate. Explicitly inspect section 9, **Reflection**,
-against this checklist:
-- It must be about the reasoning process, not merely reflection about the domain.
-- It must include rejected alternative framings and how the conclusion would
-  change if one were correct.
-- It must calibrate confidence for each of 2-3 load-bearing claims and state
-  where each claim may be wrong.
-- It must identify method/pipeline biases introduced by the way evidence was
-  generated or selected.
-- It must name the weakest reasoning link, the highest-leverage missing
-  information/work, and residual action risks.
+The self-critique (final section, "Where this reasoning could be wrong") is the
+hardest test. It fails if any of these is missing:
+- It is about the reasoning process, not merely reflection about the domain.
+- It names rejected alternative framings and how the conclusion would change if
+  one were correct.
+- It calibrates confidence for 2-3 load-bearing claims and states where each may
+  be wrong.
+- It identifies bias introduced by how the evidence itself was gathered/selected.
+- It names the weakest reasoning link, the highest-leverage missing
+  information/work, and residual risks of acting on the answer.
 
-Flag any failure as a metacognition defect. Do not relax the other dimensions;
-the answer must remain committed, direct, and evidence-grounded.
+Flag a weak self-critique explicitly. Do not relax the other marks; the answer
+must stay committed, direct, and evidence-grounded.
 
-Return concise, actionable critique bullets only. Name weak dimensions using the
-dimension names above so the refiner can target them.
+Return concise, actionable critique bullets only, each naming the specific
+weakness so the refiner can target it.
 """
 
 _REFINE_SYSTEM = """\
-You are refining the final answer after critique. Preserve the committed direct
-answer and improve the draft against the critique.
+You are refining the final answer after critique. Preserve the committed Answer
+and fix every weakness the critique raised.
 
-Treat the critique as a rubric repair list across the eight dimensions: framing,
-decomposition, diversity, coherence, justification, uncertainty handling,
-knowledge integration, and metacognition. Strengthen every flagged weak dimension.
+Treat the critique as a repair list. Strengthen each flagged spot in place,
+through substance — do not add labeled sections or write to a checklist.
 
-If the critique flags metacognition, deepen section 9, **Reflection**, by adding
-the missing checklist elements: alternative framings, calibrated confidence for
-load-bearing claims, method/pipeline bias, weakest link plus highest-leverage gap,
-and residual risks. Do not turn this into domain hedging or a refusal.
+If the self-critique ("Where this reasoning could be wrong") was flagged, deepen
+it with the missing reasoning-level elements: rejected alternative framings,
+calibrated confidence for load-bearing claims, bias from how the evidence was
+gathered, the weakest link plus the highest-leverage gap, and residual risks. Do
+not turn it into domain hedging or a refusal.
 
-Do not trim the other eight sections; this is a Pareto improvement, not a
-rebalancing. Keep framing, decomposition, diversity, coherence, justification,
-uncertainty, and knowledge integration at least as strong as in the draft.
+This is a Pareto improvement, not a rebalancing: do not trim or weaken any part
+that was already strong while fixing another.
 
-Return only the final markdown answer with all nine sections.
+Return only the final markdown answer using the same memo section headers
+(Answer; How I'm reading the question; What it hinges on; Options I weighed; The
+case for it; What's still uncertain; Where this reasoning could be wrong).
 """
 
 
@@ -181,9 +187,9 @@ Unresolved contradictions:
 Overall confidence: {overall_conf:.2f}
 Iterations used: {iteration}
 
-Produce the final answer now with all nine required sections. Lead with the direct,
-concrete answer to the question. Commit to a single best-supported conclusion;
-do not defer or hedge.
+Produce the final answer now using the memo section headers. Lead with the
+direct, concrete Answer to the question. Commit to a single best-supported
+conclusion; do not defer or hedge.
 """
 
     try:
@@ -232,14 +238,13 @@ Original synthesis prompt:
 Draft answer:
 {draft}
 
-Critique the draft against all eight benchmark dimensions: framing, decomposition,
-diversity, coherence, justification, uncertainty handling, knowledge integration,
-and metacognition. Treat metacognition as a strict gate: if **Reflection** is
-domain reflection rather than reasoning-level self-assessment, lacks rejected
-framings, lacks calibrated confidence for each load-bearing claim, lacks
-method/pipeline bias, or lacks weakest-link/highest-leverage-gap analysis, flag
-it explicitly. Do not weaken the other seven rubric dimensions or the committed
-Direct Answer.
+Critique the draft on whether it reads as genuine, committed expert reasoning.
+Treat the self-critique ("Where this reasoning could be wrong") as a strict test:
+if it is domain reflection rather than reasoning-level self-assessment, lacks
+rejected framings, lacks calibrated confidence for each load-bearing claim, lacks
+analysis of bias in how evidence was gathered, or lacks weakest-link/
+highest-leverage-gap analysis, flag it explicitly. Do not weaken the other
+strengths or the committed Answer.
 """
     critique_response = llm.invoke([
         {"role": "system", "content": _CRITIQUE_SYSTEM},
@@ -257,12 +262,12 @@ Draft answer:
 Critique:
 {critique}
 
-Refine the draft into the final answer. If metacognition was flagged, deepen
-only section 9, **Reflection**, with the missing reasoning-level elements. Do
-not trim the other eight sections; this is a Pareto improvement, not a
-rebalancing. If any of the other seven dimensions were flagged, strengthen the
-corresponding section while preserving its role. Keep the Direct Answer committed
-and avoid fail-closed language.
+Refine the draft into the final answer. If the self-critique ("Where this
+reasoning could be wrong") was flagged, deepen it with the missing reasoning-level
+elements. This is a Pareto improvement, not a rebalancing: do not trim or weaken
+any part that was already strong. If any other spot was flagged, strengthen it in
+place while preserving its role. Keep the Answer committed and avoid fail-closed
+language.
 """
     refine_response = llm.invoke([
         {"role": "system", "content": _REFINE_SYSTEM},
@@ -294,53 +299,54 @@ def _fallback_answer(
         "- No unresolved contradictions were reported."
     ]
     lines = [
-        "## Direct Answer\n",
+        "## Answer\n",
         f"{best_claim}\n",
-        "## Framing\n",
-        "The answer is framed as selecting the strongest committed conclusion "
+        "## How I'm reading the question\n",
+        "I read this as a call to commit to the strongest supported conclusion "
         f"for: {question}\n",
-        "## Decomposition\n",
-        "- Identify the highest-confidence facts.\n"
-        "- Check contradictions.\n"
-        "- Commit to the best-supported conclusion.\n",
-        "## Candidate Views\n",
-        "- Primary view: follow the strongest confirmed fact pattern.\n"
-        "- Alternative view: give more weight to unresolved contradictions if "
-        "they directly undermine the main claim.\n",
-        "## Evidence And Justification\n",
+        "## What it hinges on\n",
+        "- Which confirmed facts carry the most weight.\n"
+        "- Whether any unresolved contradiction defeats the leading claim.\n"
+        "- Committing to the best-supported conclusion rather than deferring.\n",
+        "## Options I weighed\n",
+        "- Follow the strongest confirmed fact pattern (chosen).\n"
+        "- Give more weight to unresolved contradictions if they directly "
+        "undermine the main claim (rejected unless a contradiction is decisive).\n",
+        "## The case for it\n",
     ]
     lines.extend(fact_lines or ["- No confirmed facts were available."])
+    lines.append(
+        "\nThe conclusion follows the highest-confidence available claims and "
+        "integrates source agreement and confidence into one committed answer, "
+        "keeping contradictions visible rather than letting them erase it.\n"
+    )
     lines.extend([
-        "\n## Coherence Check\n",
-        "The conclusion follows the highest-confidence available claims while "
-        "keeping contradictions visible rather than letting them erase the answer.\n",
-        "## Uncertainty\n",
+        "## What's still uncertain\n",
         f"Overall confidence is {overall_conf:.2f}. Contradictions and "
         "low-confidence facts remain the main uncertainty drivers.\n",
-        "## Knowledge Integration\n",
-        "The answer integrates the confirmed claims, source agreement, confidence "
-        "scores, and contradiction status into one committed conclusion.\n",
-        "## Reflection\n",
-        "- Alternative framings: A conservative evidence-only frame would withhold "
-        "judgment, but the final-answer frame requires the best-supported committed "
-        "conclusion. A contradiction-first frame would change the answer only if "
-        "unresolved contradictions directly defeat the highest-confidence claim.",
-        f"- Calibrated confidence: The main conclusion has confidence {overall_conf:.2f}; "
+        "Open contradictions:\n",
+    ])
+    lines.extend(contradiction_lines)
+    lines.extend([
+        "\n## Where this reasoning could be wrong\n",
+        "- Rejected framings: A conservative evidence-only frame would withhold "
+        "judgment, but committing to the best-supported conclusion is required "
+        "here. A contradiction-first frame would change the answer only if an "
+        "unresolved contradiction directly defeats the highest-confidence claim.",
+        f"- Calibrated confidence: The main conclusion sits at {overall_conf:.2f}; "
         "it may be wrong where the top confirmed fact is incomplete, stale, or "
         "source-skewed. The contradiction assessment is moderate-confidence unless "
         "all conflicting claims share comparable source quality. The source-weighting "
         "step is weaker if agent outputs used overlapping sources.",
-        "- Method/pipeline bias: The fallback uses available confirmed facts and "
-        "confidence scores, so it may inherit source-type skew, agent-selection skew, "
-        "and over-weighting of easily retrieved evidence.",
-        "- Weakest link and highest-leverage gap: The weakest link is whether the "
+        "- Bias from how evidence was gathered: this fallback leans on whatever "
+        "facts were confirmed, so it may inherit source-type skew, agent-selection "
+        "skew, and over-weighting of easily retrieved evidence.",
+        "- Weakest link and highest-leverage gap: the weakest link is whether the "
         "highest-confidence fact captures the decisive constraint. The highest-leverage "
         "next check is an independent source or computation aimed directly at that "
         "decisive constraint.",
-        "- Residual risks: Acting as written may miss edge cases, minority evidence, "
+        "- Residual risks: acting as written may miss edge cases, minority evidence, "
         "or late-breaking facts not captured in the confirmed-fact set.\n",
-        "## Unresolved Contradictions\n",
     ])
-    lines.extend(contradiction_lines)
 
     return "\n".join(lines)
