@@ -35,11 +35,27 @@ from fp2mp_core.nodes.mediator import mediator_node
 from fp2mp_core.nodes.orchestrator import orchestrator_node, route_from_orchestrator
 from fp2mp_core.nodes.synthesis import final_synthesis_node
 from fp2mp_core.state import BaseState, BlackBoard, create_initial_state
-from fp2mp_core.usage import TokenUsageAccumulator
+from fp2mp_core.usage import TokenUsageAccumulator, count_tokens
 
 
-def _ai_message(content: str, name: str, usage_metadata: dict | None = None) -> AIMessage:
-    return AIMessage(content=content, name=name, usage_metadata=usage_metadata)
+def _ai_message(content: str, name: str, input_tokens: int = 0) -> AIMessage:
+    """Build an AIMessage carrying a per-message tiktoken estimate.
+
+    ``output_tokens`` is the cl100k token count of ``content``; ``input_tokens``
+    is the estimated size of the prompt this message responded to (passed in by
+    the log builder). These are best-effort per-message estimates for display
+    and rough summation — the authoritative run total lives in ``BaseState.usage``.
+    """
+    output_tokens = count_tokens(content)
+    return AIMessage(
+        content=content,
+        name=name,
+        usage_metadata={
+            "input_tokens": input_tokens,
+            "output_tokens": output_tokens,
+            "total_tokens": input_tokens + output_tokens,
+        },
+    )
 
 
 def build_graph():
@@ -111,13 +127,19 @@ def build_graph():
     return graph.compile()
 
 
-def _build_log(
-    input: str,
-    raw_data: list,
-    final_answer: str,
-    usage_metadata: dict | None = None,
-) -> list:
+def _build_log(input: str, raw_data: list, final_answer: str) -> list:
+    """Reconstruct a LangChain message log from raw_data.
+
+    Each AIMessage carries a per-message tiktoken estimate: ``output_tokens`` is
+    the size of its own content, ``input_tokens`` the size of the most recent
+    preceding prompt (the human turn / tool call it responded to). These are
+    rough estimates for display and summation; the authoritative run total is
+    returned separately in ``BaseState.usage``.
+    """
     log: list = [HumanMessage(content=input)]
+    # Tokens of the most recent "prompt" turn, attributed as input to the next
+    # AIMessage we emit.
+    last_input_tokens = count_tokens(input)
 
     entries = sorted(raw_data, key=lambda e: (e.get("iteration", 0), e.get("entry_id", "")))
 
@@ -130,25 +152,28 @@ def _build_log(
             question = directive.get("question") or directive.get("directive", "")
             if question:
                 log.append(HumanMessage(content=question))
+                last_input_tokens = count_tokens(question)
 
             for step in trace.get("intermediate_steps") or []:
                 tool_name = step.get("tool", "tool")
                 tool_input = str(step.get("tool_input", ""))
                 observation = str(step.get("observation", ""))
-                log.append(HumanMessage(content=f"[{tool_name}] {tool_input}"))
+                tool_call = f"[{tool_name}] {tool_input}"
+                log.append(HumanMessage(content=tool_call))
+                last_input_tokens = count_tokens(tool_call)
                 if observation:
-                    log.append(_ai_message(observation, tool_name))
+                    log.append(_ai_message(observation, tool_name, input_tokens=last_input_tokens))
 
             raw_output = trace.get("raw_output", "")
             if raw_output:
-                log.append(_ai_message(raw_output, agent))
+                log.append(_ai_message(raw_output, agent, input_tokens=last_input_tokens))
 
         if not tool_trace:
             content = entry.get("content", "")
             if content:
-                log.append(_ai_message(content, agent))
+                log.append(_ai_message(content, agent, input_tokens=last_input_tokens))
 
-    log.append(_ai_message(final_answer, "FinalSynthesis", usage_metadata=usage_metadata))
+    log.append(_ai_message(final_answer, "FinalSynthesis", input_tokens=last_input_tokens))
     return log
 
 
@@ -166,5 +191,6 @@ def run(input: str, model: str, max_iterations: int | None = None) -> BaseState:
     return BaseState(
         input=input,
         output=final_answer,
-        log=_build_log(input, raw_data, final_answer, usage_metadata=usage.totals()),
+        log=_build_log(input, raw_data, final_answer),
+        usage=usage.totals(),
     )

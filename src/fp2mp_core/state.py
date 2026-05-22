@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from typing import Annotated, Any
 
 from langchain_core.messages import BaseMessage
-from typing_extensions import TypedDict
+from typing_extensions import NotRequired, TypedDict
 
 # ---------------------------------------------------------------------------
 # Leaf data types
@@ -248,6 +248,11 @@ class BaseState(TypedDict):
     input: str
     output: str
     log: list[BaseMessage]
+    # Authoritative run-level token usage (real backend numbers when the
+    # provider returns them, otherwise a tiktoken estimate). Reported here —
+    # separate from the per-message estimates carried inside ``log`` — so that
+    # summing the log does not double-count against this run total.
+    usage: NotRequired[dict]
 
 
 def now_iso() -> str:

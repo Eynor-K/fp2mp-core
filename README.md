@@ -109,8 +109,9 @@ result = run(
     max_iterations=2,
 )
 
-assert set(result.keys()) == {"input", "output", "log"}
+assert {"input", "output", "log"} <= set(result.keys())
 print(result["output"])
+print(result["usage"])  # авторитетный итог по токенам за прогон
 ```
 
 `run()` возвращает `BaseState`:
@@ -119,7 +120,8 @@ print(result["output"])
 |---|---|---|
 | `input` | `str` | Исходный вопрос |
 | `output` | `str` | Финальный синтезированный ответ |
-| `log` | `list[BaseMessage]` | Сообщения трассировки в формате LangChain messages |
+| `log` | `list[BaseMessage]` | Сообщения трассировки в формате LangChain messages; каждое `AIMessage` несёт **per-message** оценку токенов (`usage_metadata`, tiktoken) |
+| `usage` | `dict` | **Авторитетный** итог по токенам за прогон: `{input_tokens, output_tokens, total_tokens, source}`, где `source` = `"real"` (реальные данные бэкенда) либо `"estimate"` (tiktoken-оценка). Считается отдельно от лога, чтобы суммирование per-message оценок не задваивало этот итог |
 
 Низкоуровневый запуск LangGraph всё ещё доступен, если нужен полный внутренний `BlackBoard`:
 
@@ -141,7 +143,7 @@ pytest tests/test_state.py  # один модуль
 pytest -v --tb=short        # подробный вывод с короткими трейсбеками
 ```
 
-64 теста проходят (`pytest`). Примечание: `tests/benchmark_smoke.py` содержит вспомогательный preflight `preflight_answer()` со старым списком из 9 секций — он не участвует в рантайм-пути `run()` и его список секций отстаёт от текущего 7-секционного формата синтеза; сам тест при этом проходит (проверяется на собственных фикстурах).
+68 тестов проходят (`pytest`). Примечание: `tests/benchmark_smoke.py` содержит вспомогательный preflight `preflight_answer()` со старым списком из 9 секций — он не участвует в рантайм-пути `run()` и его список секций отстаёт от текущего 7-секционного формата синтеза; сам тест при этом проходит (проверяется на собственных фикстурах).
 
 ## Бенчмарк и оценка
 
