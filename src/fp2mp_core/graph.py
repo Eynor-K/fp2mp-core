@@ -21,29 +21,25 @@ Graph topology:
 
 from __future__ import annotations
 
-import tiktoken
-
 from langchain_core.messages import AIMessage, HumanMessage
-
-_enc = tiktoken.get_encoding("cl100k_base")
-
-
-def _ai_message(content: str, name: str) -> AIMessage:
-    n = len(_enc.encode(content))
-    return AIMessage(content=content, name=name, usage_metadata={"input_tokens": 0, "output_tokens": n, "total_tokens": n})
 from langgraph.graph import END, START, StateGraph
 
 from fp2mp_core.llm import set_active_model
-from fp2mp_core.nodes.blackboard import init_node, initialize_blackboard_node, redi_decompose_node
 from fp2mp_core.nodes.agents.code_spatial import code_spatial_agent_node
 from fp2mp_core.nodes.agents.normative import normative_agent_node
 from fp2mp_core.nodes.agents.web_search import web_search_agent_node
+from fp2mp_core.nodes.blackboard import init_node, initialize_blackboard_node, redi_decompose_node
 from fp2mp_core.nodes.critic import critic_node, route_from_critic
 from fp2mp_core.nodes.curator import route_from_curator, wiki_curator_node
 from fp2mp_core.nodes.mediator import mediator_node
 from fp2mp_core.nodes.orchestrator import orchestrator_node, route_from_orchestrator
 from fp2mp_core.nodes.synthesis import final_synthesis_node
 from fp2mp_core.state import BaseState, BlackBoard, create_initial_state
+from fp2mp_core.usage import TokenUsageAccumulator
+
+
+def _ai_message(content: str, name: str, usage_metadata: dict | None = None) -> AIMessage:
+    return AIMessage(content=content, name=name, usage_metadata=usage_metadata)
 
 
 def build_graph():
@@ -115,7 +111,12 @@ def build_graph():
     return graph.compile()
 
 
-def _build_log(input: str, raw_data: list, final_answer: str) -> list:
+def _build_log(
+    input: str,
+    raw_data: list,
+    final_answer: str,
+    usage_metadata: dict | None = None,
+) -> list:
     log: list = [HumanMessage(content=input)]
 
     entries = sorted(raw_data, key=lambda e: (e.get("iteration", 0), e.get("entry_id", "")))
@@ -147,7 +148,7 @@ def _build_log(input: str, raw_data: list, final_answer: str) -> list:
             if content:
                 log.append(_ai_message(content, agent))
 
-    log.append(_ai_message(final_answer, "FinalSynthesis"))
+    log.append(_ai_message(final_answer, "FinalSynthesis", usage_metadata=usage_metadata))
     return log
 
 
@@ -156,9 +157,14 @@ def run(input: str, model: str, max_iterations: int | None = None) -> BaseState:
     set_active_model(model)
     compiled = build_graph()
     initial = create_initial_state(input, max_iterations=max_iterations)
-    result = compiled.invoke(initial)
+    usage = TokenUsageAccumulator()
+    result = compiled.invoke(initial, config={"callbacks": [usage]})
 
     final_answer = result.get("final_answer") or ""
     raw_data = result.get("raw_data", [])
 
-    return BaseState(input=input, output=final_answer, log=_build_log(input, raw_data, final_answer))
+    return BaseState(
+        input=input,
+        output=final_answer,
+        log=_build_log(input, raw_data, final_answer, usage_metadata=usage.totals()),
+    )

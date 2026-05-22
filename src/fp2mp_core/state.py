@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import operator
 import uuid
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Annotated, Any
 
 from langchain_core.messages import BaseMessage
@@ -251,4 +251,4 @@ class BaseState(TypedDict):
 
 
 def now_iso() -> str:
-    return datetime.now(UTC).isoformat(timespec="seconds")
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")  # noqa: UP017
