@@ -36,6 +36,8 @@ from fp2mp_core.nodes.curator import route_from_curator, wiki_curator_node
 from fp2mp_core.nodes.mediator import mediator_node
 from fp2mp_core.nodes.orchestrator import orchestrator_node, route_from_orchestrator
 from fp2mp_core.nodes.synthesis import final_synthesis_node
+from fp2mp_core.config import get_settings
+from fp2mp_core.runtime import start_run, write_logs
 from fp2mp_core.state import BaseState, BlackBoard, create_initial_state
 from fp2mp_core.usage import TokenUsageAccumulator, count_tokens
 
@@ -184,17 +186,48 @@ def _build_log(input: str, raw_data: list, final_answer: str) -> list:
 def run(input: str, model: str, max_iterations: int | None = None) -> BaseState:
     """Run the graph and return the fp2mp-baselines/eval state format."""
     set_active_model(model)
+    settings = get_settings()
+    ctx = start_run(settings.model_output_dir)
     compiled = build_graph()
-    initial = create_initial_state(input, max_iterations=max_iterations)
+    initial = create_initial_state(
+        input,
+        max_iterations=max_iterations,
+        run_id=ctx.run_id,
+        run_output_dir=str(ctx.run_dir),
+    )
     usage = TokenUsageAccumulator()
     result = compiled.invoke(initial, config={"callbacks": [usage]})
 
     final_answer = result.get("final_answer") or ""
     raw_data = result.get("raw_data", [])
+    tool_calls = _collect_tool_calls(raw_data)
+    artifact_payload = write_logs(ctx, input, model, final_answer, tool_calls)
 
     return BaseState(
         input=input,
         output=final_answer,
         log=_build_log(input, raw_data, final_answer),
         usage=usage.totals(),
+        artifacts={
+            "run_dir": str(ctx.run_dir),
+            "files": artifact_payload.get("saved_files", []),
+            "log_md": artifact_payload.get("log_md", str(ctx.run_dir / "run_log.md")),
+            "log_json": artifact_payload.get("log_json", str(ctx.run_dir / "run_log.json")),
+        },
     )
+
+
+def _collect_tool_calls(raw_data: list) -> list[dict]:
+    calls: list[dict] = []
+    entries = sorted(raw_data, key=lambda e: (e.get("iteration", 0), e.get("entry_id", "")))
+    for entry in entries:
+        agent = entry.get("agent", "")
+        for trace in entry.get("tool_trace") or []:
+            for step in trace.get("intermediate_steps") or []:
+                calls.append({
+                    "agent": agent,
+                    "tool": step.get("tool", ""),
+                    "args": step.get("tool_input", ""),
+                    "observation": str(step.get("observation", ""))[:1000],
+                })
+    return calls

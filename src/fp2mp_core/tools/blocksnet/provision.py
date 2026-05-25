@@ -5,22 +5,18 @@ from langchain_core.tools import tool
 from blocksnet.analysis.provision import competitive_provision, provision_strong_total, provision_weak_total, shared_provision
 from blocksnet.config.service_types.config import SERVICE_TYPES
 
-
-def _require(state: dict, *keys: str) -> str | None:
-    missing = [key for key in keys if key not in state]
-    if missing:
-        return f"Ошибка: отсутствуют данные {missing}. Сначала вызови load_blocks() и load_accessibility_matrix()."
-    return None
+from fp2mp_core.tools.blocksnet.data import ensure_acc_mx, ensure_blocks
+from fp2mp_core.runtime import record_file
+from fp2mp_core.tools.blocksnet.viz import save_metric_map
 
 
-def _service_df(state: dict, service_type: str) -> pd.DataFrame | str:
-    err = _require(state, "blocks", "acc_mx")
-    if err:
-        return err
+def _service_df(state: dict, data_dir, service_type: str) -> pd.DataFrame | str:
+    blocks = ensure_blocks(state, data_dir)
+    ensure_acc_mx(state, data_dir)
     cap_col = f"capacity_{service_type}"
-    if cap_col not in state["blocks"].columns:
+    if cap_col not in blocks.columns:
         return f"Ошибка: тип сервиса '{service_type}' не найден. Вызови list_service_types()."
-    service_df = state["blocks"][["population", cap_col]].copy()
+    service_df = blocks[["population", cap_col]].copy()
     service_df = service_df.rename(columns={cap_col: "capacity"}).fillna(0)
     service_df["capacity"] = service_df["capacity"].astype(int)
     service_df["population"] = service_df["population"].astype(int)
@@ -47,13 +43,14 @@ def _service_demand(service_type: str) -> int | None:
 
 def make_provision_tools(ctx: dict) -> list:
     state = ctx["state"]
+    data_dir = ctx["data_dir"]
     output_dir = ctx["output_dir"]
 
     @tool
     def compute_service_provision(service_type: str, accessibility_minutes: int = 15, max_depth: int = 1) -> str:
         """Вычисляет конкурентную обеспеченность населения конкретным типом сервиса."""
         try:
-            service_df = _service_df(state, service_type)
+            service_df = _service_df(state, data_dir, service_type)
             if isinstance(service_df, str):
                 return service_df
             demand = _service_demand(service_type)
@@ -63,8 +60,11 @@ def make_provision_tools(ctx: dict) -> list:
                 for index, item in enumerate(result[1:], start=1):
                     if isinstance(item, (pd.DataFrame, pd.Series)):
                         item.to_csv(output_dir / f"competitive_provision_{service_type}_links_{index}.csv")
-            blocks_prov.to_csv(output_dir / f"competitive_provision_{service_type}.csv")
+            csv_path = output_dir / f"competitive_provision_{service_type}.csv"
+            blocks_prov.to_csv(csv_path)
+            record_file(csv_path, "csv", meta={"tool": "compute_service_provision", "service_type": service_type})
             state[f"competitive_provision_{service_type}"] = blocks_prov
+            save_metric_map(ensure_blocks(state, data_dir), blocks_prov, f"competitive_provision_{service_type}", output_dir, f"Обеспеченность {service_type}")
             strong = provision_strong_total(blocks_prov)
             weak = provision_weak_total(blocks_prov)
             col = _provision_column(blocks_prov)
@@ -83,13 +83,16 @@ def make_provision_tools(ctx: dict) -> list:
     def compute_shared_provision(service_type: str, accessibility_minutes: int = 15) -> str:
         """Вычисляет совместную обеспеченность населения сервисом в заданном пороге доступности."""
         try:
-            service_df = _service_df(state, service_type)
+            service_df = _service_df(state, data_dir, service_type)
             if isinstance(service_df, str):
                 return service_df
             result = shared_provision(service_df, state["acc_mx"], accessibility_minutes)
             result_df = result[0] if isinstance(result, tuple) else result
-            result_df.to_csv(output_dir / f"shared_provision_{service_type}.csv")
+            csv_path = output_dir / f"shared_provision_{service_type}.csv"
+            result_df.to_csv(csv_path)
+            record_file(csv_path, "csv", meta={"tool": "compute_shared_provision", "service_type": service_type})
             state[f"shared_provision_{service_type}"] = result_df
+            save_metric_map(ensure_blocks(state, data_dir), result_df, f"shared_provision_{service_type}", output_dir, f"Совместная обеспеченность {service_type}")
             cols = [col for col in result_df.columns if "provision" in col.lower()]
             summary = result_df[cols].describe().to_string() if cols else result_df.describe().to_string()
             return f"Совместная обеспеченность '{service_type}' (порог {accessibility_minutes} мин):\n{summary}"

@@ -1,0 +1,10 @@
+{
+  "id": "provision_competitive",
+  "name": "Обеспеченность населения сервисом",
+  "when_to_use": "Вопрос про обеспеченность, покрытие или доступность населения конкретным сервисом в N минут.",
+  "tools": ["list_service_types", "compute_service_provision"],
+  "prerequisites": "blocks + acc_mx подгружаются автоматически.",
+  "io_contract": "Вход: service_type из list_service_types(), accessibility_minutes. Выход: strong/weak provision и количество кварталов с полной, частичной и нулевой обеспеченностью.",
+  "interpretation": "provision показывает долю удовлетворенного спроса; strong/weak читать как консервативную и расширенную оценку обеспеченности.",
+  "pitfalls": ["Не заменять обеспеченность services_count", "service_type должен существовать среди capacity_*", "порог по умолчанию 15 минут"]
+}

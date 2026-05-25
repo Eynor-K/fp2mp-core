@@ -6,13 +6,9 @@ from blocksnet.analysis.centrality import population_centrality, services_centra
 from blocksnet.analysis.diversity import shannon_diversity
 from blocksnet.analysis.services import services_collocation, services_count, services_density
 
-
-def _require(state: dict, *keys: str) -> str | None:
-    missing = [key for key in keys if key not in state]
-    if not missing:
-        return None
-    loaders = {"blocks": "load_blocks()", "acc_mx": "load_accessibility_matrix()", "adjacency_graph": "build_adjacency_graph()"}
-    return f"Ошибка: отсутствуют данные {missing}. Сначала вызови: {', '.join(loaders.get(key, key) for key in missing)}."
+from fp2mp_core.tools.blocksnet.data import ensure_acc_mx, ensure_blocks
+from fp2mp_core.runtime import record_file
+from fp2mp_core.tools.blocksnet.viz import save_metric_map
 
 
 def _save(result, path) -> None:
@@ -20,6 +16,7 @@ def _save(result, path) -> None:
         result.to_csv(path)
     else:
         pd.Series(result).to_csv(path)
+    record_file(path, "csv")
 
 
 def _series(result, name: str, col: str | None = None) -> pd.Series:
@@ -53,18 +50,17 @@ def _summary(result, key: str, filename: str, output_dir, top_label: str = "То
 
 def make_services_tools(ctx: dict) -> list:
     state = ctx["state"]
+    data_dir = ctx["data_dir"]
     output_dir = ctx["output_dir"]
 
     @tool
     def compute_services_density() -> str:
         """Вычисляет плотность сервисов для каждого квартала."""
         try:
-            err = _require(state, "blocks")
-            if err:
-                return err
-            df = services_density(state["blocks"])
+            df = services_density(ensure_blocks(state, data_dir))
             state["services_density"] = df
             _save(df, output_dir / "services_density.csv")
+            save_metric_map(ensure_blocks(state, data_dir), df, "services_density", output_dir, "Плотность сервисов")
             return f"Плотность сервисов вычислена.\n{df.describe().to_string()}"
         except Exception as exc:
             return f"Ошибка: {exc}"
@@ -73,12 +69,10 @@ def make_services_tools(ctx: dict) -> list:
     def compute_services_count() -> str:
         """Подсчитывает количество объектов каждого типа сервиса по кварталам."""
         try:
-            err = _require(state, "blocks")
-            if err:
-                return err
-            df = services_count(state["blocks"])
+            df = services_count(ensure_blocks(state, data_dir))
             state["services_count"] = df
             _save(df, output_dir / "services_count.csv")
+            save_metric_map(ensure_blocks(state, data_dir), df, "services_count", output_dir, "Количество сервисов")
             return f"Количество сервисов вычислено.\n{df.describe().to_string()}"
         except Exception as exc:
             return f"Ошибка: {exc}"
@@ -87,10 +81,7 @@ def make_services_tools(ctx: dict) -> list:
     def compute_services_collocation() -> str:
         """Анализирует совместное расположение типов сервисов в кварталах."""
         try:
-            err = _require(state, "blocks")
-            if err:
-                return err
-            df = services_collocation(state["blocks"])
+            df = services_collocation(ensure_blocks(state, data_dir))
             state["services_collocation"] = df
             _save(df, output_dir / "services_collocation.csv")
             return f"Колокация сервисов вычислена.\n{df.to_string()[:1000]}"
@@ -101,11 +92,9 @@ def make_services_tools(ctx: dict) -> list:
     def compute_shannon_diversity() -> str:
         """Вычисляет индекс разнообразия Шеннона для распределения сервисов по кварталам."""
         try:
-            err = _require(state, "blocks")
-            if err:
-                return err
-            result = shannon_diversity(state["blocks"])
+            result = shannon_diversity(ensure_blocks(state, data_dir))
             state["shannon_diversity"] = result
+            save_metric_map(ensure_blocks(state, data_dir), result, "shannon_diversity", output_dir, "Разнообразие Шеннона")
             return _summary(result, "shannon_diversity", "shannon_diversity.csv", output_dir, "Топ-10 кварталов по разнообразию", col="shannon_diversity")
         except Exception as exc:
             return f"Ошибка: {exc}"
@@ -114,11 +103,9 @@ def make_services_tools(ctx: dict) -> list:
     def compute_services_centrality() -> str:
         """Вычисляет составной индекс центральности кварталов на основе сервисов и доступности."""
         try:
-            err = _require(state, "blocks", "acc_mx")
-            if err:
-                return err
-            result = services_centrality(state["acc_mx"], state["blocks"])
+            result = services_centrality(ensure_acc_mx(state, data_dir), ensure_blocks(state, data_dir))
             state["services_centrality"] = result
+            save_metric_map(ensure_blocks(state, data_dir), result, "services_centrality", output_dir, "Центральность сервисов")
             return _summary(result, "services_centrality", "services_centrality.csv", output_dir, "Топ-10 наиболее центральных кварталов")
         except Exception as exc:
             return f"Ошибка: {exc}"
@@ -127,11 +114,13 @@ def make_services_tools(ctx: dict) -> list:
     def compute_population_centrality() -> str:
         """Вычисляет центральность кварталов на основе населения и графа смежности."""
         try:
-            err = _require(state, "blocks", "adjacency_graph")
-            if err:
-                return err
-            result = population_centrality(state["blocks"], state["adjacency_graph"])
+            blocks = ensure_blocks(state, data_dir)
+            if "adjacency_graph" not in state:
+                from blocksnet.relations import generate_adjacency_graph
+                state["adjacency_graph"] = generate_adjacency_graph(blocks, buffer_size=0)
+            result = population_centrality(blocks, state["adjacency_graph"])
             state["population_centrality"] = result
+            save_metric_map(blocks, result, "population_centrality", output_dir, "Центральность населения")
             return _summary(result, "population_centrality", "population_centrality.csv", output_dir, "Топ-10", col="population_centrality")
         except Exception as exc:
             return f"Ошибка: {exc}"

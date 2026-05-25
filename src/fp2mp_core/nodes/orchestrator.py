@@ -13,6 +13,7 @@ Key behaviors:
 from __future__ import annotations
 
 import json
+import re
 import uuid
 from typing import Any
 
@@ -35,6 +36,17 @@ _AGENT_NODES = {
 }
 
 _SPECIALIZED_AGENTS = set(AGENT_CAPABILITIES.keys())
+
+_URBAN_METRIC_RE = re.compile(
+    r"обеспеч|доступн|связност|плотност|разнообраз|центральност|сервис|населен|населени|"
+    r"квартал|землепольз|освоенн|застрой|coverage|accessibility|density|diversity|centrality|service|block",
+    re.IGNORECASE,
+)
+_DEVELOPMENT_PROPOSAL_RE = re.compile(
+    r"предлож|гипотез|развити|постро|размест|измен|смен|оптимиз|мастер-план|"
+    r"proposal|hypothesis|develop|build|place|optimi[sz]e|land.?use",
+    re.IGNORECASE,
+)
 
 
 def _format_agent_capabilities(capabilities: dict[str, AgentCapability]) -> str:
@@ -82,6 +94,9 @@ BlocksNet routing rule:
   code for these urban metrics.
 - Use CodeSpatialAgent, not BlocksNetAgent, when the question is about an arbitrary place outside
   the local model or requires fresh geodata from OSM/the web.
+- If the question asks for development proposals, what/where to build, land-use change,
+  or service-mix optimization for the local model city, BlocksNetAgent can generate
+  measured hypotheses through local model tools.
 
 Rules:
 1. Assign based on agent capabilities, using search_modality only as a hint.
@@ -190,6 +205,66 @@ def _count_results_by_type(raw_data: list[RawEntry]) -> dict[str, int]:
     return counts
 
 
+def _model_locality_matches(text: str) -> bool:
+    try:
+        locality = get_model_locality()
+    except Exception:
+        return False
+    if not locality:
+        return False
+    lowered = text.lower()
+    names = {str(locality.get("name", "")).lower()}
+    names.update(part.strip().lower() for part in str(locality.get("display_name", "")).split(","))
+    for name in names:
+        if not name:
+            continue
+        if name in lowered:
+            return True
+        if len(name) >= 6 and name[:5] in lowered:
+            return True
+    return False
+
+
+def _blocksnet_metric_directives(base_text: str, slots_left: int, context_text: str = "") -> list[str]:
+    if slots_left <= 1:
+        return [base_text]
+    match_text = f"{base_text}\n{context_text}"
+    if not _model_locality_matches(match_text) or not _URBAN_METRIC_RE.search(base_text):
+        return [base_text]
+
+    if _DEVELOPMENT_PROPOSAL_RE.search(match_text):
+        return [
+            f"{base_text}\n\n"
+            "Вопрос просит предложения/гипотезы развития. Сначала используй измеренные метрики модели "
+            "для выбора зоны; если нужны конкретные варианты 'что и где построить', вызови "
+            "suggest_target_blocks и затем, только если это уместно по задаче, propose_zone_development. "
+            "Верни HYPOTHESES и FOLLOW_UPS для нормативной/веб-проверки, не трактуй TPE как обязательное решение."
+        ]
+
+    directives = [
+        (
+            f"{base_text}\n\n"
+            "Сфокусируйся только на обеспеченности ключевыми сервисами в нормативное время. "
+            "Сначала вызови list_key_services(), выбери 1-2 релевантных сервиса и их accessibility, "
+            "затем вызови compute_service_provision для каждого выбранного сервиса. "
+            "В ответе интерпретируй полную/частичную/нулевую обеспеченность и назови проблемные block_id."
+        ),
+        (
+            f"{base_text}\n\n"
+            "Сфокусируйся только на транспортной доступности и связности кварталов. "
+            "Вызови compute_mean_accessibility, compute_median_accessibility и compute_connectivity. "
+            "Сравни лучшие и худшие кварталы по block_id и дай численную интерпретацию."
+        ),
+        (
+            f"{base_text}\n\n"
+            "Сфокусируйся только на сервисном разнообразии, центральности и плотности/освоенности. "
+            "Вызови compute_shannon_diversity, compute_services_centrality и compute_density_indicators. "
+            "Свяжи метрики с выводами для мастер-плана, цитируя конкретные числа и block_id."
+        ),
+    ]
+    return directives[:slots_left]
+
+
 def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
     """LangGraph node for OrchestratorAgent."""
     iteration = state.get("iteration", 0)
@@ -243,8 +318,10 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
             agent = _llm_choose_agent(sq, state, exclude_agents=excluded)
         else:
             agent = _llm_choose_agent(sq, state, exclude_agents=tried_agents)
-        pair = (agent, sq_id)
+        if task.get("assigned_agent") in _SPECIALIZED_AGENTS and task.get("assigned_agent") not in tried_agents:
+            agent = task.get("assigned_agent", agent)
 
+        pair = (agent, sq_id)
         if pair in done_pairs:
             continue
 
@@ -252,9 +329,9 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
         assigned_agents_by_task_id[task.get("task_id", "")] = agent
 
         # Build directive text
-        sq_text = sq.get("text", task.get("directive", ""))
+        sq_text = sq.get("text", "")
         enriched_variants = sq.get("enriched_variants", [])
-        directive_text = sq_text
+        directive_text = task.get("directive") or sq_text
         if enriched_variants:
             directive_text += f"\n\nSearch hints: {'; '.join(enriched_variants[:2])}"
 
@@ -262,17 +339,26 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
         if domain_hints and agent == "NormativeAgent":
             directive_text += f"\n\nFocus on: {', '.join(domain_hints)}"
 
-        dispatches.append(
-            OrchestratorDirective(
+        directive_variants = [directive_text]
+        if agent == "BlocksNetAgent":
+            directive_variants = _blocksnet_metric_directives(
+                directive_text,
+                _MAX_DISPATCHES_PER_ROUND - len(dispatches),
+                state.get("question", ""),
+            )
+
+        for variant in directive_variants:
+            if len(dispatches) >= _MAX_DISPATCHES_PER_ROUND:
+                break
+            dispatches.append(OrchestratorDirective(
                 directive_id=str(uuid.uuid4()),
                 target_agent=agent,
                 task_id=task.get("task_id", ""),
                 sub_query_id=sq_id,
-                question=directive_text,
+                question=variant,
                 rationale=f"Assigned by capability-aware routing; modality hint was '{modality}'",
                 priority=task.get("priority", "medium"),
-            )
-        )
+            ))
 
     if not dispatches:
         return _route_to_critic(state, iteration, reason="no_valid_dispatches")
@@ -394,7 +480,8 @@ def _llm_choose_agent(sq: dict, state: BlackBoard, exclude_agents: set[str] | No
             "\nLocal model context:\n"
             f"Локальная модель data/model покрывает локацию: {locality['display_name']}.\n"
             "Если вопрос касается этой локации и просит метрики обеспеченности/"
-            "доступности/плотности/разнообразия/центральности — предпочитай "
+            "доступности/плотности/разнообразия/центральности или предложения "
+            "развития/оптимизации набора сервисов — предпочитай "
             "BlocksNetAgent. Если вопрос про другое место или нужны свежие данные "
             "OSM/веба — выбирай CodeSpatialAgent. Сопоставляй названия с учётом "
             "языка и транслитерации.\n"

@@ -98,11 +98,14 @@ BLOCKSNET_CAPABILITY = AgentCapability(
         "matrix. It computes reliable urban indicators through BlocksNet instead of ad-hoc code."
     ),
     handles=[
-        "population provision with services within a time threshold",
-        "transport accessibility and connectivity between blocks: mean, median, and maximum travel time",
-        "service density, count, collocation, Shannon diversity, service centrality, and population centrality",
-        "urban form and development indicators such as FSI, GSI, MXI, and OSR",
-        "accessibility by land-use type in the local city model",
+        "service provision and population coverage within a minute threshold: schools, kindergartens, healthcare, commerce, sport, transit stops",
+        "shared service provision and comparison of full, partial, and missing coverage by blocks",
+        "transport accessibility and network connectivity between blocks: mean, median, maximum travel time, and connectivity index",
+        "accessibility to land-use zones: residential, business, recreation, transport, industrial, special, and area-weighted accessibility",
+        "service density, service count, service collocation, and Shannon diversity for mixed-use and service-saturation analysis",
+        "service centrality and population centrality for centers, subcenters, and urban framework diagnostics",
+        "urban form, density, and development indicators such as FSI, GSI, MXI, OSR, and development intensity",
+        "development hypotheses for local model zones: optimize land-use and service mix to suggest what and where to build",
     ],
     cannot_do=[
         "analyze any city outside the local data/model model",

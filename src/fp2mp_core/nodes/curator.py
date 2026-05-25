@@ -24,6 +24,7 @@ from fp2mp_core.state import (
     WikiPage,
     board_message,
 )
+from fp2mp_core.summarize import compress_text
 from fp2mp_core.wiki.index import build_index
 from fp2mp_core.wiki.log import append_log_entry, make_log_entry
 from fp2mp_core.wiki.maintenance import (
@@ -95,9 +96,12 @@ def _entry_to_fact(entry: RawEntry) -> ConfirmedFact:
         entry.get("sub_query_id", "x"),
         uuid.uuid4().hex[:6],
     ])
+    focus = "preserve key claim, exact numbers, IDs, block_id values, hypotheses, follow-ups, limitations"
+    if entry.get("type") == "blocksnet_result":
+        focus = "preserve REFLECTION, HYPOTHESES, exact model numbers, units, block_id values, and FOLLOW_UPS"
     return ConfirmedFact(
         fact_id=f"fact_{fact_suffix}",
-        claim=entry.get("content", "")[:500],
+        claim=compress_text(entry.get("content", ""), max_chars=800, focus=focus),
         source_agents=[entry.get("agent", "unknown")],
         confidence=entry.get("confidence", 0.0),
         citations=entry.get("citations", []),

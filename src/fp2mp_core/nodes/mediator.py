@@ -14,6 +14,7 @@ from typing import Any
 
 from fp2mp_core.llm import call_with_thinking
 from fp2mp_core.state import BlackBoard, Citation, ConfirmedFact, WikiPage, board_message
+from fp2mp_core.summarize import compress_text
 
 _SYSTEM = """\
 You are the MediatorAgent. Your role is to synthesize knowledge from multiple agents
@@ -36,6 +37,9 @@ Rules:
   and source agreement) rather than leaving the question open
 - Only promote a fact to output if at least 2 independent sources agree OR confidence >= 0.75
 - Attribute each claim to its source agents
+- If facts include measured quantitative analytics from a local model, carry the key
+  numbers and derived hypotheses into synthesis_narrative. Prefer measured values
+  over external estimates when they conflict, and record the conflict in contradictions.
 
 Output format (JSON only):
 {
@@ -68,14 +72,18 @@ def mediator_node(state: BlackBoard) -> dict[str, Any]:
         if page_id in {"index.md", "log.md"}:
             continue
         title = page.get("title", page_id)
-        content = page.get("content", "")[:800]
+        content = compress_text(
+            page.get("content", ""),
+            max_chars=600,
+            focus="preserve exact numbers, IDs, block_id values, hypotheses, contradictions, and source labels",
+        )
         conf = page.get("confidence", 0.0)
         wiki_content_parts.append(f"### [{page_id}] {title} (conf={conf:.2f})\n{content}")
     wiki_summary = "\n\n".join(wiki_content_parts[:12])  # cap context
 
     facts_summary = "\n".join(
         f"- [{f.get('sub_query_id','?')} conf={f.get('confidence',0):.2f}] "
-        f"{f.get('claim','')[:200]}"
+        f"{compress_text(f.get('claim',''), max_chars=400, focus='preserve exact numbers, IDs, hypotheses, contradictions, and source labels')}"
         for f in output_facts[:20]
     )
 
@@ -118,7 +126,10 @@ and produce new confirmed facts where multiple sources agree.
         contradictions = data.get("contradictions", [])
 
     except Exception as exc:
-        synthesis_narrative = f"Mediator synthesis (parse error: {exc})\n\n{answer_text[:1000]}"
+        synthesis_narrative = "Mediator synthesis (parse error: {exc})\n\n{summary}".format(
+            exc=exc,
+            summary=compress_text(answer_text, max_chars=1000, focus="preserve key claims, numbers, IDs, hypotheses"),
+        )
         raw_facts = []
         contradictions = []
 
@@ -129,7 +140,11 @@ and produce new confirmed facts where multiple sources agree.
         citations: list[Citation] = [Citation(**c) for c in raw_cits if isinstance(c, dict)]
         fact = ConfirmedFact(
             fact_id=f"fact_mediator_{uuid.uuid4().hex[:8]}",
-            claim=rf.get("claim", "")[:500],
+            claim=compress_text(
+                rf.get("claim", ""),
+                max_chars=800,
+                focus="preserve exact numbers, IDs, source labels, hypotheses, and limitations",
+            ),
             source_agents=rf.get("source_agents", ["MediatorAgent"]),
             confidence=float(rf.get("confidence", 0.5)),
             citations=citations,
@@ -162,7 +177,11 @@ and produce new confirmed facts where multiple sources agree.
         agent="MediatorAgent",
         iteration=iteration,
         msg_type="mediator_synthesis",
-        content=synthesis_narrative[:400],
+        content=compress_text(
+            synthesis_narrative,
+            max_chars=800,
+            focus="preserve conclusion, exact numbers, source labels, hypotheses, and contradictions",
+        ),
         confidence=0.8,
     )
 

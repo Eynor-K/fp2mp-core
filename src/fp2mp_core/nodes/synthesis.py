@@ -12,6 +12,7 @@ from typing import Any
 from fp2mp_core.config import get_settings
 from fp2mp_core.llm import get_chat_model
 from fp2mp_core.state import BlackBoard
+from fp2mp_core.summarize import compress_text
 
 _FAILED_CLAIM_PREFIXES = (
     "Vector search error",
@@ -45,6 +46,10 @@ Rules:
   answer (weighted by confidence and source agreement) and state it as your
   conclusion. Commit; do not refuse, defer, or hedge the conclusion itself.
 - Support the answer with the confirmed facts and cite sources inline.
+- If confirmed facts include measured quantitative analytics, the "The case for it"
+  section must cite the numbers and any conclusions or development hypotheses that
+  depend on them. When measured facts conflict with external estimates, prefer the
+  measured facts and explicitly note the discrepancy.
 - Keep all sections domain-neutral and factual.
 
 Write as a thoughtful expert would — a decision memo, not a graded checklist.
@@ -165,6 +170,11 @@ def final_synthesis_node(state: BlackBoard) -> dict[str, Any]:
 
     synthesis_page = wiki.get("synthesis", {})
     synthesis_text = synthesis_page.get("content", "") if synthesis_page else ""
+    synthesis_context = compress_text(
+        synthesis_text,
+        max_chars=1500,
+        focus="preserve measured numbers, source labels, contradictions, hypotheses, and conclusions",
+    ) if synthesis_text else "Not available."
 
     contradictions = critique.get("contradictions", [])
     contradictions_str = "\n".join(f"- {c}" for c in contradictions) if contradictions else "None"
@@ -179,7 +189,7 @@ Confirmed facts:
 {facts_str or "No confirmed facts."}
 
 Mediator synthesis:
-{synthesis_text[:1500] if synthesis_text else "Not available."}
+{synthesis_context}
 
 Unresolved contradictions:
 {contradictions_str}

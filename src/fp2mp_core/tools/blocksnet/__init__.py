@@ -5,8 +5,11 @@ from langchain_core.tools import BaseTool
 from fp2mp_core.tools.blocksnet.data import make_data_tools
 from fp2mp_core.tools.blocksnet.indicators import make_indicators_tools
 from fp2mp_core.tools.blocksnet.network import make_network_tools
+from fp2mp_core.tools.blocksnet.optimize import make_optimize_tools
 from fp2mp_core.tools.blocksnet.provision import make_provision_tools
+from fp2mp_core.tools.blocksnet.registry import find_blocksnet_capability
 from fp2mp_core.tools.blocksnet.services import make_services_tools
+from fp2mp_core.tools.blocksnet.viz import make_viz_tools
 
 
 def make_blocksnet_tools(state: dict, data_dir: Path, output_dir: Path) -> list[BaseTool]:
@@ -17,6 +20,9 @@ def make_blocksnet_tools(state: dict, data_dir: Path, output_dir: Path) -> list[
         + make_provision_tools(ctx)
         + make_services_tools(ctx)
         + make_indicators_tools(ctx)
+        + make_optimize_tools(ctx)
+        + make_viz_tools(ctx)
+        + [find_blocksnet_capability]
     )
 
 

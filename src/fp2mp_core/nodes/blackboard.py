@@ -26,6 +26,8 @@ def init_node(state: BlackBoard) -> dict[str, Any]:
     settings = get_settings()
     return {
         "redi_decomposition": [],
+        "run_id": state.get("run_id", ""),
+        "run_output_dir": state.get("run_output_dir", ""),
         "tasks": [],
         "raw_data": [],
         "wiki": {},

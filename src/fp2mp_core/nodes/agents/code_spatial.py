@@ -49,6 +49,9 @@ Workflow:
 6. Do not submit identical code twice. Change approach or finish with fallback.
 7. INTERPRET the numbers. Include units, provenance/source_url when available,
    and a numeric self-check.
+8. If a spatial or numeric result benefits from visualization, create a matplotlib
+   figure with the Agg backend and save it to OUTPUT_DIR, e.g. plt.savefig(f"{OUTPUT_DIR}/map.png").
+   OUTPUT_DIR is available in executed code; close figures with plt.close().
 
 Location guardrail:
 - If the task names a place, use only that explicit place as spatial scope.

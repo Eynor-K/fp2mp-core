@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import numpy as np
 import pandas as pd
 import geopandas as gpd
@@ -19,6 +20,13 @@ def _service_columns(blocks: pd.DataFrame) -> list[str]:
     return sorted(c.replace("capacity_", "", 1) for c in blocks.columns if c.startswith("capacity_"))
 
 
+def _read_service_type_metadata(data_dir) -> list[dict]:
+    path = data_dir / "service_type.json"
+    with path.open("r", encoding="utf-8") as file:
+        data = json.load(file)
+    return data if isinstance(data, list) else []
+
+
 def _parse_land_use(value):
     if isinstance(value, LandUse):
         return value
@@ -31,6 +39,23 @@ def _parse_land_use(value):
     return value
 
 
+def ensure_blocks(state: dict, data_dir):
+    if "blocks" not in state:
+        blocks = gpd.read_file(data_dir / "blocks_with_services.gpkg")
+        if "land_use" in blocks.columns:
+            blocks["land_use"] = blocks["land_use"].apply(_parse_land_use)
+        blocks["site_area"] = blocks.geometry.area
+        state["blocks"] = blocks
+    return state["blocks"]
+
+
+def ensure_acc_mx(state: dict, data_dir):
+    if "acc_mx" not in state:
+        acc_mx = pd.read_pickle(data_dir / "acc_mx.pickle")
+        state["acc_mx"] = acc_mx.astype("float64")
+    return state["acc_mx"]
+
+
 def make_data_tools(ctx: dict) -> list:
     state = ctx["state"]
     data_dir = ctx["data_dir"]
@@ -39,11 +64,7 @@ def make_data_tools(ctx: dict) -> list:
     def load_blocks() -> str:
         """Загружает GeoDataFrame кварталов с сервисами из data/blocks_with_services.gpkg."""
         try:
-            blocks = gpd.read_file(data_dir / "blocks_with_services.gpkg")
-            if "land_use" in blocks.columns:
-                blocks["land_use"] = blocks["land_use"].apply(_parse_land_use)
-            blocks["site_area"] = blocks.geometry.area
-            state["blocks"] = blocks
+            blocks = ensure_blocks(state, data_dir)
 
             land_use_counts = blocks["land_use"].value_counts(dropna=False).to_dict() if "land_use" in blocks else {}
             services = _service_columns(blocks)
@@ -66,10 +87,9 @@ def make_data_tools(ctx: dict) -> list:
     def load_accessibility_matrix() -> str:
         """Загружает предвычисленную матрицу доступности из data/acc_mx.pickle."""
         try:
-            acc_mx = pd.read_pickle(data_dir / "acc_mx.pickle")
-            original_dtype = acc_mx.dtypes.iloc[0]
-            acc_mx = acc_mx.astype("float64")
-            state["acc_mx"] = acc_mx
+            original = pd.read_pickle(data_dir / "acc_mx.pickle")
+            original_dtype = original.dtypes.iloc[0]
+            acc_mx = ensure_acc_mx(state, data_dir)
             values = acc_mx.to_numpy()
             flat = values[np.isfinite(values) & (values > 0)]
             return (
@@ -91,10 +111,34 @@ def make_data_tools(ctx: dict) -> list:
     def list_service_types() -> str:
         """Возвращает список типов сервисов из загруженных кварталов."""
         try:
-            if "blocks" not in state:
-                return "Ошибка: сначала вызови load_blocks()."
-            services = _service_columns(state["blocks"])
+            services = _service_columns(ensure_blocks(state, data_dir))
             return f"Доступные типы сервисов ({len(services)} шт.):\n" + ", ".join(services)
+        except Exception as exc:
+            return f"Ошибка: {exc}"
+
+    @tool
+    def list_key_services() -> str:
+        """Возвращает доступные сервисы с нормативами demand и accessibility из service_type.json."""
+        try:
+            available = set(_service_columns(ensure_blocks(state, data_dir)))
+            rows = []
+            for item in _read_service_type_metadata(data_dir):
+                name = str(item.get("name", "")).strip()
+                if not name or name not in available:
+                    continue
+                demand = item.get("demand")
+                accessibility = item.get("accessibility")
+                name_ru = item.get("name_ru") or name
+                rows.append((name, name_ru, demand, accessibility))
+            rows.sort(key=lambda row: row[0])
+            if not rows:
+                return "Сервисы с нормативами не найдены. Проверь service_type.json и capacity_* в кварталах."
+            lines = ["Ключевые сервисы из service_type.json (только доступные в модели):"]
+            for name, name_ru, demand, accessibility in rows:
+                lines.append(
+                    f"- {name} ({name_ru}): demand={demand}, accessibility={accessibility} мин"
+                )
+            return "\n".join(lines)
         except Exception as exc:
             return f"Ошибка: {exc}"
 
@@ -102,9 +146,7 @@ def make_data_tools(ctx: dict) -> list:
     def get_block_info(block_id: int) -> str:
         """Возвращает подробную информацию о квартале по индексу или колонке block_id."""
         try:
-            if "blocks" not in state:
-                return "Ошибка: сначала вызови load_blocks()."
-            blocks = state["blocks"]
+            blocks = ensure_blocks(state, data_dir)
             row = blocks[blocks.index == block_id]
             if row.empty and "block_id" in blocks.columns:
                 row = blocks[blocks["block_id"] == block_id]
@@ -138,4 +180,12 @@ def make_data_tools(ctx: dict) -> list:
         except Exception as exc:
             return f"Ошибка: {exc}"
 
-    return [load_blocks, load_accessibility_matrix, list_cached_data, list_service_types, get_block_info, get_analysis_results]
+    return [
+        load_blocks,
+        load_accessibility_matrix,
+        list_cached_data,
+        list_service_types,
+        list_key_services,
+        get_block_info,
+        get_analysis_results,
+    ]

@@ -32,6 +32,8 @@ class Settings:
     normative_db_path: Path = field(default_factory=lambda: NORMATIVE_DIR)
     model_data_dir: Path = field(default_factory=lambda: DATA_DIR / "model")
     model_output_dir: Path = field(default_factory=lambda: DATA_DIR / "model" / "output")
+    save_web_images: bool = True
+    max_web_images_per_page: int = 3
     wiki_persist_dir: Path | None = None
     log_level: str = "INFO"
 
@@ -63,6 +65,9 @@ def get_settings() -> Settings:
         normative_db_path=Path(norm_path_str),
         model_data_dir=model_data_dir,
         model_output_dir=model_output_dir,
+        save_web_images=os.getenv("SAVE_WEB_IMAGES", "1").strip().lower()
+        not in {"0", "false", "no", "off"},
+        max_web_images_per_page=int(os.getenv("MAX_WEB_IMAGES_PER_PAGE", "3")),
         wiki_persist_dir=wiki_dir,
         log_level=os.getenv("LOG_LEVEL", "INFO"),
     )

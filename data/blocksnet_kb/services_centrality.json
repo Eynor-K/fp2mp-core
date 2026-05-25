@@ -1,0 +1,10 @@
+{
+  "id": "services_centrality",
+  "name": "Центральность по сервисам и населению",
+  "when_to_use": "Вопрос про центры притяжения, опорный каркас, полицентричность, иерархию кварталов или населенные узлы.",
+  "tools": ["compute_services_centrality", "build_adjacency_graph", "compute_population_centrality"],
+  "prerequisites": "blocks + acc_mx подгружаются автоматически; граф смежности строится build_adjacency_graph или автоматически для population_centrality.",
+  "io_contract": "Выход: индексы centrality по кварталам и топ кварталов с максимальными значениями.",
+  "interpretation": "Высокая centrality показывает узлы, где целесообразно концентрировать общественные функции и пересадки.",
+  "pitfalls": ["Для population_centrality нужен adjacency_graph", "интерпретировать как относительный индекс, а не абсолютную мощность"]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "services_diversity_density",
+  "name": "Плотность, количество, колокация и разнообразие сервисов",
+  "when_to_use": "Вопрос про насыщенность сервисами, смешанность функций, разнообразие, плотность или центры повседневной активности.",
+  "tools": ["compute_services_count", "compute_services_density", "compute_services_collocation", "compute_shannon_diversity"],
+  "prerequisites": "blocks подгружается автоматически.",
+  "io_contract": "Выход: количество/плотность сервисов, матрица колокации, индекс Shannon diversity по кварталам.",
+  "interpretation": "Высокая плотность и Shannon diversity указывают на многофункциональные узлы; низкие значения помогают искать зоны дефицита.",
+  "pitfalls": ["Количество сервисов не равно обеспеченности населения", "для обеспеченности использовать compute_service_provision"]
+}

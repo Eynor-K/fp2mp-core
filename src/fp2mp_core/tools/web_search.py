@@ -7,14 +7,20 @@ Fallback: DuckDuckGo (no key required).
 
 from __future__ import annotations
 
+import base64
+import hashlib
+import mimetypes
 import re
 from functools import lru_cache
+from pathlib import Path
+from urllib.parse import urljoin, urlparse
 
 import httpx
 from langchain_core.tools import tool
 
 from fp2mp_core.config import get_settings
 from fp2mp_core.llm import get_chat_model
+from fp2mp_core.runtime import get_run_context, record_file
 
 _FETCH_TIMEOUT = 15
 _DISTILL_CHARS = 9000
@@ -150,6 +156,9 @@ def fetch_url_tool(url: str) -> str:
 
     try:
         html = _fetch_html(url)
+        settings = get_settings()
+        if settings.save_web_images:
+            save_page_images(html, url, settings.max_web_images_per_page)
         text = _extract_main_text(html, url)
         return text[:3000]
     except Exception as exc:
@@ -169,6 +178,9 @@ def research_url_tool(url: str, focus: str = "") -> str:
 
     try:
         html = _fetch_html(normalized_url)
+        settings = get_settings()
+        if settings.save_web_images:
+            save_page_images(html, normalized_url, settings.max_web_images_per_page)
         text = _extract_main_text(html, normalized_url)
     except Exception as exc:
         return (
@@ -226,6 +238,86 @@ def _extract_main_text(html: str, url: str = "") -> str:
         return _bs4_text(summary_html)
     except Exception:
         return _bs4_text(html)
+
+
+def save_page_images(html: str, base_url: str, max_images: int = 3) -> list[dict]:
+    """Save relevant images from a fetched page into the current run images folder."""
+    ctx = get_run_context()
+    if not ctx or max_images <= 0:
+        return []
+    try:
+        from bs4 import BeautifulSoup  # type: ignore[import-untyped]
+
+        soup = BeautifulSoup(html, "html.parser")
+        candidates: list[tuple[str, str]] = []
+        for meta in soup.find_all("meta"):
+            prop = str(meta.get("property") or meta.get("name") or "").lower()
+            if prop in {"og:image", "twitter:image"} and meta.get("content"):
+                candidates.append((str(meta.get("content")), ""))
+        for img in soup.find_all("img"):
+            src = img.get("src") or img.get("data-src")
+            if src:
+                candidates.append((str(src), str(img.get("alt") or "")))
+
+        saved: list[dict] = []
+        seen: set[str] = set()
+        base_host = urlparse(base_url).netloc
+        for src, alt in candidates:
+            if len(saved) >= max_images:
+                break
+            img_url = urljoin(base_url, src)
+            if img_url in seen or _skip_image_url(img_url):
+                continue
+            seen.add(img_url)
+            parsed = urlparse(img_url)
+            if parsed.scheme in {"http", "https"} and parsed.netloc != base_host:
+                continue
+            item = _download_or_decode_image(img_url, base_url, alt)
+            if item:
+                saved.append(item)
+        return saved
+    except Exception:
+        return []
+
+
+def _download_or_decode_image(img_url: str, page_url: str, alt: str) -> dict | None:
+    ctx = get_run_context()
+    if not ctx:
+        return None
+    try:
+        if img_url.startswith("data:image/"):
+            header, encoded = img_url.split(",", 1)
+            ext = "." + header.split("/", 1)[1].split(";", 1)[0]
+            content = base64.b64decode(encoded)
+            source = "data:image"
+        elif img_url.startswith("file://"):
+            path = urlparse(img_url).path
+            content = Path(path).read_bytes()  # type: ignore[name-defined]
+            ext = Path(path).suffix or ".png"  # type: ignore[name-defined]
+            source = img_url
+        else:
+            resp = httpx.get(img_url, timeout=10, follow_redirects=True, headers={"User-Agent": "fp2mp-core/1.0"})
+            resp.raise_for_status()
+            ctype = resp.headers.get("content-type", "")
+            if not ctype.startswith("image/"):
+                return None
+            content = resp.content
+            if len(content) < 2048:
+                return None
+            ext = mimetypes.guess_extension(ctype.split(";", 1)[0]) or Path(urlparse(img_url).path).suffix or ".img"  # type: ignore[name-defined]
+            source = img_url
+        digest = hashlib.sha256(img_url.encode("utf-8")).hexdigest()[:12]
+        path = ctx.images_dir / f"{digest}{ext}"
+        path.write_bytes(content)
+        record_file(path, "web_image", source=source, meta={"page": page_url, "alt": alt})
+        return {"path": str(path), "source": source, "page": page_url, "alt": alt}
+    except Exception:
+        return None
+
+
+def _skip_image_url(url: str) -> bool:
+    lowered = url.lower()
+    return any(marker in lowered for marker in ("sprite", "icon", "logo", "placeholder", "spacer"))
 
 
 def _bs4_text(html: str) -> str:

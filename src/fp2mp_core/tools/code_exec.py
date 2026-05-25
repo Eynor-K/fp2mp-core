@@ -24,6 +24,7 @@ from pathlib import Path
 from langchain_core.tools import tool
 
 from fp2mp_core.config import BASE_DIR, get_settings
+from fp2mp_core.runtime import get_run_context, get_run_dir, record_file
 
 _EXEC_TIMEOUT = 120  # seconds — allow slow OSM/geocoding network calls
 _DATA_DIR = str(BASE_DIR / "data")
@@ -42,6 +43,7 @@ _ALLOWED_DATA_LIBRARIES = [
     "osmnx", "geopandas", "shapely", "pyproj", "fiona",
     "overpy", "geopy",
     "pandas", "numpy", "scipy", "sklearn",
+    "matplotlib",
     "json", "math", "statistics", "itertools", "collections",
     "pathlib", "re", "datetime",
     "networkx", "rtree",
@@ -198,7 +200,8 @@ def _api_existence_check(code: str) -> str | None:
 
 def _ruff_pyflakes_check(code: str) -> str | None:
     """Run ruff F rules when available; skip if ruff is not installed."""
-    wrapped = f"DATA_DIR = {_DATA_DIR!r}\n" + code
+    output_dir = _code_output_dir()
+    wrapped = f"DATA_DIR = {_DATA_DIR!r}\nOUTPUT_DIR = {str(output_dir)!r}\n" + code
     try:
         with tempfile.TemporaryDirectory() as tmpdir:
             path = Path(tmpdir) / "snippet.py"
@@ -230,8 +233,11 @@ def _pre_execution_check(code: str) -> str | None:
 
 def _execute_subprocess(code: str) -> str:
     """Execute code in a subprocess with network access."""
+    output_dir = _code_output_dir()
+    before = _image_files(output_dir)
     wrapped = textwrap.dedent(f"""\
 DATA_DIR = {_DATA_DIR!r}
+OUTPUT_DIR = {str(output_dir)!r}
 
 {code}
 """)
@@ -241,7 +247,9 @@ DATA_DIR = {_DATA_DIR!r}
             capture_output=True,
             text=True,
             timeout=_EXEC_TIMEOUT,
+            cwd=str(output_dir),
         )
+        _record_new_images(output_dir, before)
         output = result.stdout
         if result.stderr:
             output += f"\n[stderr]\n{result.stderr[:800]}"
@@ -258,7 +266,10 @@ def _execute_e2b(code: str) -> str:
         from e2b_code_interpreter import Sandbox  # type: ignore[import-untyped]
         settings = get_settings()
         with Sandbox(api_key=settings.e2b_api_key) as sandbox:
-            execution = sandbox.run_code(code)
+            output_dir = _code_output_dir()
+            wrapped = f"DATA_DIR = {_DATA_DIR!r}\nOUTPUT_DIR = {str(output_dir)!r}\n" + code
+            execution = sandbox.run_code(wrapped)
+            _save_e2b_images(execution)
             output = "\n".join(str(o) for o in execution.logs.stdout)
             if execution.logs.stderr:
                 output += "\n[stderr]\n" + "\n".join(execution.logs.stderr)[:500]
@@ -278,12 +289,13 @@ def execute_python_tool(code: str) -> str:
     - geopy for geocoding addresses to coordinates
     - requests, httpx for public APIs and open datasets
     - pandas, numpy for data analysis
+    - matplotlib for plots saved to OUTPUT_DIR
 
     Restrictions (will be blocked):
     - subprocess, eval, exec, __import__, compile
     - os.system, os.popen, os.execv and other shell-escape calls
 
-    DATA_DIR variable is set to the local data directory.
+    DATA_DIR and OUTPUT_DIR variables are set to local directories.
     Returns output as string (up to 4000 characters).
     """
     code = _print_last_expression(_strip_markdown_code_fence(code))
@@ -362,6 +374,7 @@ def list_available_libraries_tool() -> str:
         "Spatial / OSM": ["osmnx", "geopandas", "shapely", "pyproj", "geopy", "networkx"],
         "HTTP / APIs": ["requests", "httpx"],
         "Data analysis": ["pandas", "numpy", "scipy"],
+        "Visualization": ["matplotlib"],
         "Standard library": ["json", "math", "statistics", "urllib", "pathlib", "re"],
     }
 
@@ -378,6 +391,43 @@ def list_available_libraries_tool() -> str:
         lines.append(f"{category}: {', '.join(available)}")
 
     lines.append(
-        "\nNote: DATA_DIR variable is always available in execute_python_tool."
+        "\nNote: DATA_DIR and OUTPUT_DIR variables are always available in execute_python_tool."
     )
     return "\n".join(lines)
+
+
+def _code_output_dir() -> Path:
+    ctx = get_run_context()
+    if ctx:
+        path = ctx.figures_dir
+    else:
+        path = get_run_dir(get_settings().model_output_dir) / "figures"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def _image_files(path: Path) -> set[Path]:
+    suffixes = {".png", ".jpg", ".jpeg", ".svg"}
+    return {p.resolve() for p in path.glob("*") if p.is_file() and p.suffix.lower() in suffixes}
+
+
+def _record_new_images(path: Path, before: set[Path]) -> None:
+    for image in sorted(_image_files(path) - before):
+        record_file(image, "code_image", meta={"agent": "CodeSpatialAgent"})
+
+
+def _save_e2b_images(execution) -> None:
+    try:
+        import base64
+
+        output_dir = _code_output_dir()
+        for idx, result in enumerate(getattr(execution, "results", []) or []):
+            png = getattr(result, "png", None) or getattr(result, "image", None)
+            if not png:
+                continue
+            raw = base64.b64decode(png) if isinstance(png, str) else png
+            path = output_dir / f"e2b_result_{idx}.png"
+            path.write_bytes(raw)
+            record_file(path, "code_image", meta={"agent": "CodeSpatialAgent", "backend": "e2b"})
+    except Exception:
+        return

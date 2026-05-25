@@ -1,0 +1,9 @@
+{
+  "id": "matplotlib_savefig",
+  "name": "Save matplotlib figures to run artifacts",
+  "when_to_use": "Use when CodeSpatialAgent computes spatial, statistical, or tabular results that are easier to inspect as a chart or map.",
+  "libs": ["matplotlib", "geopandas", "pandas"],
+  "verified_snippet": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots(figsize=(8, 6))\n# plot GeoDataFrame or Series here\nplt.savefig(f'{OUTPUT_DIR}/spatial_result.png', dpi=120, bbox_inches='tight')\nplt.close(fig)",
+  "io_contract": "INPUT: computed GeoDataFrame/DataFrame/Series. OUTPUT: PNG/SVG/JPG file saved under OUTPUT_DIR, which is injected by run_validated_python.",
+  "pitfalls": ["Always use matplotlib.use('Agg') before pyplot in headless runs", "Save to OUTPUT_DIR, not an arbitrary path", "Call plt.close(fig) after saving"]
+}

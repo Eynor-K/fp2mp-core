@@ -171,6 +171,8 @@ def _merge_output(left: list[ConfirmedFact], right: list[ConfirmedFact]) -> list
 class BlackBoard(TypedDict, total=False):
     # Input
     question: str
+    run_id: str
+    run_output_dir: str
 
     # ReDI decomposition
     redi_decomposition: list[SubQuery]
@@ -212,10 +214,17 @@ class BlackBoard(TypedDict, total=False):
 # ---------------------------------------------------------------------------
 
 
-def create_initial_state(question: str, max_iterations: int | None = None) -> BlackBoard:
+def create_initial_state(
+    question: str,
+    max_iterations: int | None = None,
+    run_id: str = "",
+    run_output_dir: str = "",
+) -> BlackBoard:
     return BlackBoard(
         question=question,
         max_iterations=max_iterations,
+        run_id=run_id,
+        run_output_dir=run_output_dir,
     )
 
 
@@ -253,6 +262,7 @@ class BaseState(TypedDict):
     # separate from the per-message estimates carried inside ``log`` — so that
     # summing the log does not double-count against this run total.
     usage: NotRequired[dict]
+    artifacts: NotRequired[dict]
 
 
 def now_iso() -> str:

@@ -1,0 +1,10 @@
+{
+  "id": "land_use_accessibility",
+  "name": "Доступность по типам землепользования",
+  "when_to_use": "Вопрос про доступность жилых, деловых, рекреационных, промышленных или транспортных зон.",
+  "tools": ["compute_land_use_accessibility", "compute_area_accessibility"],
+  "prerequisites": "blocks + acc_mx подгружаются автоматически.",
+  "io_contract": "Вход: land_use из enum LandUse. Выход: минуты доступности до выбранного типа землепользования по кварталам.",
+  "interpretation": "Среднее и медиана показывают общую близость к зоне; худшие кварталы выявляют пространственные разрывы.",
+  "pitfalls": ["Допустимые типы: RESIDENTIAL, BUSINESS, RECREATION, TRANSPORT, INDUSTRIAL, SPECIAL", "значения в минутах"]
+}
