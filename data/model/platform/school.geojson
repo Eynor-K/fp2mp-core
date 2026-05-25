@@ -1,0 +1,454 @@
+{
+  "type": "FeatureCollection",
+  "name": "school",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "relation/1369266",
+        "@id": "relation/1369266",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "9",
+        "addr:postcode": "188300",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Коли Подрядчикова",
+        "building": "school",
+        "building:cladding": "brick",
+        "building:levels": "3",
+        "design:code:SPb": "Шк-48",
+        "type": "multipolygon",
+        "design:ref": null,
+        "contact:website": null,
+        "official_name": null,
+        "roof:shape": null,
+        "building:architecture": null,
+        "name": null,
+        "capacity": 1140,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.121078852077773,
+          59.5768199
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "relation/1847997",
+        "@id": "relation/1847997",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "7А",
+        "addr:postcode": "188309",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Генерала Кныша",
+        "building": "school",
+        "building:cladding": "panel",
+        "building:levels": "3",
+        "design:code:SPb": null,
+        "type": "multipolygon",
+        "design:ref": "222-1-193",
+        "contact:website": null,
+        "official_name": null,
+        "roof:shape": null,
+        "building:architecture": null,
+        "name": null,
+        "capacity": 650,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.091328522279472,
+          59.561257
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/23051216",
+        "@id": "way/23051216",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "25",
+        "addr:postcode": null,
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Слепнёва",
+        "building": "school",
+        "building:cladding": null,
+        "building:levels": "3",
+        "design:code:SPb": "Шк-30",
+        "type": null,
+        "design:ref": null,
+        "contact:website": null,
+        "official_name": null,
+        "roof:shape": null,
+        "building:architecture": null,
+        "name": null,
+        "capacity": 1276,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.095448258537715,
+          59.55699845
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/47006882",
+        "@id": "way/47006882",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "14",
+        "addr:postcode": null,
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Беляева",
+        "building": "school",
+        "building:cladding": null,
+        "building:levels": null,
+        "design:code:SPb": null,
+        "type": null,
+        "design:ref": null,
+        "contact:website": "http://www.gtn7school.ru",
+        "official_name": "МБОУ «Гатчинская средняя общеобразовательная школа №7»",
+        "roof:shape": null,
+        "building:architecture": null,
+        "name": null,
+        "capacity": 716,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.07376009958673,
+          59.5723796
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62357266",
+        "@id": "way/62357266",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "17",
+        "addr:postcode": null,
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Изотова",
+        "building": "school",
+        "building:cladding": "panel",
+        "building:levels": "3",
+        "design:code:SPb": "Шк-40",
+        "type": null,
+        "design:ref": null,
+        "contact:website": null,
+        "official_name": null,
+        "roof:shape": "hipped",
+        "building:architecture": null,
+        "name": null,
+        "capacity": 600,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.126188963213327,
+          59.58399515
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62365403",
+        "@id": "way/62365403",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "2",
+        "addr:postcode": "188309",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Чкалова",
+        "building": "school",
+        "building:cladding": "plaster",
+        "building:levels": "2",
+        "design:code:SPb": null,
+        "type": null,
+        "design:ref": null,
+        "contact:website": null,
+        "official_name": null,
+        "roof:shape": null,
+        "building:architecture": "neoclassicism",
+        "name": "Средняя школа № 4",
+        "capacity": 576,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.125732156098202,
+          59.5572361
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62365436",
+        "@id": "way/62365436",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "32А",
+        "addr:postcode": null,
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Карла Маркса",
+        "building": "school",
+        "building:cladding": null,
+        "building:levels": "2",
+        "design:code:SPb": null,
+        "type": null,
+        "design:ref": "214-2-57",
+        "contact:website": null,
+        "official_name": null,
+        "roof:shape": null,
+        "building:architecture": null,
+        "name": "Гимназия \"Apeks\"",
+        "capacity": 137,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.123807699585164,
+          59.5623988
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62365486",
+        "@id": "way/62365486",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "2",
+        "addr:postcode": "188309",
+        "addr:region": "Ленинградская область",
+        "addr:street": "проспект 25 Октября",
+        "building": "school",
+        "building:cladding": "brick",
+        "building:levels": "3",
+        "design:code:SPb": null,
+        "type": null,
+        "design:ref": null,
+        "contact:website": null,
+        "official_name": null,
+        "roof:shape": null,
+        "building:architecture": "stalinist neoclassicism",
+        "name": "Школа №11",
+        "capacity": 950,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.11926766432386,
+          59.56705305
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:city": null,
+        "addr:country": null,
+        "addr:housenumber": null,
+        "addr:postcode": null,
+        "addr:region": null,
+        "addr:street": null,
+        "building": null,
+        "building:cladding": null,
+        "building:levels": null,
+        "design:code:SPb": null,
+        "type": null,
+        "design:ref": null,
+        "contact:website": null,
+        "official_name": null,
+        "roof:shape": null,
+        "building:architecture": null,
+        "name": null,
+        "capacity": 835,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.11780468955171,
+          59.567716785872655
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62366555",
+        "@id": "way/62366555",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "22",
+        "addr:postcode": "188309",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Киргетова",
+        "building": "school",
+        "building:cladding": "brick",
+        "building:levels": "3",
+        "design:code:SPb": null,
+        "type": null,
+        "design:ref": "2-02-73",
+        "contact:website": null,
+        "official_name": null,
+        "roof:shape": "hipped",
+        "building:architecture": null,
+        "name": null,
+        "capacity": 1080,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12979666872223,
+          59.57333165
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62366732",
+        "@id": "way/62366732",
+        "addr:city": null,
+        "addr:country": null,
+        "addr:housenumber": "32",
+        "addr:postcode": "188309",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Володарского",
+        "building": "school",
+        "building:cladding": null,
+        "building:levels": "4",
+        "design:code:SPb": null,
+        "type": null,
+        "design:ref": "2ЛГ-02-2/64",
+        "contact:website": null,
+        "official_name": null,
+        "roof:shape": "flat",
+        "building:architecture": null,
+        "name": null,
+        "capacity": 1344,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13668350166538,
+          59.5687824
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62366781",
+        "@id": "way/62366781",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "5/3",
+        "addr:postcode": null,
+        "addr:region": "Ленинградская область",
+        "addr:street": "Рощинская улица",
+        "building": "school",
+        "building:cladding": "brick",
+        "building:levels": "5",
+        "design:code:SPb": null,
+        "type": null,
+        "design:ref": "164-80-1",
+        "contact:website": null,
+        "official_name": null,
+        "roof:shape": "flat",
+        "building:architecture": null,
+        "name": "НОУ \"Первая академическая гимназия\"",
+        "capacity": 134,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13947375,
+          59.5763742
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:city": null,
+        "addr:country": null,
+        "addr:housenumber": null,
+        "addr:postcode": null,
+        "addr:region": null,
+        "addr:street": null,
+        "building": null,
+        "building:cladding": null,
+        "building:levels": null,
+        "design:code:SPb": null,
+        "type": null,
+        "design:ref": null,
+        "contact:website": null,
+        "official_name": null,
+        "roof:shape": null,
+        "building:architecture": null,
+        "name": "СОШ 6",
+        "capacity": 932,
+        "service_id": 22.0,
+        "service_name": "Школа"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.102145694995762,
+          59.54676681313708
+        ]
+      }
+    }
+  ]
+}

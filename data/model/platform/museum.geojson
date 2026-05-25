@@ -1,0 +1,285 @@
+{
+  "type": "FeatureCollection",
+  "name": "museum",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/773640178",
+        "@id": "node/773640178",
+        "name": "Гатчинский Дворец",
+        "tourism": "museum",
+        "website": "https://gatchinapalace.ru/",
+        "wikidata": "Q7461",
+        "wikipedia": "ru:Большой Гатчинский дворец",
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1080283,
+          59.5639379
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/1085289530",
+        "@id": "node/1085289530",
+        "name": "Дом П. Е. Щербова",
+        "tourism": "museum",
+        "website": null,
+        "wikidata": "Q51237",
+        "wikipedia": "ru:Музей-усадьба П. Е. Щербова",
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1334591,
+          59.5573801
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/1851809841",
+        "@id": "node/1851809841",
+        "name": "Музей истории завода Буревестник",
+        "tourism": "museum",
+        "website": null,
+        "wikidata": null,
+        "wikipedia": null,
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1350874,
+          59.5636465
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Кирха",
+        "tourism": null,
+        "website": null,
+        "wikidata": null,
+        "wikipedia": null,
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1260715498382,
+          59.57238702078618
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Авиационный выставочный центр \"Гамаюн\"",
+        "tourism": null,
+        "website": null,
+        "wikidata": null,
+        "wikipedia": null,
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.10313886490117,
+          59.55730417010457
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Птичник",
+        "tourism": null,
+        "website": null,
+        "wikidata": null,
+        "wikipedia": null,
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.09064277837325,
+          59.572212170210285
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Павильон Венеры",
+        "tourism": null,
+        "website": null,
+        "wikidata": null,
+        "wikipedia": null,
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.109137481165796,
+          59.568285146211636
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Березовые Ворота",
+        "tourism": null,
+        "website": null,
+        "wikidata": null,
+        "wikipedia": null,
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.113851170464265,
+          59.56948376539641
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Березовый домик",
+        "tourism": null,
+        "website": null,
+        "wikidata": null,
+        "wikipedia": null,
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.112457677476307,
+          59.569600005520634
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Цветочная Горка в Гатчинском парке",
+        "tourism": null,
+        "website": null,
+        "wikidata": null,
+        "wikipedia": null,
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.116607922864432,
+          59.56577222296282
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Музей истории города Гатчины",
+        "tourism": null,
+        "website": null,
+        "wikidata": null,
+        "wikipedia": null,
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.122475985052272,
+          59.5699640363662
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Приоратский дворец",
+        "tourism": null,
+        "website": null,
+        "wikidata": null,
+        "wikipedia": null,
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.121526375925374,
+          59.55821840185458
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Подземный ход",
+        "tourism": null,
+        "website": null,
+        "wikidata": null,
+        "wikipedia": null,
+        "service_id": 50.0,
+        "service_name": "Музей"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.10811915936688,
+          59.56400888808189
+        ]
+      }
+    }
+  ]
+}

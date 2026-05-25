@@ -1,0 +1,136 @@
+{
+  "type": "FeatureCollection",
+  "name": "university",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62365986",
+        "@id": "way/62365986",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "17А",
+        "addr:postcode": "188309",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Карла Маркса",
+        "building": "university",
+        "building:cladding": "brick",
+        "building:levels": "3",
+        "name": "Технологический факультет ГИЭФПТ",
+        "roof:shape": "flat",
+        "amenity": null,
+        "roof:levels": null,
+        "building:parts": null,
+        "design:code:SPb": null,
+        "service_id": 27.0,
+        "service_name": "Учреждения высшего профессионального образования"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12993716432787,
+          59.56011505
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62366472",
+        "@id": "way/62366472",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "16Б",
+        "addr:postcode": "188309",
+        "addr:region": "Ленинградская область",
+        "addr:street": "проспект 25 Октября",
+        "building": "university",
+        "building:cladding": null,
+        "building:levels": "2",
+        "name": "Санкт-Петербургский институт внешнеэкономических связей, экономики и права",
+        "roof:shape": "gabled",
+        "amenity": "university",
+        "roof:levels": "1",
+        "building:parts": null,
+        "design:code:SPb": null,
+        "service_id": 27.0,
+        "service_name": "Учреждения высшего профессионального образования"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.120855797862923,
+          59.5699227
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62366771",
+        "@id": "way/62366771",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "5",
+        "addr:postcode": "188309",
+        "addr:region": "Ленинградская область",
+        "addr:street": "Рощинская улица",
+        "building": "university",
+        "building:cladding": "brick",
+        "building:levels": "4",
+        "name": "Государственный институт экономики, финансов, права и технологий",
+        "roof:shape": null,
+        "amenity": null,
+        "roof:levels": null,
+        "building:parts": "vertical",
+        "design:code:SPb": "Шк-21",
+        "service_id": 27.0,
+        "service_name": "Учреждения высшего профессионального образования"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13939038139329,
+          59.57512925
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/234779191",
+        "@id": "way/234779191",
+        "addr:city": "Гатчина",
+        "addr:country": null,
+        "addr:housenumber": "3",
+        "addr:postcode": null,
+        "addr:region": null,
+        "addr:street": "Рощинская улица",
+        "building": "university",
+        "building:cladding": null,
+        "building:levels": "4",
+        "name": "Технический факультет ГИЭФПТ",
+        "roof:shape": null,
+        "amenity": null,
+        "roof:levels": null,
+        "building:parts": "vertical",
+        "design:code:SPb": "Шк-20",
+        "service_id": 27.0,
+        "service_name": "Учреждения высшего профессионального образования"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.14207318512213,
+          59.57513815
+        ]
+      }
+    }
+  ]
+}

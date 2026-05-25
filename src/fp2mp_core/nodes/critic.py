@@ -154,7 +154,7 @@ def _code_support_pending(state: BlackBoard) -> bool:
     if not any(sq.get("sub_query_id") == "sq_code_support" for sq in sub_queries):
         return False
     return not any(
-        entry.get("agent") == "CodeSpatialAgent"
+        entry.get("agent") in {"CodeSpatialAgent", "BlocksNetAgent"}
         and entry.get("sub_query_id") == "sq_code_support"
         for entry in state.get("raw_data", [])
     )

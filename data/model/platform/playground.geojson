@@ -1,0 +1,714 @@
+{
+  "type": "FeatureCollection",
+  "name": "playground",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/1128370049",
+        "@id": "node/1128370049",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1337598,
+          59.5661257
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/1825184823",
+        "@id": "node/1825184823",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1274904,
+          59.5671852
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/1844985748",
+        "@id": "node/1844985748",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1230322,
+          59.5778024
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/2406925766",
+        "@id": "node/2406925766",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0888276,
+          59.5620928
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/2411207460",
+        "@id": "node/2411207460",
+        "leisure": "playground",
+        "access": "yes",
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0980644,
+          59.5580862
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/2411207468",
+        "@id": "node/2411207468",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0948556,
+          59.5588914
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/2411207479",
+        "@id": "node/2411207479",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0956134,
+          59.5595408
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/3035467043",
+        "@id": "node/3035467043",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0939298,
+          59.560666
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/3508802215",
+        "@id": "node/3508802215",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": "climbingframe",
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1278327,
+          59.5676663
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/3508802221",
+        "@id": "node/3508802221",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": "trampoline",
+        "seasonal": "yes",
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1273382,
+          59.567814
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/3560688500",
+        "@id": "node/3560688500",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0961486,
+          59.5596174
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4117047821",
+        "@id": "node/4117047821",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1249827,
+          59.5694067
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4133680756",
+        "@id": "node/4133680756",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": "Колобок",
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1216361,
+          59.5743605
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4366858691",
+        "@id": "node/4366858691",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": "24/7",
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1398702,
+          59.5692781
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4366914189",
+        "@id": "node/4366914189",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": "24/7",
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1370376,
+          59.5700066
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4961645621",
+        "@id": "node/4961645621",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": "24/7",
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.087888,
+          59.561131
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4970864410",
+        "@id": "node/4970864410",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0790188,
+          59.5685636
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4970866628",
+        "@id": "node/4970866628",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": "Игровая площадка на крыше парковки",
+        "layer": "1",
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1235166,
+          59.5752389
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4973292076",
+        "@id": "node/4973292076",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1439845,
+          59.5756728
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4973320568",
+        "@id": "node/4973320568",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1216632,
+          59.5784789
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/5754539829",
+        "@id": "node/5754539829",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1257911,
+          59.5665549
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/6603722093",
+        "@id": "node/6603722093",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0917756,
+          59.5502615
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/7104561785",
+        "@id": "node/7104561785",
+        "leisure": "playground",
+        "access": null,
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0976367,
+          59.5567204
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/11166314506",
+        "@id": "node/11166314506",
+        "leisure": "playground",
+        "access": "customers",
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": "Music Park",
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1206351,
+          59.5624031
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/11257794039",
+        "@id": "node/11257794039",
+        "leisure": "playground",
+        "access": "yes",
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.128549,
+          59.5637928
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/11257794059",
+        "@id": "node/11257794059",
+        "leisure": "playground",
+        "access": "yes",
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1283913,
+          59.5647306
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/11257794117",
+        "@id": "node/11257794117",
+        "leisure": "playground",
+        "access": "yes",
+        "opening_hours": null,
+        "surface": null,
+        "playground:theme": null,
+        "playground": null,
+        "seasonal": null,
+        "name": null,
+        "description": null,
+        "layer": null,
+        "service_id": NaN,
+        "service_name": "Детская площадка"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1334483,
+          59.5701532
+        ]
+      }
+    }
+  ]
+}

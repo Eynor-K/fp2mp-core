@@ -1,0 +1,209 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-turbo",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2024-05-01T23:52:23Z",
+  "name": "restaurant",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "81",
+        "addr:street": "Киевское шоссе",
+        "amenity": "restaurant",
+        "name": "Шале",
+        "service_id": 62.0,
+        "service_name": "Ресторан"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.06089285058833,
+          59.518223740548734
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "3а",
+        "addr:street": "Проспект 25 Октября",
+        "amenity": "restaurant",
+        "name": "Павел Первый",
+        "service_id": 62.0,
+        "service_name": "Ресторан"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.11900983215836,
+          59.56455791643065
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/1794720732",
+      "properties": {
+        "@id": "node/1794720732",
+        "addr:housenumber": "18",
+        "addr:street": "Соборная",
+        "amenity": "restaurant",
+        "name": "La Pizzeria",
+        "service_id": 62.0,
+        "service_name": "Ресторан"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1263817,
+          59.5660662
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/1795985096",
+      "properties": {
+        "@id": "node/1795985096",
+        "addr:housenumber": "59",
+        "addr:street": "проспект 25 Октября",
+        "amenity": "restaurant",
+        "name": "Евразия",
+        "service_id": 62.0,
+        "service_name": "Ресторан"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1350645,
+          59.5775715
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "3А",
+        "addr:street": "Соборная",
+        "amenity": "restaurant",
+        "name": "Пхали-Хинкали",
+        "service_id": 62.0,
+        "service_name": "Ресторан"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.121641140894464,
+          59.56647598733285
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "2к2",
+        "addr:street": "Проспект 25 Октября",
+        "amenity": "restaurant",
+        "name": "Дубок",
+        "service_id": 62.0,
+        "service_name": "Ресторан"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.11856058432536,
+          59.566591573801404
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "40Б",
+        "addr:street": "Проспект 25 Октября",
+        "amenity": "restaurant",
+        "name": "Smokery",
+        "service_id": 62.0,
+        "service_name": "Ресторан"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12687523469475,
+          59.574161623104665
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5169356821",
+      "properties": {
+        "@id": "node/5169356821",
+        "addr:housenumber": "20а",
+        "addr:street": "Киевская",
+        "amenity": "restaurant",
+        "name": "Империал",
+        "service_id": 62.0,
+        "service_name": "Ресторан"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1067577,
+          59.5545637
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/5497144222",
+      "properties": {
+        "@id": "node/5497144222",
+        "addr:housenumber": "42В",
+        "addr:street": "проспект 25 Октября",
+        "amenity": "restaurant",
+        "name": "Токио-Сити",
+        "service_id": 62.0,
+        "service_name": "Ресторан"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1257832,
+          59.5740424
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "node/8244720449",
+      "properties": {
+        "@id": "node/8244720449",
+        "addr:housenumber": "6а",
+        "addr:street": "Радищева",
+        "amenity": "restaurant",
+        "name": "Копчёные кости",
+        "service_id": 62.0,
+        "service_name": "Ресторан"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1264748,
+          59.5683205
+        ]
+      }
+    }
+  ]
+}

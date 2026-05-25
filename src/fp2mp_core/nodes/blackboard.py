@@ -154,20 +154,19 @@ def _ensure_code_spatial_sub_query(question: str, sub_queries: list[SubQuery]) -
     if any(sq.get("search_modality") == "code" for sq in sub_queries):
         return sub_queries
 
-    place = _extract_named_place(question)
-    if place:
-        text = (
-            f"Compute one or more quantitative/spatial indicators for {place} "
-            "and explain how they should inform the answer. Use only this explicit "
-            f"place as the spatial scope. Original question: {question}"
-        )
-    else:
-        text = (
-            "Identify quantitative indicators relevant to the question, but do not "
-            "invent a concrete place. If a calculation requires a location, state "
-            "LIMITATIONS: location not specified and provide a low-confidence generic "
-            f"measurement plan instead. Original question: {question}"
-        )
+    text = (
+        "Вычисли релевантные количественные/пространственные индикаторы и объясни, "
+        "как они должны влиять на ответ.\n"
+        "- Если доступна локальная модель города (data/model: кварталы, ёмкости "
+        "сервисов, население, матрица доступности) и вопрос касается ИМЕННО этой "
+        "локации — посчитай метрики по ней (обеспеченность сервисами, доступность, "
+        "плотность/разнообразие).\n"
+        "- Иначе, если в вопросе названо конкретное место — используй его как "
+        "пространственный охват (OSM/код).\n"
+        "- Если место не указано — укажи LIMITATIONS: location not specified и дай "
+        "низкоуверенный обобщённый план измерений.\n"
+        f"Исходный вопрос: {question}"
+    )
 
     code_sq = SubQuery(
         sub_query_id="sq_code_support",

@@ -19,6 +19,7 @@ from typing import Any
 from langgraph.types import Send
 
 from fp2mp_core.capabilities import AGENT_CAPABILITIES, AgentCapability
+from fp2mp_core.config import get_model_locality
 from fp2mp_core.llm import get_chat_model
 from fp2mp_core.nodes.blackboard import wiki_briefing
 from fp2mp_core.state import BlackBoard, OrchestratorDirective, RawEntry, Task, board_message
@@ -29,6 +30,7 @@ _AGENT_NODES = {
     "WebSearchAgent": "web_search_agent",
     "NormativeAgent": "normative_agent",
     "CodeSpatialAgent": "code_spatial_agent",
+    "BlocksNetAgent": "blocksnet_agent",
     "MediatorAgent": "mediator",
 }
 
@@ -71,6 +73,15 @@ Spatial routing rule:
   or asks to COUNT, MEASURE, or CLASSIFY geographic features → choose CodeSpatialAgent.
   These questions are answered by OpenStreetMap via osmnx, not by web search.
 - Only use WebSearchAgent for such questions if CodeSpatialAgent has already failed.
+
+BlocksNet routing rule:
+- For questions about service provision/population coverage, walking or transport accessibility,
+  service centrality/diversity/density, urban form/development indicators, and land-use
+  accessibility for the city that already exists in the local data/model model → choose
+  BlocksNetAgent. It uses precomputed BlocksNet analytics and is more reliable than ad-hoc
+  code for these urban metrics.
+- Use CodeSpatialAgent, not BlocksNetAgent, when the question is about an arbitrary place outside
+  the local model or requires fresh geodata from OSM/the web.
 
 Rules:
 1. Assign based on agent capabilities, using search_modality only as a hint.
@@ -206,6 +217,7 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
             result_counts.get("web_findings", 0)
             + result_counts.get("normative_findings", 0)
             + result_counts.get("code_result", 0)
+            + result_counts.get("blocksnet_result", 0)
         )
         if agent_results >= 2 and "mediator_synthesis" not in result_counts:
             return _dispatch_mediator(state, iteration)
@@ -225,8 +237,10 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
         sq_id = task.get("sub_query_id", "")
         sq = sub_query_index.get(sq_id, {})
         tried_agents = _tried_agents_for_sub_query(all_tasks, raw_data, sq_id)
-        if sq.get("search_modality") == "code" and "CodeSpatialAgent" not in tried_agents:
-            agent = "CodeSpatialAgent"
+        if sq.get("search_modality") == "code":
+            code_agents = {"CodeSpatialAgent", "BlocksNetAgent"}
+            excluded = tried_agents | (_SPECIALIZED_AGENTS - code_agents)
+            agent = _llm_choose_agent(sq, state, exclude_agents=excluded)
         else:
             agent = _llm_choose_agent(sq, state, exclude_agents=tried_agents)
         pair = (agent, sq_id)
@@ -370,12 +384,29 @@ def _llm_choose_agent(sq: dict, state: BlackBoard, exclude_agents: set[str] | No
     if not available_agents:
         return "WebSearchAgent"
 
+    model_context = ""
+    try:
+        locality = get_model_locality()
+    except Exception:
+        locality = None
+    if locality:
+        model_context = (
+            "\nLocal model context:\n"
+            f"Локальная модель data/model покрывает локацию: {locality['display_name']}.\n"
+            "Если вопрос касается этой локации и просит метрики обеспеченности/"
+            "доступности/плотности/разнообразия/центральности — предпочитай "
+            "BlocksNetAgent. Если вопрос про другое место или нужны свежие данные "
+            "OSM/веба — выбирай CodeSpatialAgent. Сопоставляй названия с учётом "
+            "языка и транслитерации.\n"
+        )
+
     prompt = f"""\
 {_ROUTING_SYSTEM}
 
 Task: {sq.get('text', '')}
 Intent: {sq.get('intent_aspect', '')}
 Initial modality hint from decomposer: {sq.get('search_modality', 'any')}
+{model_context}
 
 Current wiki state:
 {brief[:800]}

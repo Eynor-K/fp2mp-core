@@ -1,0 +1,188 @@
+{
+  "type": "FeatureCollection",
+  "name": "polyclinic",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "service_id\n": 28,
+        "service_name": "Поликлиника (+ ФАП, детская)",
+        "capacity\n": null,
+        "service_id": 28.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.118300033687262,
+          59.57048463845554
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "service_id\n": 28,
+        "service_name": "Поликлиника (+ ФАП, детская)",
+        "capacity\n": null,
+        "service_id": 28.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.139613648446275,
+          59.56659345035139
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "service_id\n": 28,
+        "service_name": "Поликлиника (+ ФАП, детская)",
+        "capacity\n": null,
+        "service_id": 28.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.123164560575205,
+          59.57489444162723
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "service_id\n": 28,
+        "service_name": "Поликлиника (+ ФАП, детская)",
+        "capacity\n": null,
+        "service_id": 28.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.140355192179197,
+          59.57346574203531
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "service_id\n": 28,
+        "service_name": "Поликлиника (+ ФАП, детская)",
+        "capacity\n": null,
+        "service_id": 28.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.131277200865064,
+          59.58002599925755
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "service_id\n": 28,
+        "service_name": "Поликлиника (+ ФАП, детская)",
+        "capacity\n": null,
+        "service_id": 28.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13304655739429,
+          59.58183808371064
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "service_id\n": 28,
+        "service_name": "Поликлиника (+ ФАП, детская)",
+        "capacity\n": null,
+        "service_id": 28.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.119045244363402,
+          59.57081228918157
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "service_id\n": 28,
+        "service_name": "Поликлиника (+ ФАП, детская)",
+        "capacity\n": null,
+        "service_id": 28.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.123549060983258,
+          59.56319801364011
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "service_id\n": 28,
+        "service_name": "Поликлиника (+ ФАП, детская)",
+        "capacity\n": null,
+        "service_id": 28.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.129471287382742,
+          59.56128676747065
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "service_id\n": 28,
+        "service_name": "Поликлиника (+ ФАП, детская)",
+        "capacity\n": null,
+        "service_id": 28.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.10053280332205,
+          59.555856162065794
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "service_id\n": 28,
+        "service_name": "Поликлиника (+ ФАП, детская)",
+        "capacity\n": null,
+        "service_id": 28.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.061831784940477,
+          59.56889962369332
+        ]
+      }
+    }
+  ]
+}

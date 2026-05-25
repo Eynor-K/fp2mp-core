@@ -1,0 +1,78 @@
+{
+  "type": "FeatureCollection",
+  "name": "fire_station",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:city": null,
+        "addr:country": null,
+        "addr:housenumber": null,
+        "addr:postcode": null,
+        "addr:region": null,
+        "addr:street": null,
+        "alt_name": null,
+        "amenity": null,
+        "building": null,
+        "building:cladding": null,
+        "building:levels": null,
+        "fire_station:type": null,
+        "name": "ОГПС Гатчинского района",
+        "official_name": null,
+        "operator": null,
+        "ref": null,
+        "source": null,
+        "service_id": 79.0,
+        "service_name": "Пожарная станция"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.127102487432452,
+          59.580364771286604
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:city": null,
+        "addr:country": null,
+        "addr:housenumber": null,
+        "addr:postcode": null,
+        "addr:region": null,
+        "addr:street": null,
+        "alt_name": null,
+        "amenity": null,
+        "building": null,
+        "building:cladding": null,
+        "building:levels": null,
+        "fire_station:type": null,
+        "name": "18 отряд Федеральной противопожарной службы по Ленинградской области",
+        "official_name": null,
+        "operator": null,
+        "ref": null,
+        "source": null,
+        "service_id": 79.0,
+        "service_name": "Пожарная станция"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.087268767927654,
+          59.56331197161953
+        ]
+      }
+    }
+  ]
+}

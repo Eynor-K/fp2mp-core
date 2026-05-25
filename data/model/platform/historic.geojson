@@ -1,0 +1,1066 @@
+{
+  "type": "FeatureCollection",
+  "name": "historic",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Император Павел I",
+        "memorial:subject": "Павел I",
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1066868,
+          59.5627441
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "В. И. Ленину",
+        "memorial:subject": "Владимир Ильич Ленин",
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1222799,
+          59.5685575
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ингербургские ворота",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1318664,
+          59.5764845
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Колонна Орла",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0960073,
+          59.5669927
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Чесменский обелиск",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1047008,
+          59.567071
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Памятник М.Н. Ефимову",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1004745,
+          59.561553
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Памятник воинам-освободителям",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1204002,
+          59.5653643
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Финским пленным, погибшим в 1939 - 1944 гг.",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1293144,
+          59.5528196
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "МиГ-21",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0935341,
+          59.5513848
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Мемориал комсомольцам-подпольщикам",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0947626,
+          59.5673728
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Памятник подводной лодке Джевецкого",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.104321,
+          59.5617483
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Памятник самолёту Farman",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1035787,
+          59.5613167
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ангел Хранитель",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0931001,
+          59.5591895
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Петля Нестерова",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.093803,
+          59.5594818
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Авиатриссе Зверевой",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0935054,
+          59.5592428
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "А. И. Куприн",
+        "memorial:subject": "Александр Иванович Куприн",
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1350351,
+          59.5651696
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Андрей Григорин",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1210218,
+          59.5667673
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Гатчина - город воинской славы",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1182613,
+          59.5639562
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Памятник фонарю",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1206511,
+          59.5631353
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Памятный камень в честь Фёдора Галеева",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0689353,
+          59.5765943
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "М. М. Ипполитову-Иванову",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1204914,
+          59.5632511
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Парашютист",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0929755,
+          59.5590557
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Указ императора",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0927561,
+          59.5587616
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Дедал и Икар",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0924845,
+          59.5583566
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": null,
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1285302,
+          59.571893
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "доска о выступлении Дыбенко",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1079734,
+          59.5625598
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Александр lll",
+        "memorial:subject": "Александр III",
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1088846,
+          59.5628354
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Жертвам Гражданской войны",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1462938,
+          59.5577293
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Захоронение мирных советских граждан и военнопленных",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0930192,
+          59.5690058
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Памятный камень блокадникам",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1202848,
+          59.5658531
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Советским людям, погибшим в фашистском концлагере",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1289943,
+          59.5430793
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "А.И. Куприну",
+        "memorial:subject": "Александр Иванович Куприн",
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12047,
+          59.5641615
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "М.М. Ипполитову-Иванову",
+        "memorial:subject": "Михаил Михайлович Ипполитов-Иванов",
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1201218,
+          59.5634964
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Сквер воинов - интернационалистов",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1492041,
+          59.563523
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "платформа Татьянино",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1391943,
+          59.5649115
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": null,
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1275504,
+          59.5652738
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "МиГ-21",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0935341,
+          59.5513848
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Зверинские ворота",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1048495,
+          59.5727692
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Сильвийские ворота",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0950101,
+          59.5674409
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Дуб-солитер",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1088284,
+          59.5642121
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Каскадские ворота",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0950476,
+          59.5707
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "водный лабиринт",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1138711,
+          59.5661319
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Холодная ванна",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0986448,
+          59.5718157
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ДОТ Ма-1 КрУР",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0736816,
+          59.5845499
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ДОТ Ма-2 КрУР",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0723019,
+          59.5829321
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ДОТ Ма-3 КрУР",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0676721,
+          59.5793506
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ДОТ Ма-4 КрУР (захвачен)",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0629172,
+          59.5760047
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ДОТ Ма-5 КрУР",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0670603,
+          59.570989
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ДОТ Ма-7 КрУР",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0665131,
+          59.5669238
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ДОТ Кп-5 КрУР",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0869142,
+          59.5416512
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ДОТ Га-1 КрУР",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1504061,
+          59.5613243
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Адмиралтейские ворота",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.116127814239515,
+          59.56324369364943
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Смоленские ворота",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.110995061137533,
+          59.55839112126309
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Карпин мост",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.112163708674355,
+          59.56363052373844
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "площадь Коннетабля",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.113023594219918,
+          59.560175805451465
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Лесная оранжерея",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.10121759808104,
+          59.56727996273656
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Дом Ольдерогге",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12071276380868,
+          59.56446639792471
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Портал \"Маска\"",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.11244425048364,
+          59.56960059831885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Берёзовые ворота",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.113921660011677,
+          59.56956024080631
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Горбатый мост",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.105274664245847,
+          59.56824523204443
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Восьмигранный колодец",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.110623218739523,
+          59.56380711860572
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Гатчинский дворец",
+        "memorial:subject": null,
+        "service_id": 113.0,
+        "service_name": "Памятник",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.10802364197445,
+          59.563916438773546
+        ]
+      }
+    }
+  ]
+}

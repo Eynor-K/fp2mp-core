@@ -1,0 +1,432 @@
+{
+  "type": "FeatureCollection",
+  "name": "hairdresser",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.129177952042745,
+          59.57844944910225
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.127138559938125,
+          59.573566910080764
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.120902197828404,
+          59.57440901768287
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13767908382118,
+          59.56830500027732
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 5,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.134496312854644,
+          59.56639352617166
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 6,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1382122941558,
+          59.56546072081019
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 7,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13071161888149,
+          59.56394172422471
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 8,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.128199483593587,
+          59.56613735533366
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 9,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12554167744104,
+          59.56641301735126
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 10,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12453847243,
+          59.56659957521358
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 11,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.124057483726077,
+          59.5662863244821
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.124615430622633,
+          59.56617355350513
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 13,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.122350660953867,
+          59.56670120704678
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 14,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12257878702487,
+          59.565980032059244
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 15,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.121204533585093,
+          59.564999877576845
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 16,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.121726749892208,
+          59.56491912494073
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 17,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.124893029817464,
+          59.563301246826455
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 18,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.130021743654716,
+          59.557976458655524
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 19,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.09887016668179,
+          59.55846942682358
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 20,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.090531196809224,
+          59.55828839415409
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 21,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.124901275338093,
+          59.57248675443779
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 22,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12397777702656,
+          59.571597270346054
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 23,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.136862777277926,
+          59.580577335207515
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 24,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.136032728200288,
+          59.57476534116589
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 25,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.121042371679163,
+          59.56821172620147
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 25,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.128699711845627,
+          59.56691282302987
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 26,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.133396910102793,
+          59.566600967432535
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 27,
+        "service_id": 104.0,
+        "service_name": "Парикмахерская"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.131794530592003,
+          59.5541341232556
+        ]
+      }
+    }
+  ]
+}

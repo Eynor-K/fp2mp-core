@@ -49,6 +49,7 @@ _FAILED_CONTENT_PREFIXES = (
     "NormativeAgent did not produce usable evidence",
     "CodeSpatialAgent did not complete",
     "CodeSpatialAgent low-confidence augmentation only",
+    "BlocksNetAgent low-confidence",
 )
 
 _builder = WikiPageBuilder()
@@ -83,7 +84,7 @@ def _should_promote(entry: RawEntry) -> bool:
         return False
     if agent_type == "normative_findings":
         return confidence >= _NORMATIVE_PROMOTE_THRESHOLD
-    if agent_type in {"web_findings", "code_result", "mediator_synthesis"}:
+    if agent_type in {"web_findings", "code_result", "mediator_synthesis", "blocksnet_result"}:
         return confidence >= _PROMOTE_THRESHOLD
     return False
 

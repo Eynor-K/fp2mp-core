@@ -1,0 +1,688 @@
+{
+  "type": "FeatureCollection",
+  "name": "lawyer",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/3508802233",
+        "@id": "node/3508802233",
+        "contact:email": null,
+        "contact:phone": "+7 921 8665066",
+        "contact:website": null,
+        "description": null,
+        "name": null,
+        "office": "lawyer",
+        "opening_hours": "Mo-Fr 10:00-17:00",
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1376387,
+          59.5683686
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4121640989",
+        "@id": "node/4121640989",
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": null,
+        "office": "lawyer",
+        "opening_hours": null,
+        "operator": null,
+        "phone": "+7 921 3116657",
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1280008,
+          59.5753757
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4124631891",
+        "@id": "node/4124631891",
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Единство, коллегия адвокатов",
+        "office": "lawyer",
+        "opening_hours": null,
+        "operator": null,
+        "phone": "+7 812 9445502",
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1250713,
+          59.5699876
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4192061826",
+        "@id": "node/4192061826",
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": "Консультации трудовым мигрантам",
+        "name": "Вектор",
+        "office": "lawyer",
+        "opening_hours": null,
+        "operator": null,
+        "phone": "+7 81371 35618",
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1214035,
+          59.5661989
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/8065737309",
+        "@id": "node/8065737309",
+        "contact:email": null,
+        "contact:phone": "+7 962 7068813",
+        "contact:website": "https://chistiylist.com/",
+        "description": null,
+        "name": "Чистый лист",
+        "office": "lawyer",
+        "opening_hours": "Mo-Fr 09:00-13:00,14:00-18:00",
+        "operator": "Чистый лист",
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1244715,
+          59.5660984
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/11304292108",
+        "@id": "node/11304292108",
+        "contact:email": "jurist47@yandex.ru",
+        "contact:phone": "+7 931 2151300",
+        "contact:website": "https://jurist47.ru/",
+        "description": null,
+        "name": "Областной центр списания долгов",
+        "office": "lawyer",
+        "opening_hours": "Mo-Fr 10:00-19:00; Sa 10:00-18:00",
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1308578,
+          59.5632424
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Кредитный Эксперт. Юрист по кредитам. Банкротство физических лиц. Списание долгов.",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.134255719721512,
+          59.57359401204119
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "ЮРИСТ - Николаев Дмитрий Александрович",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.120150382415236,
+          59.57570039970644
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Юридический центр Гатчина и Гатчинский р-он",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.120069759546762,
+          59.57550368538325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "СВИРИНА.В.А - Адвокатский кабинет г.Гатчина",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.122935536053273,
+          59.56915067915429
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Гатчинский филиал ННО \"Ленинградская областная коллегия адвокатов\"",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.123067464383496,
+          59.569423532289846
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Адвокат. Юрист.",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12135239609061,
+          59.568551136943455
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Юридическая помощь. Гатчина. Гатчинский район",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.121304755304692,
+          59.56847688948686
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Юридическая фирма Ваш Юрист",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12206700787931,
+          59.566615080967466
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Юрикон",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12110319813351,
+          59.56651298480001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Банкротство физических лиц, Бизнес-Юрист",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12103356929259,
+          59.56514115353416
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Юрист Невский Алексей Олегович",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.120298801786767,
+          59.56374977364933
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "ЮрКонсультант",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.124784365014328,
+          59.56320304493441
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Юкон",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12423099896257,
+          59.56550500056248
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Адвокат - Хасиев Руслан Элгуджевич",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.123487069767133,
+          59.566960349348406
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Первая Гатчинская коллегия адвокатов",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.126624032285758,
+          59.565298944820206
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "юрист",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.127950644939673,
+          59.55966069607023
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "\n\nюрист гатчина\n\n\n\n3 фото\nЮридический центр \"Вектор\"",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.131659296889275,
+          59.564272360029456
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62365423",
+        "@id": "way/62365423",
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": "http://gatchinsky.lo.sudrf.ru/",
+        "description": null,
+        "name": "Суд",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.124521898875493,
+          59.5643342565667
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4986844826",
+        "@id": "node/4986844826",
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Прокуратура",
+        "office": "government",
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1234442,
+          59.5644053
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "contact:email": null,
+        "contact:phone": null,
+        "contact:website": null,
+        "description": null,
+        "name": "Комитет По Управлению Имуществом",
+        "office": null,
+        "opening_hours": null,
+        "operator": null,
+        "phone": null,
+        "service_id": 102.0,
+        "service_name": "Юридические услуги",
+        "capacity": null
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.122614679942238,
+          59.567877088722184
+        ]
+      }
+    }
+  ]
+}

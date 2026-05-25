@@ -1,0 +1,2561 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-turbo",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2024-05-01T14:42:02Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/775144255",
+        "bus": "yes",
+        "name": "Новая улица",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1088829,
+          59.5420084
+        ]
+      },
+      "id": "node/775144255"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2014636335",
+        "alt_name": "Гатчина-Балтийская",
+        "esr:user": "034100",
+        "name": "Гатчина-Балтийская Пассажирская",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "train": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1036318,
+          59.5591334
+        ]
+      },
+      "id": "node/2014636335"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2014636337",
+        "alt_name": "Гатчина-Балтийская",
+        "esr:user": "034100",
+        "name": "Гатчина-Балтийская Пассажирская",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "train": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1037731,
+          59.5591962
+        ]
+      },
+      "id": "node/2014636337"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2014636338",
+        "alt_name": "Гатчина-Балтийская",
+        "esr:user": "034100",
+        "name": "Гатчина-Балтийская Пассажирская",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "train": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.103843,
+          59.5592272
+        ]
+      },
+      "id": "node/2014636338"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2014636339",
+        "name": "Гатчина-Варшавская",
+        "name:de": "Gatschina Warschauer Bahnhof",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "train": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1328612,
+          59.5518636
+        ]
+      },
+      "id": "node/2014636339"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2014636341",
+        "name": "Гатчина-Варшавская",
+        "name:de": "Gatschina Warschauer Bahnhof",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "train": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1329811,
+          59.5518553
+        ]
+      },
+      "id": "node/2014636341"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2014636359",
+        "name": "Татьянино",
+        "name:de": "Tatjanino",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "train": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1398196,
+          59.5652394
+        ]
+      },
+      "id": "node/2014636359"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2014636361",
+        "name": "Татьянино",
+        "name:de": "Tatjanino",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "train": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1397452,
+          59.5652546
+        ]
+      },
+      "id": "node/2014636361"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3091399325",
+        "name": "Гатчина-Товарная-Балтийская",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "train": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1122709,
+          59.5438084
+        ]
+      },
+      "id": "node/3091399325"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3174922358",
+        "name": "Гатчина-Товарная-Балтийская",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "train": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1036668,
+          59.5439762
+        ]
+      },
+      "id": "node/3174922358"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3174922359",
+        "name": "Гатчина-Товарная-Балтийская",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "train": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1036713,
+          59.544036
+        ]
+      },
+      "id": "node/3174922359"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8526434899",
+        "name": "Мариенбург",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "train": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0761407,
+          59.5743416
+        ]
+      },
+      "id": "node/8526434899"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9188341600",
+        "bus": "yes",
+        "name": "Варшавский вокзал",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1322323,
+          59.5534853
+        ]
+      },
+      "id": "node/9188341600"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9347323049",
+        "bus": "yes",
+        "name": "Варшавский вокзал",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1326253,
+          59.5532228
+        ]
+      },
+      "id": "node/9347323049"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9494843443",
+        "bus": "yes",
+        "name": "Улица Леонова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1279427,
+          59.5603221
+        ]
+      },
+      "id": "node/9494843443"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9494843444",
+        "bus": "yes",
+        "name": "Музыкальная школа/Проспект 25 Октября",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1195489,
+          59.5638414
+        ]
+      },
+      "id": "node/9494843444"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9494843445",
+        "bus": "yes",
+        "name": "Балтийский вокзал",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1030867,
+          59.5601401
+        ]
+      },
+      "id": "node/9494843445"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9494872809",
+        "bus": "yes",
+        "name": "Музыкальная школа",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1206143,
+          59.563404
+        ]
+      },
+      "id": "node/9494872809"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9494872811",
+        "bus": "yes",
+        "name": "Приоратский дворец",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1241898,
+          59.560118
+        ]
+      },
+      "id": "node/9494872811"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9494872812",
+        "bus": "yes",
+        "name": "Балтийский вокзал",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1040087,
+          59.5599326
+        ]
+      },
+      "id": "node/9494872812"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9495446296",
+        "bus": "yes",
+        "name": "Варшавский вокзал",
+        "public_transport": "stop_position",
+        "share_taxi": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1328117,
+          59.553715
+        ]
+      },
+      "id": "node/9495446296"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500260712",
+        "bus": "yes",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.109034,
+          59.5419905
+        ]
+      },
+      "id": "node/9500260712"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500260713",
+        "bus": "yes",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1002547,
+          59.5426268
+        ]
+      },
+      "id": "node/9500260713"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500260714",
+        "bus": "yes",
+        "name": "Можайская улица",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0952486,
+          59.544014
+        ]
+      },
+      "id": "node/9500260714"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500260715",
+        "bus": "yes",
+        "name": "Двинское шоссе",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0914692,
+          59.5422615
+        ]
+      },
+      "id": "node/9500260715"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500260716",
+        "bus": "yes",
+        "name": "Школьный переулок",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.09957,
+          59.5489053
+        ]
+      },
+      "id": "node/9500260716"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500283617",
+        "bus": "yes",
+        "name": "Киевская улица",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1042636,
+          59.5529405
+        ]
+      },
+      "id": "node/9500283617"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500283618",
+        "bus": "yes",
+        "name": "Площадь Коннетабля",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1130021,
+          59.5598313
+        ]
+      },
+      "id": "node/9500283618"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500283619",
+        "bus": "yes",
+        "name": "Улица Чкалова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1184851,
+          59.5644436
+        ]
+      },
+      "id": "node/9500283619"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500283620",
+        "bus": "yes",
+        "name": "Улица 7-й Армии/Проспект 25 Октября, 47",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1265829,
+          59.5735997
+        ]
+      },
+      "id": "node/9500283620"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500283621",
+        "bus": "yes",
+        "name": "Ингербургские ворота",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1319877,
+          59.57756
+        ]
+      },
+      "id": "node/9500283621"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500283622",
+        "bus": "yes",
+        "name": "Улица Изотова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1254095,
+          59.5799824
+        ]
+      },
+      "id": "node/9500283622"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500283623",
+        "bus": "yes",
+        "name": "Химози",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.111684,
+          59.5338588
+        ]
+      },
+      "id": "node/9500283623"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500421117",
+        "bus": "yes",
+        "name": "Гатчинский военный госпиталь",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1098154,
+          59.5574903
+        ]
+      },
+      "id": "node/9500421117"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500421118",
+        "bus": "yes",
+        "name": "Магазин «Картеж»/Рощинская улица, 18",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.127933,
+          59.5789642
+        ]
+      },
+      "id": "node/9500421118"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500421119",
+        "bus": "yes",
+        "name": "Ингербургские ворота",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1322321,
+          59.5773528
+        ]
+      },
+      "id": "node/9500421119"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500421120",
+        "bus": "yes",
+        "name": "Улица Матвеева",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1011374,
+          59.5426315
+        ]
+      },
+      "id": "node/9500421120"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500421121",
+        "bus": "yes",
+        "name": "Киевская улица, 23",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1035783,
+          59.5523673
+        ]
+      },
+      "id": "node/9500421121"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500421122",
+        "bus": "yes",
+        "name": "Школьный переулок",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1001429,
+          59.5493991
+        ]
+      },
+      "id": "node/9500421122"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500421123",
+        "bus": "yes",
+        "name": "Двинское шоссе",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0927923,
+          59.5427529
+        ]
+      },
+      "id": "node/9500421123"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500421124",
+        "bus": "yes",
+        "name": "Стадион «Спартак»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1214198,
+          59.5679408
+        ]
+      },
+      "id": "node/9500421124"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500421125",
+        "bus": "yes",
+        "name": "Кирха",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1251755,
+          59.5722682
+        ]
+      },
+      "id": "node/9500421125"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500421126",
+        "bus": "yes",
+        "name": "Улица 7-й Армии",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1289744,
+          59.5749498
+        ]
+      },
+      "id": "node/9500421126"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500498974",
+        "bus": "yes",
+        "name": "ТРК «Пилот»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0929162,
+          59.5626018
+        ]
+      },
+      "id": "node/9500498974"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500498975",
+        "bus": "yes",
+        "name": "Рынок «Аэродром»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0952272,
+          59.56119
+        ]
+      },
+      "id": "node/9500498975"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500498976",
+        "bus": "yes",
+        "name": "Завод «Электронстандарт»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0485631,
+          59.5636085
+        ]
+      },
+      "id": "node/9500498976"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500498977",
+        "bus": "yes",
+        "name": "Железнодорожная платформа «Мариенбург»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0750925,
+          59.5744017
+        ]
+      },
+      "id": "node/9500498977"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500498978",
+        "bus": "yes",
+        "name": "Улица Кустова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0784878,
+          59.5722987
+        ]
+      },
+      "id": "node/9500498978"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500498979",
+        "bus": "yes",
+        "name": "Площадь Станислава Богданова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0922544,
+          59.5578779
+        ]
+      },
+      "id": "node/9500498979"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500498980",
+        "bus": "yes",
+        "name": "Бульвар Авиаторов",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0970062,
+          59.5560077
+        ]
+      },
+      "id": "node/9500498980"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500498981",
+        "bus": "yes",
+        "name": "Улица Слепнёва",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1022293,
+          59.5537018
+        ]
+      },
+      "id": "node/9500498981"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500498982",
+        "bus": "yes",
+        "name": "Гатчинский военный госпиталь",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.109156,
+          59.556946
+        ]
+      },
+      "id": "node/9500498982"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9500498984",
+        "bus": "yes",
+        "name": "Хлебокомбинат",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0481305,
+          59.5728988
+        ]
+      },
+      "id": "node/9500498984"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9501186774",
+        "bus": "yes",
+        "name": "Улица Нестерова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0972779,
+          59.5644934
+        ]
+      },
+      "id": "node/9501186774"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9501186775",
+        "bus": "yes",
+        "name": "Железнодорожная платформа «Мариенбург»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0745799,
+          59.5747029
+        ]
+      },
+      "id": "node/9501186775"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507445399",
+        "bus": "yes",
+        "name": "Улица Лейтенанта Шмидта",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1312446,
+          59.5572492
+        ]
+      },
+      "id": "node/9507445399"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507445400",
+        "bus": "yes",
+        "name": "Улица Леонова/Поликлиника",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1290173,
+          59.5613575
+        ]
+      },
+      "id": "node/9507445400"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507445401",
+        "bus": "yes",
+        "name": "Соборная улица/Центральный рынок",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.130597,
+          59.5634838
+        ]
+      },
+      "id": "node/9507445401"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507445402",
+        "bus": "yes",
+        "name": "Улица Урицкого",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1329082,
+          59.5665978
+        ]
+      },
+      "id": "node/9507445402"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507445403",
+        "bus": "yes",
+        "name": "Стадион «Спартак»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1212075,
+          59.5676738
+        ]
+      },
+      "id": "node/9507445403"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507445404",
+        "bus": "yes",
+        "name": "ФОК «Арена»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0988329,
+          59.5589771
+        ]
+      },
+      "id": "node/9507445404"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507445405",
+        "bus": "yes",
+        "name": "ТРК «Пилот»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0923141,
+          59.5629708
+        ]
+      },
+      "id": "node/9507445405"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507445406",
+        "bus": "yes",
+        "name": "Улица Новосёлов",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0855605,
+          59.5608545
+        ]
+      },
+      "id": "node/9507445406"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507445407",
+        "bus": "yes",
+        "name": "Улица Слепнёва",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0881824,
+          59.5582872
+        ]
+      },
+      "id": "node/9507445407"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507445408",
+        "bus": "yes",
+        "name": "Лётное поле",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0934419,
+          59.5525532
+        ]
+      },
+      "id": "node/9507445408"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507459630",
+        "bus": "yes",
+        "name": "Улица Слепнёва",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0891782,
+          59.5581207
+        ]
+      },
+      "id": "node/9507459630"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507459631",
+        "bus": "yes",
+        "name": "Улица Новосёлов",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0859686,
+          59.5611928
+        ]
+      },
+      "id": "node/9507459631"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507459632",
+        "bus": "yes",
+        "name": "Балтийский вокзал",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1037147,
+          59.559845
+        ]
+      },
+      "id": "node/9507459632"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507459633",
+        "bus": "yes",
+        "name": "Соборная улица",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1200779,
+          59.5662541
+        ]
+      },
+      "id": "node/9507459633"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507459634",
+        "bus": "yes",
+        "name": "Улица Лейтенанта Шмидта",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1303224,
+          59.5581251
+        ]
+      },
+      "id": "node/9507459634"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507459635",
+        "bus": "yes",
+        "name": "Администрация",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1276215,
+          59.5659426
+        ]
+      },
+      "id": "node/9507459635"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9507459636",
+        "bus": "yes",
+        "name": "Лётное поле",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0937903,
+          59.5518656
+        ]
+      },
+      "id": "node/9507459636"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484570",
+        "bus": "yes",
+        "name": "Улица Крупской",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1154379,
+          59.5780028
+        ]
+      },
+      "id": "node/9510484570"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484571",
+        "bus": "yes",
+        "name": "Улица Академика Константинова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.119122,
+          59.5747392
+        ]
+      },
+      "id": "node/9510484571"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484572",
+        "bus": "yes",
+        "name": "Улица Хохлова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1183544,
+          59.571851
+        ]
+      },
+      "id": "node/9510484572"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484573",
+        "bus": "yes",
+        "name": "Улица Киргетова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1259313,
+          59.568293
+        ]
+      },
+      "id": "node/9510484573"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484574",
+        "bus": "yes",
+        "name": "Улица Крупской",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1155941,
+          59.5783058
+        ]
+      },
+      "id": "node/9510484574"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484575",
+        "bus": "yes",
+        "name": "Улица Академика Константинова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1163584,
+          59.575995
+        ]
+      },
+      "id": "node/9510484575"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484576",
+        "bus": "yes",
+        "name": "Улица Коли Подрядчикова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1175811,
+          59.571857
+        ]
+      },
+      "id": "node/9510484576"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484577",
+        "bus": "yes",
+        "name": "Варшавский вокзал",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1327155,
+          59.5534588
+        ]
+      },
+      "id": "node/9510484577"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484578",
+        "bus": "yes",
+        "name": "ТК «Гатчинский»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.142893,
+          59.5707157
+        ]
+      },
+      "id": "node/9510484578"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484579",
+        "bus": "yes",
+        "name": "Железнодорожная платформа «Татьянино»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1392699,
+          59.565838
+        ]
+      },
+      "id": "node/9510484579"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484580",
+        "bus": "yes",
+        "name": "Психоневрологический интернат",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.120701,
+          59.5812469
+        ]
+      },
+      "id": "node/9510484580"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484581",
+        "bus": "yes",
+        "name": "Соборная ул.",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1270445,
+          59.5650312
+        ]
+      },
+      "id": "node/9510484581"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484582",
+        "bus": "yes",
+        "name": "Улица Радищева",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1336617,
+          59.566647
+        ]
+      },
+      "id": "node/9510484582"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484583",
+        "bus": "yes",
+        "name": "Дворец",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1053916,
+          59.5630266
+        ]
+      },
+      "id": "node/9510484583"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484584",
+        "bus": "yes",
+        "name": "Психоневрологический интернат",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1219776,
+          59.5808504
+        ]
+      },
+      "id": "node/9510484584"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484585",
+        "bus": "yes",
+        "name": "Улица Нестерова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0973082,
+          59.5633416
+        ]
+      },
+      "id": "node/9510484585"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484586",
+        "bus": "yes",
+        "name": "Петербургский институт ядерной физики",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1123783,
+          59.5921625
+        ]
+      },
+      "id": "node/9510484586"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510484597",
+        "bus": "yes",
+        "name": "Улица Нестерова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0988033,
+          59.5640978
+        ]
+      },
+      "id": "node/9510484597"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510726574",
+        "bus": "yes",
+        "name": "Микрорайон Въезд",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1360603,
+          59.5786615
+        ]
+      },
+      "id": "node/9510726574"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510726575",
+        "bus": "yes",
+        "name": "Дворец",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1055791,
+          59.5629256
+        ]
+      },
+      "id": "node/9510726575"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510726576",
+        "bus": "yes",
+        "name": "Красноармейский проспект/Обувная фабрика",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0915786,
+          59.567216
+        ]
+      },
+      "id": "node/9510726576"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510726577",
+        "bus": "yes",
+        "name": "Улица Комсомольцев Подпольщиков",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0866141,
+          59.5695963
+        ]
+      },
+      "id": "node/9510726577"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510726578",
+        "bus": "yes",
+        "name": "Улица Рысева",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0794189,
+          59.5717329
+        ]
+      },
+      "id": "node/9510726578"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510726579",
+        "bus": "yes",
+        "name": "Рынок «Мариенбург»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0711003,
+          59.5736621
+        ]
+      },
+      "id": "node/9510726579"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510726580",
+        "bus": "yes",
+        "name": "Заводская улица",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0649943,
+          59.5714236
+        ]
+      },
+      "id": "node/9510726580"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510726581",
+        "bus": "yes",
+        "name": "Завод «Ленинец»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0594395,
+          59.5692745
+        ]
+      },
+      "id": "node/9510726581"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510726582",
+        "bus": "yes",
+        "name": "Улица Комсомольцев Подпольщиков",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0871431,
+          59.5693419
+        ]
+      },
+      "id": "node/9510726582"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510726583",
+        "bus": "yes",
+        "name": "Красноармейский проспект/Обувная фабрика",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0924854,
+          59.5667823
+        ]
+      },
+      "id": "node/9510726583"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510726584",
+        "bus": "yes",
+        "name": "Микрорайон Въезд",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1348385,
+          59.5780202
+        ]
+      },
+      "id": "node/9510726584"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9510726585",
+        "bus": "yes",
+        "name": "Гипермаркет «О'кей»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1394592,
+          59.5833167
+        ]
+      },
+      "id": "node/9510726585"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9512971150",
+        "bus": "yes",
+        "name": "Корпиковское шоссе",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0496167,
+          59.5749809
+        ]
+      },
+      "id": "node/9512971150"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9513447330",
+        "bus": "yes",
+        "name": "Улица Достоевского/Центральный рынок",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1330587,
+          59.56299
+        ]
+      },
+      "id": "node/9513447330"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9513759343",
+        "bus": "yes",
+        "name": "Улица Леонова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1273322,
+          59.5608941
+        ]
+      },
+      "id": "node/9513759343"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9513759344",
+        "bus": "yes",
+        "name": "Улица Радищева",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1334216,
+          59.5666998
+        ]
+      },
+      "id": "node/9513759344"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9513759345",
+        "bus": "yes",
+        "name": "Пенсионный фонд",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1358745,
+          59.5751593
+        ]
+      },
+      "id": "node/9513759345"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9513759346",
+        "bus": "yes",
+        "name": "ТК «Гатчинский»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1430409,
+          59.5709066
+        ]
+      },
+      "id": "node/9513759346"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9521416677",
+        "bus": "yes",
+        "name": "Станционная улица",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1501872,
+          59.5554885
+        ]
+      },
+      "id": "node/9521416677"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9521416678",
+        "bus": "yes",
+        "name": "Железнодорожная платформа «Татьянино»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1377561,
+          59.5638676
+        ]
+      },
+      "id": "node/9521416678"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9521416679",
+        "bus": "yes",
+        "name": "Бельгийский переулок",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1428551,
+          59.5578703
+        ]
+      },
+      "id": "node/9521416679"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9521416683",
+        "bus": "yes",
+        "name": "Станционная улица",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1501219,
+          59.5555342
+        ]
+      },
+      "id": "node/9521416683"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9521416684",
+        "bus": "yes",
+        "name": "Бельгийский переулок",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.14265,
+          59.5580698
+        ]
+      },
+      "id": "node/9521416684"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9883121466",
+        "bus": "yes",
+        "name": "ТРК \"Кубус\"",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1455681,
+          59.5819922
+        ]
+      },
+      "id": "node/9883121466"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10006176378",
+        "bus": "yes",
+        "name": "Малые Колпаны",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0838198,
+          59.5410744
+        ]
+      },
+      "id": "node/10006176378"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10140053633",
+        "bus": "yes",
+        "name": "ТРК \"Кубус\"",
+        "public_transport": "stop_position",
+        "share_taxi": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1462096,
+          59.5839985
+        ]
+      },
+      "id": "node/10140053633"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10140053669",
+        "bus": "yes",
+        "name": "Ленинградское шоссе/Гипермаркет «О'кей»",
+        "public_transport": "stop_position",
+        "share_taxi": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1415094,
+          59.5831722
+        ]
+      },
+      "id": "node/10140053669"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10140053713",
+        "bus": "yes",
+        "name": "Ленинградское шоссе/Гипермаркет «О'кей»",
+        "public_transport": "stop_position",
+        "share_taxi": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1423826,
+          59.584
+        ]
+      },
+      "id": "node/10140053713"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10140053714",
+        "bus": "yes",
+        "name": "Улица Леонова",
+        "public_transport": "stop_position",
+        "share_taxi": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1237676,
+          59.5605101
+        ]
+      },
+      "id": "node/10140053714"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10287376303",
+        "bus": "yes",
+        "name": "Улица 120-й Гатчинской Дивизии",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0439736,
+          59.5740982
+        ]
+      },
+      "id": "node/10287376303"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11097590821",
+        "bus": "yes",
+        "name": "Старая дорога",
+        "public_transport": "stop_position",
+        "share_taxi": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0980504,
+          59.5494116
+        ]
+      },
+      "id": "node/11097590821"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11097590822",
+        "bus": "yes",
+        "name": "Диагональная улица",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0997498,
+          59.550292
+        ]
+      },
+      "id": "node/11097590822"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11097590823",
+        "bus": "yes",
+        "name": "Площадь Станислава Богданова",
+        "public_transport": "stop_position",
+        "share_taxi": "yes",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0924728,
+          59.5580644
+        ]
+      },
+      "id": "node/11097590823"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11300926475",
+        "bus": "yes",
+        "name": "ФОК «Арена»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0988933,
+          59.5589396
+        ]
+      },
+      "id": "node/11300926475"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11300926484",
+        "bus": "yes",
+        "name": "Северная улица",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0842864,
+          59.5644064
+        ]
+      },
+      "id": "node/11300926484"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11300926485",
+        "bus": "yes",
+        "name": "Северная улица",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0847138,
+          59.5643394
+        ]
+      },
+      "id": "node/11300926485"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11542372630",
+        "bus": "yes",
+        "name": "Улица Киргетова",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.125113,
+          59.5684651
+        ]
+      },
+      "id": "node/11542372630"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11542372632",
+        "bus": "yes",
+        "name": "Улица Глинки",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0636347,
+          59.5709299
+        ]
+      },
+      "id": "node/11542372632"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11542372634",
+        "bus": "yes",
+        "name": "Рынок «Мариенбург»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0701919,
+          59.5733291
+        ]
+      },
+      "id": "node/11542372634"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11554370170",
+        "bus": "yes",
+        "name": "Поликлиника «Аэродром»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1034219,
+          59.556137
+        ]
+      },
+      "id": "node/11554370170"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11554370171",
+        "bus": "yes",
+        "name": "Поликлиника «Аэродром»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.102221,
+          59.5568852
+        ]
+      },
+      "id": "node/11554370171"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11733505971",
+        "bus": "yes",
+        "name": "Железнодорожная платформа «Мариенбург»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.077818,
+          59.5737042
+        ]
+      },
+      "id": "node/11733505971"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11733505972",
+        "bus": "yes",
+        "name": "Железнодорожная платформа «Мариенбург»",
+        "public_transport": "stop_position",
+        "service_id": NaN,
+        "service_name": "Остановка наземного общественного транспорта"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0782833,
+          59.5734638
+        ]
+      },
+      "id": "node/11733505972"
+    }
+  ]
+}

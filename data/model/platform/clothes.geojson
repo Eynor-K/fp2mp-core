@@ -1,0 +1,372 @@
+{
+  "type": "FeatureCollection",
+  "name": "clothes",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.14860316490986,
+          59.582088784001975
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.14711914910104,
+          59.581795562936264
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.14848203413764,
+          59.581725876243766
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.138662585992204,
+          59.58221225165939
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 5,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.133988934694223,
+          59.57818428664294
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 6,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.126159738046326,
+          59.574988805200675
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 7,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.121381138852374,
+          59.574108575522345
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 8,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12333165093886,
+          59.57111274605752
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 9,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.142230680112334,
+          59.57128332821054
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 10,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.139079932087583,
+          59.57101571541288
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 11,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13530184991639,
+          59.56942986342355
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 12,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13384141132805,
+          59.5673132771971
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 13,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12962906366455,
+          59.56801602820998
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 14,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12253664874149,
+          59.56746271717969
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 15,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12297242812804,
+          59.566488379853126
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 16,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12625855712227,
+          59.56550710261545
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 17,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.131724351847602,
+          59.56405425479118
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 18,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13346358552754,
+          59.56484769793779
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 19,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13221481351702,
+          59.56367056935807
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 20,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13216012240474,
+          59.556029111391325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 21,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.097189076033477,
+          59.56051787405986
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 22,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.092452692620945,
+          59.56366266189531
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 23,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.091959906439588,
+          59.56001165494603
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 24,
+        "service_id": 93.0,
+        "service_name": "Одежда и обувь"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.071096098994357,
+          59.57325060754646
+        ]
+      }
+    }
+  ]
+}

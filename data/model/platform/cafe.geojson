@@ -1,0 +1,892 @@
+{
+  "type": "FeatureCollection",
+  "name": "cafe",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/792611884",
+        "@id": "node/792611884",
+        "addr:housenumber": "8А",
+        "addr:street": "улица Киргетова",
+        "amenity": "cafe",
+        "name": "Колибри",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1263659,
+          59.5709809
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "1д",
+        "addr:street": "Площадь варшавского вокзала",
+        "amenity": "cafe",
+        "name": "Ватрушка",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.132951094116905,
+          59.5531617339813
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/1504346762",
+        "@id": "node/1504346762",
+        "addr:housenumber": "30",
+        "addr:street": "Красноармейский проспект",
+        "amenity": "cafe",
+        "name": "Нестеровъ",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0970084,
+          59.5642098
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/1929520998",
+        "@id": "node/1929520998",
+        "addr:housenumber": "7/5",
+        "addr:street": "Красная",
+        "amenity": "cafe",
+        "name": "огни Баку",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1224267,
+          59.5659078
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "68",
+        "addr:street": "Чкалова",
+        "amenity": "cafe",
+        "name": "Кебаб",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.119388088111236,
+          59.56373321050323
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "1",
+        "addr:street": "Солодухина",
+        "amenity": "cafe",
+        "name": "Водопад",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.138192318835184,
+          59.562067863208256
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/1931391586",
+        "@id": "node/1931391586",
+        "addr:housenumber": "22",
+        "addr:street": "7-ой Армии",
+        "amenity": "cafe",
+        "name": "Кебаб",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1372634,
+          59.5716706
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "11а",
+        "addr:street": "Чехова",
+        "amenity": "cafe",
+        "name": "Сели поели",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13851321014447,
+          59.564123345030616
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "20",
+        "addr:street": "Соборная",
+        "amenity": "cafe",
+        "name": "Кебаб",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.127873563212546,
+          59.56557476047392
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/2409601295",
+        "@id": "node/2409601295",
+        "addr:housenumber": "13",
+        "addr:street": "Урицкого",
+        "amenity": "cafe",
+        "name": "у Анюты",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.131682,
+          59.5643987
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/2660515713",
+        "@id": "node/2660515713",
+        "addr:housenumber": "4",
+        "addr:street": "Красноармейский проспект",
+        "amenity": "cafe",
+        "name": "Росто",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1044546,
+          59.5630087
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/2681652176",
+        "@id": "node/2681652176",
+        "addr:housenumber": "15",
+        "addr:street": "Соборная",
+        "amenity": "cafe",
+        "name": "Блинная на соборной",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1250644,
+          59.5655878
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/3445474591",
+        "@id": "node/3445474591",
+        "addr:housenumber": "9",
+        "addr:street": "улица Володарского",
+        "amenity": "cafe",
+        "name": "Султан",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1325871,
+          59.5615072
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/3575616958",
+        "@id": "node/3575616958",
+        "addr:housenumber": "3",
+        "addr:street": "Бульвар авиаторов",
+        "amenity": "cafe",
+        "name": "My Way",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0979528,
+          59.5561503
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/3860806257",
+        "@id": "node/3860806257",
+        "addr:housenumber": "1б",
+        "addr:street": "Площадь варшавского вокзала",
+        "amenity": "cafe",
+        "name": "Варшавский экспресс",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.132893,
+          59.5528468
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "16а",
+        "addr:street": "Урицкого",
+        "amenity": "cafe",
+        "name": "Салам",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13243735072234,
+          59.56635498232331
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "19а ст1",
+        "addr:street": "Урицкого",
+        "amenity": "cafe",
+        "name": "Гатчина",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.133236013536553,
+          59.565213540530394
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "22а",
+        "addr:street": "Володарского",
+        "amenity": "cafe",
+        "name": "Piter",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.133991890842857,
+          59.56469337700199
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "16г",
+        "addr:street": "Володарского",
+        "amenity": "cafe",
+        "name": "Акбар",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13306487150494,
+          59.56329901011564
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "5/1",
+        "addr:street": "Красная",
+        "amenity": "cafe",
+        "name": "Буфетъ на Красной",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.121776628336182,
+          59.564888439267065
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4191876013",
+        "@id": "node/4191876013",
+        "addr:housenumber": "9",
+        "addr:street": "Проспект 25 Октября",
+        "amenity": "cafe",
+        "name": "Олеся",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1210448,
+          59.5665761
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "17б",
+        "addr:street": "Соборная",
+        "amenity": "cafe",
+        "name": "Анамария",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12616927381436,
+          59.56527856040629
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "10ю лит А",
+        "addr:street": "Соборная",
+        "amenity": "cafe",
+        "name": "London street",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.124450722580196,
+          59.56637665489432
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4464431191",
+        "@id": "node/4464431191",
+        "addr:housenumber": "17",
+        "addr:street": "Соборная",
+        "amenity": "cafe",
+        "name": "Гранат",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1262428,
+          59.5653779
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4580815189",
+        "@id": "node/4580815189",
+        "addr:housenumber": null,
+        "addr:street": "Григорина",
+        "amenity": "cafe",
+        "name": "Шаверма",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1029158,
+          59.560168
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4774416834",
+        "@id": "node/4774416834",
+        "addr:housenumber": "7б",
+        "addr:street": "Соборная улица",
+        "amenity": "cafe",
+        "name": "Дед Хо",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1233169,
+          59.5660828
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "14",
+        "addr:street": "Соборная",
+        "amenity": "cafe",
+        "name": "Pizza Italiana",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.125712895063373,
+          59.565910691542705
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/5311978321",
+        "@id": "node/5311978321",
+        "addr:housenumber": "8а",
+        "addr:street": "Авиатриссы Зверевой",
+        "amenity": "cafe",
+        "name": "Tj",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0925011,
+          59.5576972
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "37а",
+        "addr:street": "Проспект 25 Октября",
+        "amenity": "cafe",
+        "name": "Bottega",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.125605931293606,
+          59.57212300589361
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/6019448865",
+        "@id": "node/6019448865",
+        "addr:housenumber": "14А",
+        "addr:street": "улица Чехова",
+        "amenity": "cafe",
+        "name": "Мой Город",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1386288,
+          59.5643643
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "28",
+        "addr:street": "Проспект 25 Октября",
+        "amenity": "cafe",
+        "name": "Пироговый дом",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12392303464937,
+          59.571530718396836
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "20",
+        "addr:street": "Проспект 25 Октября",
+        "amenity": "cafe",
+        "name": "Гости",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.122653731248207,
+          59.57033166545536
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "20к3",
+        "addr:street": "Авиатриссы Зверевой",
+        "amenity": "cafe",
+        "name": "Белоснежка",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.087063636889532,
+          59.55071168373313
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "13а",
+        "addr:street": "Генерала Кныша",
+        "amenity": "cafe",
+        "name": "Nonna bonna",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.097089707575112,
+          59.56034462971962
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "8к2",
+        "addr:street": "Генерала Кныша",
+        "amenity": "cafe",
+        "name": "Восточная долина",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.09492190850796,
+          59.56188723490525
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "1",
+        "addr:street": "Красноармейский проспект",
+        "amenity": "cafe",
+        "name": "Кафе",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.10853483093952,
+          59.56348034311683
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "2",
+        "addr:street": "Киевская",
+        "amenity": "cafe",
+        "name": "Сим-сим",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.112699287042194,
+          59.55898982448268
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "5",
+        "addr:street": "Киевское шоссе 53км",
+        "amenity": "cafe",
+        "name": "Кафе",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.084118567762104,
+          59.52524301623324
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "24а",
+        "addr:street": "Чкалова",
+        "amenity": "cafe",
+        "name": "Господин крендель",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.124572265485646,
+          59.55944865796121
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "8",
+        "addr:street": "Крупской",
+        "amenity": "cafe",
+        "name": "Торжество",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.115223314708825,
+          59.576485387752285
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "16к1",
+        "addr:street": "Хохлова",
+        "amenity": "cafe",
+        "name": "Кебаб",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.123709107109846,
+          59.57493984032689
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "23",
+        "addr:street": "Чехова",
+        "amenity": "cafe",
+        "name": "Lavaш&Pita",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1417004131836,
+          59.57119484341633
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "12",
+        "addr:street": "Ленинградское шоссе",
+        "amenity": "cafe",
+        "name": "Вкусно - и точка",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.138512892844734,
+          59.58303151051534
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:housenumber": "15",
+        "addr:street": "пушкинское шоссе",
+        "amenity": "cafe",
+        "name": "Waffle store",
+        "service_id": 61.0,
+        "service_name": "Кафе "
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.14744080216077,
+          59.58194840109151
+        ]
+      }
+    }
+  ]
+}

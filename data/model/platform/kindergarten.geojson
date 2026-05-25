@@ -1,0 +1,948 @@
+{
+  "type": "FeatureCollection",
+  "name": "kindergarten",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/23051196",
+        "@id": "way/23051196",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "4 к1",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Авиатриссы Зверевой",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": "211-1-247",
+        "name": "Детский сад № 31",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "280",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.09615925892532,
+          59.5584444
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/61870372",
+        "@id": "way/61870372",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "15А",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Слепнёва",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": "2С-04-3",
+        "name": "Детский Сад №8 Комбинированного Вида ",
+        "building:cladding": "panel",
+        "height": "8",
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "150",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.08753943347972,
+          59.56001415
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:city": null,
+        "addr:country": null,
+        "addr:housenumber": null,
+        "addr:region": null,
+        "addr:street": null,
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": null,
+        "name": "Детский сад №12 компенсирующего вида",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "153",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.128479055256754,
+          59.57277525891024
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62357225",
+        "@id": "way/62357225",
+        "addr:city": null,
+        "addr:country": null,
+        "addr:housenumber": "46/2",
+        "addr:region": null,
+        "addr:street": "проспект 25 Октября",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": null,
+        "name": "Детский Сад № 11 комбинированного вида ",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": "0",
+        "addr:postcode": null,
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "140",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.132858171898263,
+          59.57863945
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62357236",
+        "@id": "way/62357236",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "73",
+        "addr:region": "Ленинградская область",
+        "addr:street": "проспект 25 Октября",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": "211-1-247",
+        "name": "Центр развития ребенка-детский сад №26 Гатчинского района ",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": "188300",
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": "282",
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "282",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.14102385449948,
+          59.57759055
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62365384",
+        "@id": "way/62365384",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "27",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Володарского",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": null,
+        "name": "Детский сад №18 комбинированного вида ",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": "188309",
+        "roof:shape": "flat",
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "300",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.138607464285712,
+          59.5678688
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62365407",
+        "@id": "way/62365407",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "10А",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Карла Маркса",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": "2C-04-8",
+        "name": "Детский Сад №23 Комбинированного Вида",
+        "building:cladding": "brick",
+        "height": "8",
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": "flat",
+        "design:modified": "yes",
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "280",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.130179515196964,
+          59.55676965
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62366063",
+        "@id": "way/62366063",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "15А",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Леонова",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": null,
+        "name": "Детский сад №22",
+        "building:cladding": "brick",
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": "188309",
+        "roof:shape": "hipped",
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "202",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13259815144033,
+          59.5598496
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62366141",
+        "@id": "way/62366141",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "18",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Достоевского",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": null,
+        "name": "Детский сад №22",
+        "building:cladding": "plaster",
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": "188309",
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": "stalinist neoclassicism",
+        "construction": "yes",
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "202",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.130898021877613,
+          59.56294605
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62366329",
+        "@id": "way/62366329",
+        "addr:city": null,
+        "addr:country": null,
+        "addr:housenumber": "17А",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Володарского",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": "2-04-651/5",
+        "name": "Детский сад №3 общеразвивающего вида \n",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": "188309",
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": "153",
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "153",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.135923674700294,
+          59.5647123
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62366493",
+        "@id": "way/62366493",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "30А",
+        "addr:region": "Ленинградская область",
+        "addr:street": "проспект 25 Октября",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": "2-04-651/5",
+        "name": "Центр развития ребенка-детский сад №13",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": "188309",
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "200",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12284398224525,
+          59.57202675
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62366526",
+        "@id": "way/62366526",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "8",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Коли Подрядчикова",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": "2C-04-8",
+        "name": "Детский Сад № 10 Комбинированного Вида",
+        "building:cladding": "brick",
+        "height": "8",
+        "roof:levels": null,
+        "addr:postcode": "188309",
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "269",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.117819838227014,
+          59.5742537
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/62366645",
+        "@id": "way/62366645",
+        "addr:city": "Гатчина",
+        "addr:country": null,
+        "addr:housenumber": "63А",
+        "addr:region": null,
+        "addr:street": "улица Карла Маркса",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": "2-04-651/5",
+        "name": "НО ЧДОУ Детский сад \"Планета ДЕТСТВА\"",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": "flat",
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "75",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13230324824035,
+          59.5697386
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/151583827",
+        "@id": "way/151583827",
+        "addr:city": "Гатчина",
+        "addr:country": null,
+        "addr:housenumber": "1Б",
+        "addr:region": null,
+        "addr:street": "Заводская улица",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": null,
+        "name": "Центр развития ребенка-детский сад №9 ",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": "ДС-51",
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "214",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.066327380316586,
+          59.569842
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/183082950",
+        "@id": "way/183082950",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "13 к1",
+        "addr:region": "Ленинградская область",
+        "addr:street": "улица Авиатриссы Зверевой",
+        "building": "kindergarten",
+        "building:levels": "2",
+        "design:ref": "211-1-247",
+        "name": "\nДетский Сад № 24 комбинированного вида ",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": "188310",
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "233",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.088256800542744,
+          59.55650635
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/305104824",
+        "@id": "way/305104824",
+        "addr:city": "Гатчина",
+        "addr:country": null,
+        "addr:housenumber": "16",
+        "addr:region": null,
+        "addr:street": "улица Слепнёва",
+        "building": "kindergarten",
+        "building:levels": null,
+        "design:ref": null,
+        "name": "Детский сад №40 комбинированного вида",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": "yes",
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "311",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.093287080381533,
+          59.555691
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/312553653",
+        "@id": "way/312553653",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "12А",
+        "addr:region": null,
+        "addr:street": "улица Авиатриссы Зверевой",
+        "building": "kindergarten",
+        "building:levels": "3",
+        "design:ref": null,
+        "name": "Детский сад №45 комбинированного вида",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": "188309",
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": "1",
+        "start_date": "2014",
+        "capacity": "157",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0914234401446,
+          59.5543847
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/351728047",
+        "@id": "way/351728047",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "3А",
+        "addr:region": null,
+        "addr:street": "улица Генерала Сандалова",
+        "building": "kindergarten",
+        "building:levels": null,
+        "design:ref": null,
+        "name": "Детский сад №46 комбинированного вида ",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "202",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.089392998993645,
+          59.54978145
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/412935585",
+        "@id": "way/412935585",
+        "addr:city": "Гатчина",
+        "addr:country": "RU",
+        "addr:housenumber": "7",
+        "addr:region": null,
+        "addr:street": "улица Генерала Сандалова",
+        "building": "kindergarten",
+        "building:levels": null,
+        "design:ref": null,
+        "name": "Детский сад №51 комбинированного вида ",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "220",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.094083652111152,
+          59.5500481
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "way/702510478",
+        "@id": "way/702510478",
+        "addr:city": "Гатчина",
+        "addr:country": null,
+        "addr:housenumber": "13 к7",
+        "addr:region": null,
+        "addr:street": "Пушкинское шоссе",
+        "building": "kindergarten",
+        "building:levels": "3",
+        "design:ref": null,
+        "name": "Детский сад №52 комбинированного вида ",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": "188300",
+        "roof:shape": "flat",
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "145",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.14312095931235,
+          59.58042445
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:city": "Гатчина",
+        "addr:country": null,
+        "addr:housenumber": null,
+        "addr:region": null,
+        "addr:street": null,
+        "building": "kindergarten",
+        "building:levels": null,
+        "design:ref": null,
+        "name": "Детский сад №1 с приоритетным осуществлением деятельности по художественно-эстетическому развитию детей ",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": "",
+        "start_date": null,
+        "capacity": "277",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.11732741386662,
+          59.57326468969046
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:city": "Гатчина",
+        "addr:country": null,
+        "addr:housenumber": null,
+        "addr:region": null,
+        "addr:street": null,
+        "building": "kindergarten",
+        "building:levels": null,
+        "design:ref": null,
+        "name": "Детский сад №12 компенсирующего вида ",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "152",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.126657739685847,
+          59.5688451642861
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:city": "Гатчина",
+        "addr:country": null,
+        "addr:housenumber": null,
+        "addr:region": null,
+        "addr:street": null,
+        "building": "kindergarten",
+        "building:levels": null,
+        "design:ref": null,
+        "name": "Детский сад №12 компенсирующего вида ",
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "153",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1261108024789,
+          59.57016175776289
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "addr:city": null,
+        "addr:country": null,
+        "addr:housenumber": null,
+        "addr:region": null,
+        "addr:street": null,
+        "building": null,
+        "building:levels": null,
+        "design:ref": null,
+        "name": null,
+        "building:cladding": null,
+        "height": null,
+        "roof:levels": null,
+        "addr:postcode": null,
+        "roof:shape": null,
+        "design:modified": null,
+        "design:code:SPb": null,
+        "building:architecture": null,
+        "construction": null,
+        "amenity": null,
+        "design:fixme": null,
+        "building:levels:underground": null,
+        "start_date": null,
+        "capacity": "220",
+        "service_id": 21.0,
+        "service_name": "Детский сад"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.08895165024755,
+          59.54745044717373
+        ]
+      }
+    }
+  ]
+}

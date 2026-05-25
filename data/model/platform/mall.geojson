@@ -1,0 +1,336 @@
+{
+  "type": "FeatureCollection",
+  "name": "mall",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "node/4131708367",
+        "@id": "node/4131708367",
+        "name": "Орлова роща",
+        "shop": "mall",
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12125,
+          59.5744348
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "ТРК Кубус",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.14758882537556,
+          59.58186318674943
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "ТРК Апельсин",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.145054702032606,
+          59.582636900571984
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Торговый центр\n",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.138630067201618,
+          59.582411467806175
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Въезд\n",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13680780714047,
+          59.580655267003294
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "ТЦ Рощинский",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13584857823951,
+          59.575873260390246
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Мегаполис",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.126729032413134,
+          59.575288684441105
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Гатчинский",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.14257692308068,
+          59.571355059337904
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "На Красной",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.122477092270454,
+          59.56735275726327
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Центральный",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.126319504888063,
+          59.56555261024742
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Галерея",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12179821107117,
+          59.564913555786404
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Пилот",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.09324947011317,
+          59.563447443827705
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Балтийский",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.102933834103293,
+          59.56024071051335
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Капитал",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.127288353563063,
+          59.56179746939299
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Мечта",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1315595332539,
+          59.56374958228476
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Сокол",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13194432421704,
+          59.56472559628304
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Тк на Соборной",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.132925541173023,
+          59.56374958228474
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": null,
+        "@id": null,
+        "name": "Сезонная Ярмарка",
+        "shop": null,
+        "service_id": 57.0,
+        "service_name": "Торгово-развлекательный центр"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.133898512608383,
+          59.56455643183272
+        ]
+      }
+    }
+  ]
+}

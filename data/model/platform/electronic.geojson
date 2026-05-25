@@ -1,0 +1,147 @@
+{
+  "type": "FeatureCollection",
+  "name": "electronic",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "service_id": 94.0,
+        "service_name": "Бытовая техника"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13889356962865,
+          59.582347743539096
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2,
+        "service_id": 94.0,
+        "service_name": "Бытовая техника"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.146035436420423,
+          59.582125996013126
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "service_id": 94.0,
+        "service_name": "Бытовая техника"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.148308238771616,
+          59.582245101143855
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4,
+        "service_id": 94.0,
+        "service_name": "Бытовая техника"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.126740952858498,
+          59.57469222928145
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 5,
+        "service_id": 94.0,
+        "service_name": "Бытовая техника"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.13157270574617,
+          59.56534666833414
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 6,
+        "service_id": 94.0,
+        "service_name": "Бытовая техника"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.131627867052032,
+          59.56441116967428
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 7,
+        "service_id": 94.0,
+        "service_name": "Бытовая техника"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.093057047550165,
+          59.56346799864252
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 8,
+        "service_id": 94.0,
+        "service_name": "Бытовая техника"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.092001548155856,
+          59.559926237892824
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 9,
+        "service_id": 94.0,
+        "service_name": "Бытовая техника"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.058523472212627,
+          59.56845575120845
+        ]
+      }
+    }
+  ]
+}
