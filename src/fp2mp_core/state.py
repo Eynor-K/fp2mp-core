@@ -79,6 +79,7 @@ class WikiPage(TypedDict, total=False):
 
 class ConfirmedFact(TypedDict, total=False):
     fact_id: str
+    source_entry_id: str
     claim: str
     source_agents: list[str]
     confidence: float

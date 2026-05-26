@@ -24,6 +24,13 @@ from fp2mp_core.config import get_model_locality
 from fp2mp_core.llm import get_chat_model
 from fp2mp_core.nodes.blackboard import wiki_briefing
 from fp2mp_core.state import BlackBoard, OrchestratorDirective, RawEntry, Task, board_message
+from fp2mp_core.text import (
+    DEVELOPMENT_PROPOSAL_RE as _DEVELOPMENT_PROPOSAL_RE,
+    URBAN_METRIC_RE as _URBAN_METRIC_RE,
+    needs_fresh_geodata as _needs_fresh_geodata,
+    prefer_blocksnet_routing,
+    text_matches_locality,
+)
 
 _MAX_DISPATCHES_PER_ROUND = 3
 
@@ -37,16 +44,8 @@ _AGENT_NODES = {
 
 _SPECIALIZED_AGENTS = set(AGENT_CAPABILITIES.keys())
 
-_URBAN_METRIC_RE = re.compile(
-    r"обеспеч|доступн|связност|плотност|разнообраз|центральност|сервис|населен|населени|"
-    r"квартал|землепольз|освоенн|застрой|coverage|accessibility|density|diversity|centrality|service|block",
-    re.IGNORECASE,
-)
-_DEVELOPMENT_PROPOSAL_RE = re.compile(
-    r"предлож|гипотез|развити|постро|размест|измен|смен|оптимиз|мастер-план|"
-    r"proposal|hypothesis|develop|build|place|optimi[sz]e|land.?use",
-    re.IGNORECASE,
-)
+# _URBAN_METRIC_RE, _DEVELOPMENT_PROPOSAL_RE and _needs_fresh_geodata are imported from
+# fp2mp_core.text so the BlocksNet routing decision lives in a single shared place.
 
 
 def _format_agent_capabilities(capabilities: dict[str, AgentCapability]) -> str:
@@ -212,17 +211,14 @@ def _model_locality_matches(text: str) -> bool:
         return False
     if not locality:
         return False
-    lowered = text.lower()
-    names = {str(locality.get("name", "")).lower()}
-    names.update(part.strip().lower() for part in str(locality.get("display_name", "")).split(","))
-    for name in names:
-        if not name:
-            continue
-        if name in lowered:
-            return True
-        if len(name) >= 6 and name[:5] in lowered:
-            return True
-    return False
+    names = _locality_names(locality)
+    return text_matches_locality(text, names)
+
+
+def _locality_names(locality: dict) -> list[str]:
+    names = [str(locality.get("name", "")).strip()]
+    names.extend(part.strip() for part in str(locality.get("display_name", "")).split(","))
+    return [name for name in names if name]
 
 
 def _blocksnet_metric_directives(base_text: str, slots_left: int, context_text: str = "") -> list[str]:
@@ -237,6 +233,8 @@ def _blocksnet_metric_directives(base_text: str, slots_left: int, context_text: 
             f"{base_text}\n\n"
             "Цель: обоснуй, какие зоны и направления развития выглядят наиболее перспективными "
             "по локальной модели города. Сам выбери измерения, которые нужны для проверки этого вывода, "
+            "при необходимости можешь сгенерировать и проверить гипотезу развития через оптимизатор "
+            "зоны и сценарный пересчёт обеспеченности, "
             "и отдели проверенные гипотезы от непроверенных. Если появляются нормативные или внешние "
             "вопросы, вынеси их в FOLLOW_UPS."
         ]
@@ -315,7 +313,22 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
             agent = _llm_choose_agent(sq, state, exclude_agents=excluded)
         else:
             agent = _llm_choose_agent(sq, state, exclude_agents=tried_agents)
-        if task.get("assigned_agent") in _SPECIALIZED_AGENTS and task.get("assigned_agent") not in tried_agents:
+        # BlocksNet is primary by assignment for local-model spatial/development sub-queries:
+        # do not let the modality pre-assignment (CodeSpatial) override that preference.
+        prefer_bn = (
+            "BlocksNetAgent" not in tried_agents
+            and agent == "BlocksNetAgent"
+            and prefer_blocksnet_routing(
+                str(state.get("question", "")),
+                str(sq.get("text", "")),
+                str(sq.get("search_modality", "any")),
+                str(task.get("directive", "")),
+            )
+        )
+        if not prefer_bn and (
+            task.get("assigned_agent") in _SPECIALIZED_AGENTS
+            and task.get("assigned_agent") not in tried_agents
+        ):
             agent = task.get("assigned_agent", agent)
 
         pair = (agent, sq_id)
@@ -467,6 +480,17 @@ def _llm_choose_agent(sq: dict, state: BlackBoard, exclude_agents: set[str] | No
     if not available_agents:
         return "WebSearchAgent"
 
+    sq_text = str(sq.get("text", ""))
+    question = str(state.get("question", ""))
+    modality = str(sq.get("search_modality", "any")).lower()
+    local_match = _model_locality_matches(sq_text) or _model_locality_matches(question)
+    prefer_blocksnet = (
+        "BlocksNetAgent" in available_agents
+        and prefer_blocksnet_routing(question, sq_text, modality)
+    )
+    if prefer_blocksnet:
+        return "BlocksNetAgent"
+
     model_context = ""
     try:
         locality = get_model_locality()
@@ -482,6 +506,12 @@ def _llm_choose_agent(sq: dict, state: BlackBoard, exclude_agents: set[str] | No
             "BlocksNetAgent. Если вопрос про другое место или нужны свежие данные "
             "OSM/веба — выбирай CodeSpatialAgent. Сопоставляй названия с учётом "
             "языка и транслитерации.\n"
+        )
+    if local_match:
+        model_context += (
+            "\nЭтот под-вопрос относится к локации локальной модели: для метрик "
+            "обеспеченности/доступности/плотности и предложений развития предпочитай "
+            "BlocksNetAgent; выбирай CodeSpatialAgent только если явно нужны свежие OSM/веб-геоданные.\n"
         )
 
     prompt = f"""\
@@ -517,6 +547,8 @@ Reply strictly as JSON:
             return agent
     except Exception:
         pass
+    if prefer_blocksnet:
+        return "BlocksNetAgent"
     if "WebSearchAgent" in available_agents:
         return "WebSearchAgent"  # safe default
     return next(iter(available_agents))

@@ -55,6 +55,9 @@ Rules:
 - If "Measured local-model indicators" is present, it is authoritative: the
   "The case for it" section MUST cite its concrete numbers and verified
   hypotheses with block_id references. Prefer it over web/external estimates.
+- If measured indicators contain concrete block_id values, name those block_id
+  candidates in "Answer" and "The case for it" when discussing where to add
+  services, improve accessibility, or prioritize development.
 - Keep all sections domain-neutral and factual.
 
 Write as a thoughtful expert would — a decision memo, not a graded checklist.
@@ -152,6 +155,7 @@ case for it; What's still uncertain; Where this reasoning could be wrong).
 _NUMBER_RE = re.compile(r"[-+]?\d+(?:[.,]\d+)?")
 _FAILED_OBSERVATION_PREFIXES = ("Ошибка:", "Traceback", "Exception")
 _MEASURED_ENTRY_TYPES = {"blocksnet_result", "code_result"}
+_BLOCKSNET_ARTIFACT_TOOLS = {"propose_zone_development", "optimize_zone_services", "suggest_target_blocks"}
 
 
 def measured_indicators_digest(state: BlackBoard) -> str:
@@ -160,7 +164,9 @@ def measured_indicators_digest(state: BlackBoard) -> str:
     entries = sorted(raw_data, key=lambda e: (e.get("iteration", 0), e.get("entry_id", "")))
     observation_rows: list[str] = []
     content_rows: list[str] = []
+    block_rows: list[str] = []
     seen_observations: set[tuple[str, str]] = set()
+    seen_block_rows: set[str] = set()
 
     for entry in entries:
         entry_type = entry.get("type", "")
@@ -173,7 +179,10 @@ def measured_indicators_digest(state: BlackBoard) -> str:
         for trace in entry.get("tool_trace") or []:
             for step in trace.get("intermediate_steps") or []:
                 tool = str(step.get("tool", ""))
-                if not tool.startswith("compute_"):
+                is_blocksnet_artifact = (
+                    entry.get("agent") == "BlocksNetAgent" and tool in _BLOCKSNET_ARTIFACT_TOOLS
+                )
+                if not tool.startswith("compute_") and not is_blocksnet_artifact:
                     continue
                 observation = str(step.get("observation", "") or "").strip()
                 if not observation or observation.startswith(_FAILED_OBSERVATION_PREFIXES):
@@ -188,6 +197,17 @@ def measured_indicators_digest(state: BlackBoard) -> str:
                 observation_rows.append(
                     f"- {prefix}: {tool}({args}) -> {_compact_line(observation, 900)}"
                 )
+                if is_blocksnet_artifact:
+                    for artifact_line in _extract_optimizer_artifact_lines(observation):
+                        row = f"- {prefix}: {tool}: {artifact_line}"
+                        if row not in seen_block_rows:
+                            seen_block_rows.add(row)
+                            block_rows.append(row)
+                for block_line in _extract_block_id_lines(observation):
+                    row = f"- {prefix}: {tool}: {block_line}"
+                    if row not in seen_block_rows:
+                        seen_block_rows.add(row)
+                        block_rows.append(row)
 
         content = str(entry.get("content", "") or "")
         for section_name, section_text in _extract_measured_sections(content).items():
@@ -195,11 +215,19 @@ def measured_indicators_digest(state: BlackBoard) -> str:
                 content_rows.append(
                     f"- {prefix}: {section_name}: {_compact_line(section_text, 1200)}"
                 )
+            for block_line in _extract_block_id_lines(section_text):
+                row = f"- {prefix}: {section_name}: {block_line}"
+                if row not in seen_block_rows:
+                    seen_block_rows.add(row)
+                    block_rows.append(row)
 
-    if not observation_rows and not content_rows:
+    if not observation_rows and not content_rows and not block_rows:
         return "No measured local-model indicators found."
 
     parts = []
+    if block_rows:
+        parts.append("Ключевые кварталы (block_id):")
+        parts.extend(block_rows[:40])
     if observation_rows:
         parts.append("Tool observations (primary source of measured numbers):")
         parts.extend(observation_rows[:40])
@@ -210,7 +238,7 @@ def measured_indicators_digest(state: BlackBoard) -> str:
 
 
 def _extract_measured_sections(content: str) -> dict[str, str]:
-    names = ("RESULT", "HYPOTHESES")
+    names = ("RESULT", "REFLECTION", "HYPOTHESES")
     pattern = re.compile(rf"^({'|'.join(names)}):\s*(.*)$", re.MULTILINE)
     matches = list(pattern.finditer(content or ""))
     sections: dict[str, str] = {}
@@ -220,6 +248,40 @@ def _extract_measured_sections(content: str) -> dict[str, str]:
         end = matches[index + 1].start() if index + 1 < len(matches) else len(content)
         sections[name] = (match.group(2) + content[start:end]).strip()
     return sections
+
+
+def _extract_block_id_lines(text: str) -> list[str]:
+    lines: list[str] = []
+    for raw_line in str(text or "").splitlines():
+        line = " ".join(raw_line.split())
+        if "block_id" in line.lower() and _NUMBER_RE.search(line):
+            lines.append(_compact_line(line, 600))
+    if lines:
+        return lines
+
+    # Some tool summaries use prose with several IDs on one long line; keep the
+    # local sentence around block_id so the ID remains tied to its metric value.
+    sentences = re.split(r"(?<=[.!?;])\s+", " ".join(str(text or "").split()))
+    for sentence in sentences:
+        if "block_id" in sentence.lower() and _NUMBER_RE.search(sentence):
+            lines.append(_compact_line(sentence, 600))
+    return lines
+
+
+def _extract_optimizer_artifact_lines(text: str) -> list[str]:
+    lines: list[str] = []
+    keywords = (
+        "Оптимизатор предложил",
+        "Распределение по кварталам",
+        "Оценка обеспеченности",
+        "delta_demand",
+        "solution_services",
+        "verdict:",
+    )
+    for sentence in re.split(r"(?<=[.!?;])\s+", " ".join(str(text or "").split())):
+        if any(keyword.lower() in sentence.lower() for keyword in keywords) and _NUMBER_RE.search(sentence):
+            lines.append(_compact_line(sentence, 700))
+    return lines
 
 
 def _compact_line(text: str, limit: int) -> str:

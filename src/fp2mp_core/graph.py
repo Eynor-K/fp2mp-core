@@ -241,6 +241,11 @@ def _collect_agent_outputs(raw_data: list, output_facts: list | None = None) -> 
     (ANALYSIS PLAN / RESULT / HYPOTHESES / etc.) so runs can be audited without
     reconstructing conclusions from tool observations.
     """
+    promoted_entry_ids = {
+        str(f.get("source_entry_id", ""))
+        for f in output_facts or []
+        if f.get("source_entry_id")
+    }
     promoted_claims = [str(f.get("claim", "")) for f in output_facts or []]
     content_types = {"blocksnet_result", "code_result", "mediator_synthesis"}
     outputs: list[dict] = []
@@ -250,13 +255,14 @@ def _collect_agent_outputs(raw_data: list, output_facts: list | None = None) -> 
         entry_type = entry.get("type", "")
         if not content or entry_type not in content_types:
             continue
-        promoted = any(
+        entry_id = str(entry.get("entry_id", ""))
+        promoted = entry_id in promoted_entry_ids or any(
             content[:200] in claim or claim[:200] in content
             for claim in promoted_claims
             if claim
         )
         outputs.append({
-            "entry_id": entry.get("entry_id", ""),
+            "entry_id": entry_id,
             "agent": entry.get("agent", ""),
             "sub_query_id": entry.get("sub_query_id", ""),
             "iteration": entry.get("iteration", 0),

@@ -50,7 +50,7 @@ Workflow:
 7. INTERPRET the numbers. Include units, provenance/source_url when available,
    and a numeric self-check.
 8. If a spatial or numeric result benefits from visualization, create a matplotlib
-   figure with the Agg backend and save it to OUTPUT_DIR, e.g. plt.savefig(f"{OUTPUT_DIR}/map.png").
+   figure with the Agg backend and save it to OUTPUT_DIR, e.g. plt.savefig(f"{{OUTPUT_DIR}}/map.png").
    OUTPUT_DIR is available in executed code; close figures with plt.close().
 
 Location guardrail:

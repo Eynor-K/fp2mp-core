@@ -101,6 +101,7 @@ def _entry_to_fact(entry: RawEntry) -> ConfirmedFact:
         focus = "preserve REFLECTION, HYPOTHESES, exact model numbers, units, block_id values, and FOLLOW_UPS"
     return ConfirmedFact(
         fact_id=f"fact_{fact_suffix}",
+        source_entry_id=entry.get("entry_id", ""),
         claim=compress_text(entry.get("content", ""), max_chars=800, focus=focus),
         source_agents=[entry.get("agent", "unknown")],
         confidence=entry.get("confidence", 0.0),

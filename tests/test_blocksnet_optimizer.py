@@ -17,6 +17,7 @@ def test_optimizer_tools_are_registered(tmp_path):
     assert "suggest_target_blocks" in names
     assert "propose_zone_development" in names
     assert "optimize_zone_services" in names
+    assert "compute_scenario_provision" in names
 
 
 def test_suggest_target_blocks_returns_model_ids(tmp_path):
@@ -52,3 +53,24 @@ def test_propose_zone_development_writes_solution_artifacts(tmp_path):
     assert (tmp_path / "solution_services.csv").exists()
     assert (tmp_path / "solution_area.csv").exists()
     assert (tmp_path / "delta_demand.csv").exists()
+
+
+def test_compute_scenario_provision_returns_verdict_shape(tmp_path):
+    state = {}
+    tools = {
+        tool.name: tool
+        for tool in make_optimize_tools({"state": state, "data_dir": Path("data/model"), "output_dir": tmp_path})
+    }
+
+    result = tools["compute_scenario_provision"].invoke({
+        "scenario": {"0": {"school": 120}},
+        "use_cached_solution": False,
+        "service_set": "basic",
+        "max_depth": 1,
+    })
+
+    assert "Сценарная обеспеченность" in result
+    assert "HYPOTHESES:" in result
+    assert "verdict:" in result
+    assert "block_id" in result
+    assert "->" in result

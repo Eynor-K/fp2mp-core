@@ -13,6 +13,7 @@ from typing import Any
 from fp2mp_core.config import get_settings
 from fp2mp_core.redi import ReDIDecomposer, ReDIEnricher
 from fp2mp_core.state import BlackBoard, SubQuery, Task, WikiPage, board_message
+from fp2mp_core.text import prefer_blocksnet_routing
 from fp2mp_core.wiki.index import build_index
 from fp2mp_core.wiki.log import make_initial_log_page
 
@@ -85,10 +86,17 @@ def initialize_blackboard_node(state: BlackBoard) -> dict[str, Any]:
     """Create initial tasks from ReDI sub-queries and set up wiki skeleton."""
     sub_queries: list[SubQuery] = state.get("redi_decomposition", [])
 
+    question = str(state.get("question", ""))
     tasks: list[Task] = []
     for sq in sub_queries:
         modality = sq.get("search_modality", "any")
         agent = _modality_to_agent(modality)
+        # BlocksNet is primary by assignment for local-model spatial/development sub-queries;
+        # CodeSpatial complements it (fresh geodata, custom scenarios, off-model places).
+        if agent == "CodeSpatialAgent" and prefer_blocksnet_routing(
+            question, str(sq.get("text", "")), str(modality)
+        ):
+            agent = "BlocksNetAgent"
         tasks.append(
             Task(
                 task_id=str(uuid.uuid4()),

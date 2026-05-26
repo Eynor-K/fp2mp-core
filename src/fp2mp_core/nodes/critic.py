@@ -230,13 +230,18 @@ def _blocksnet_hypothesis_followups(state: BlackBoard) -> list[dict[str, Any]]:
             continue
         content = entry.get("content", "")
         section = _section(content, "FOLLOW_UPS")
-        lines = section.splitlines() if section else []
+        lines = _followup_directive_chunks(section) if section else []
         hypotheses = _section(content, "HYPOTHESES")
         if hypotheses and "unverified" not in hypotheses.lower() and "verdict" in hypotheses.lower():
             lines.append(
                 "NormativeAgent: проверить нормативную допустимость и ограничения для проверенных BlocksNet-гипотез развития: "
                 + compress_text(hypotheses, max_chars=500, focus="preserve verdicts, exact numbers, and block_id values")
             )
+            if _looks_like_development_hypothesis(hypotheses) and "compute_scenario_provision" not in content:
+                lines.append(
+                    "BlocksNetAgent: независимо проверить гипотезу развития через compute_scenario_provision, "
+                    "сохранив before/after provision, block_id и verdict."
+                )
         if not lines:
             continue
         for line in lines:
@@ -278,6 +283,28 @@ def _followup_agent(text: str) -> str:
         if text.startswith(f"{agent}:"):
             return agent
     return ""
+
+
+def _followup_directive_chunks(text: str) -> list[str]:
+    chunks: list[str] = []
+    for line in str(text or "").splitlines():
+        parts = re.split(
+            r"\s*;\s*(?=(?:WebSearchAgent|NormativeAgent|CodeSpatialAgent|BlocksNetAgent):)",
+            line,
+        )
+        chunks.extend(part for part in parts if part.strip())
+    return chunks
+
+
+def _looks_like_development_hypothesis(text: str) -> bool:
+    lowered = str(text or "").lower()
+    return any(
+        token in lowered
+        for token in (
+            "развит", "землепольз", "сервис", "tpe", "оптимиз", "стро",
+            "development", "land-use", "optimizer", "build",
+        )
+    )
 
 
 def _strip_agent_prefix(text: str) -> str:

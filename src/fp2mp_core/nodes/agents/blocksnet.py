@@ -42,7 +42,9 @@ _SYSTEM_PROMPT = """\
 
 Инвентарь инструментов: data для обзора модели и деталей block_id; network для доступности и связности;
 provision для обеспеченности сервисами; services для плотности, разнообразия, колокации и центральности;
-indicators для морфологии/освоенности; optimize для явных сценариев развития и подбора зоны.
+indicators для морфологии/освоенности; optimize для генерации гипотез развития:
+suggest_target_blocks, propose_zone_development / optimize_zone_services и независимая проверка
+compute_scenario_provision для before/after обеспеченности.
 
 ANALYSIS PLAN обязателен до расчётов: для ЭТОЙ задачи и контекста сформулируй
 вопрос → информационные потребности → выбранные метрики/инструменты с обоснованием.
@@ -51,7 +53,11 @@ ANALYSIS PLAN обязателен до расчётов: для ЭТОЙ зад
 
 Проверка гипотез: сформулировал гипотезу → выбери метрику/детализацию, которая её проверяет
 → вызови compute_*, get_analysis_results(result_key) или get_block_info(block_id) → запиши verdict
-с конкретным числом и block_id. Непроверенные гипотезы помечай unverified и не выдавай как факт.
+с конкретным числом и block_id. Сформулировав гипотезу, ОБЯЗАТЕЛЬНО выполни заявленный test
+инструментом по названным block_id или result_key. Не оставляй гипотезу unverified, если её можно
+проверить доступными инструментами; verdict без выполненного теста недопустим. Для гипотез развития
+можно использовать propose_zone_development как генератор варианта, а compute_scenario_provision как
+независимый тест с before/after числами; порядок выбирай по задаче, не как обязательный шаблон.
 
 Retrieved capability cards:
 {capability_cards}
@@ -71,6 +77,11 @@ LIMITATIONS: <что не учтено; явно отметить, если вы
 """
 _NUMBER_RE = re.compile(r"[-+]?\d+(?:[.,]\d+)?")
 _FAILURE_MARKERS = ("Ошибка:", "Traceback", "Exception", "not found", "не найден")
+_EVIDENCE_TOOLS = {
+    "propose_zone_development",
+    "optimize_zone_services",
+    "suggest_target_blocks",
+}
 
 
 def _build_agent(tools: list[BaseTool], capability_cards: str) -> AgentExecutor:
@@ -125,10 +136,13 @@ def _parse_output(text: str, steps: list[dict[str, str]] | None = None) -> tuple
         if unverified:
             limitations.append("Some BlocksNet hypotheses were not verified by tool output and are marked unverified.")
 
-    compute_count = _successful_compute_count(steps or [])
-    confidence = _confidence_from_steps(compute_count, bool(reflection))
-    if unverified:
-        confidence = min(confidence, 0.62)
+    evidence_count = _successful_evidence_count(steps or [])
+    confidence = _confidence_from_evidence(
+        evidence_count,
+        bool(reflection),
+        _verified_hypothesis_count(hypotheses),
+        unverified,
+    )
     sections = []
     if analysis_plan:
         sections.append(f"ANALYSIS PLAN: {analysis_plan}")
@@ -160,11 +174,13 @@ def _extract_sections(text: str) -> dict[str, str]:
 
 def _ensure_hypothesis_verdicts(hypotheses: str, steps: list[dict[str, str]]) -> tuple[str, bool]:
     """Ensure hypotheses have verdicts grounded in tool output; mark unsafe ones unverified."""
-    if _has_verdict_with_number(hypotheses):
+    if _has_verdict_with_number(hypotheses) and "unverified" not in hypotheses.lower():
         return hypotheses, False
     verified = _build_hypothesis_verdicts(hypotheses, steps)
     if verified and _has_verdict_with_number(verified):
-        return verified, False
+        return verified, "unverified" in verified.lower()
+    if _has_verdict_with_number(hypotheses):
+        return hypotheses, "unverified" in hypotheses.lower()
     suffix = "\n- verdict: unverified — нет достаточного фактического вывода инструмента с числом/block_id для проверки."
     return hypotheses.rstrip() + suffix, True
 
@@ -176,6 +192,47 @@ def _has_verdict_with_number(text: str) -> bool:
             if _NUMBER_RE.search(line):
                 return True
     return False
+
+
+def _has_unverified_hypotheses(text: str) -> bool:
+    hypotheses = _extract_sections(text).get("HYPOTHESES", text)
+    return "unverified" in hypotheses.lower()
+
+
+def _merge_verified_hypotheses(output_text: str, verified_text: str) -> str:
+    verified_hypotheses = _extract_sections(verified_text).get("HYPOTHESES", verified_text).strip()
+    if not verified_hypotheses:
+        return output_text
+    if "HYPOTHESES:" not in output_text:
+        return output_text.rstrip() + f"\nHYPOTHESES: {verified_hypotheses}"
+    pattern = re.compile(
+        r"^HYPOTHESES:\s*(.*?)(?=^(?:ANALYSIS PLAN|RESULT|REFLECTION|NUMERIC SELF-CHECK|FOLLOW_UPS|CONFIDENCE|LIMITATIONS):|\Z)",
+        re.MULTILINE | re.DOTALL,
+    )
+    return pattern.sub(f"HYPOTHESES: {verified_hypotheses}\n", output_text, count=1)
+
+
+def _verified_hypothesis_count(text: str) -> int:
+    hypotheses = _extract_sections(text).get("HYPOTHESES", text or "")
+    count = 0
+    for line in hypotheses.splitlines():
+        lowered = line.lower()
+        if "verdict" not in lowered and "вердикт" not in lowered:
+            continue
+        if "unverified" in lowered:
+            continue
+        if _NUMBER_RE.search(line) and "block_id" in lowered:
+            count += 1
+    return count
+
+
+def _confidence_from_evidence(evidence_count: int, has_reflection: bool, verified_hypotheses: int, has_unverified: bool) -> float:
+    confidence = _confidence_from_steps(evidence_count, has_reflection)
+    if verified_hypotheses:
+        confidence = max(confidence, 0.72 if evidence_count >= 2 else 0.62)
+    if has_unverified:
+        confidence = min(confidence, 0.62)
+    return confidence
 
 
 def _build_hypothesis_verdicts(hypotheses: str, steps: list[dict[str, str]]) -> str:
@@ -209,12 +266,47 @@ def _successful_numeric_observation(steps: list[dict[str, str]]) -> str:
     return ""
 
 
+def _verify_unverified_hypotheses(
+    executor: AgentExecutor,
+    question: str,
+    context: str,
+    output_text: str,
+) -> tuple[str, list[dict[str, str]], str]:
+    hypotheses = _extract_sections(output_text).get("HYPOTHESES", "")
+    if not hypotheses or "unverified" not in hypotheses.lower():
+        return output_text, [], ""
+    verify_prompt = (
+        "Проверь следующие непроверенные гипотезы BlocksNet. Используй инструменты по названным "
+        "block_id/result_key: get_block_info(block_id), get_analysis_results(result_key), нужный compute_* "
+        "или compute_scenario_provision для сценариев развития. "
+        "Верни только обновлённый блок HYPOTHESES: для каждой гипотезы claim / test / verdict. "
+        "Каждый verdict должен содержать конкретное число и block_id из результата инструмента; "
+        "unverified оставляй только если инструментами реально нечем проверить.\n\n"
+        f"Исходный вопрос: {question}\n\n"
+        f"Текущий вывод агента:\n{output_text[:4000]}\n\n"
+        f"Непроверенные гипотезы:\n{hypotheses[:2500]}"
+    )
+    result = executor.invoke({"input": verify_prompt, "context": context})
+    verify_output = str(result.get("output", ""))
+    verify_steps = _format_steps(result.get("intermediate_steps", []))
+    merged = _merge_verified_hypotheses(output_text, verify_output)
+    return merged, verify_steps, verify_output
+
+
 def _successful_compute_count(steps: list[dict[str, str]]) -> int:
+    return _successful_evidence_count(steps)
+
+
+def _successful_evidence_count(steps: list[dict[str, str]]) -> int:
     tools = set()
     for step in steps:
         tool = step.get("tool", "")
         observation = step.get("observation", "").strip()
-        if tool.startswith("compute_") and observation and not observation.startswith(_FAILURE_MARKERS):
+        if (
+            (tool.startswith("compute_") or tool in _EVIDENCE_TOOLS)
+            and observation
+            and not observation.startswith(_FAILURE_MARKERS)
+        ):
             tools.add(tool)
     return len(tools)
 
@@ -231,14 +323,14 @@ def _build_reflection(text: str, steps: list[dict[str, str]]) -> str:
     compute_observations = [
         f"{step.get('tool')}: {step.get('observation')}"
         for step in steps
-        if str(step.get("tool", "")).startswith("compute_")
+        if (str(step.get("tool", "")).startswith("compute_") or str(step.get("tool", "")) in _EVIDENCE_TOOLS)
         and step.get("observation")
         and not str(step.get("observation", "")).startswith(_FAILURE_MARKERS)
     ]
     if not compute_observations:
         return ""
     prompt = (
-        "Сформулируй краткий блок REFLECTION для BlocksNet-анализа по наблюдениям compute_*. "
+        "Сформулируй краткий блок REFLECTION для BlocksNet-анализа по наблюдениям инструментов. "
         "Нужно связать метрики, назвать лучшие/худшие кварталы или block_id, если они есть, "
         "и процитировать конкретные числа. Не добавляй внешние данные.\n\n"
         + "\n\n".join(compute_observations)[:6000]
@@ -269,7 +361,7 @@ def _selected_metrics(steps: list[dict[str, str]]) -> list[dict[str, str]]:
     return [
         {"tool": step.get("tool", ""), "tool_input": step.get("tool_input", "")}
         for step in steps
-        if str(step.get("tool", "")).startswith("compute_")
+        if str(step.get("tool", "")).startswith("compute_") or str(step.get("tool", "")) in _EVIDENCE_TOOLS
     ]
 
 
@@ -306,6 +398,16 @@ def blocksnet_agent_node(state: BlackBoard) -> dict[str, Any]:
             result = executor.invoke({"input": question, "context": context})
             output_text = result.get("output", "")
             intermediate_steps = _format_steps(result.get("intermediate_steps", []))
+            verify_steps: list[dict[str, str]] = []
+            verify_output = ""
+            if _has_unverified_hypotheses(output_text):
+                output_text, verify_steps, verify_output = _verify_unverified_hypotheses(
+                    executor,
+                    question,
+                    context,
+                    output_text,
+                )
+                intermediate_steps.extend(verify_steps)
             answer, confidence, limitations = _parse_output(output_text, intermediate_steps)
             entry = board_message(
                 agent="BlocksNetAgent",
@@ -321,6 +423,8 @@ def blocksnet_agent_node(state: BlackBoard) -> dict[str, Any]:
                     "selected_metrics": _selected_metrics(intermediate_steps),
                     "capability_cards": [card.get("id", "") for card in cards],
                     "raw_output": output_text[:400],
+                    "verification_raw_output": verify_output[:1000],
+                    "verification_steps": verify_steps,
                     "intermediate_steps": intermediate_steps,
                 }],
             )

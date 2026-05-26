@@ -32,7 +32,7 @@ _SERVICE_PRESETS: dict[str, dict[str, float]] = {
         "convenience": 0.7,
         "pharmacy": 0.7,
         "pitch": 0.6,
-        "sports_centre": 0.5,
+        "swimming_pool": 0.5,
         "extra_education": 0.5,
         "cafe": 0.4,
         "bus_stop": 0.5,
@@ -101,6 +101,7 @@ def make_optimize_tools(ctx: dict) -> list:
         service_set: str = "basic",
         max_time_sec: int = 300,
         max_runs: int = 1000,
+        max_prov_evals: int = 100,
     ) -> str:
         """Run area-based TPE optimization and return a development hypothesis for selected blocks."""
         try:
@@ -117,7 +118,7 @@ def make_optimize_tools(ctx: dict) -> list:
             return f"Ошибка: blocksnet.optimization.services недоступен: {exc}"
 
         try:
-            blocks = ensure_blocks(state, data_dir).copy()
+            blocks = _ensure_site_area(ensure_blocks(state, data_dir).copy())
             acc_mx = ensure_acc_mx(state, data_dir)
             ids = _valid_block_ids(block_ids, blocks)
             if not ids:
@@ -133,8 +134,14 @@ def make_optimize_tools(ctx: dict) -> list:
 
             max_time_sec = max(10, min(int(max_time_sec), 300))
             max_runs = max(1, min(int(max_runs), 1000))
+            max_prov_evals = max(1, min(int(max_prov_evals), 1000))
 
-            facade = Facade(AreaSolution(blocks_lu), acc_mx, blocks, blocks_lu)
+            facade = Facade(
+                var_adapter=AreaSolution(blocks_lu=blocks_lu),
+                accessibility_matrix=acc_mx,
+                blocks_df=blocks,
+                blocks_lu=blocks_lu,
+            )
             added_services: list[str] = []
             for service_type, weight in weights.items():
                 service_df = _capacity_df(blocks, service_type)
@@ -149,17 +156,21 @@ def make_optimize_tools(ctx: dict) -> list:
                 )
 
             objective = WeightedObjective(
-                facade.num_params,
-                facade,
-                max_evals=max_runs,
+                num_params=facade.num_params,
+                facade=facade,
+                max_evals=max_prov_evals,
                 weights={service: weights[service] for service in added_services},
             )
-            constraints = WeightedConstraints(facade, facade.num_params)
+            constraints = WeightedConstraints(
+                facade=facade,
+                num_params=facade.num_params,
+                priority={service: weights[service] for service in added_services},
+            )
             optimizer = TPEOptimizer(
-                objective,
-                constraints,
-                RandomOrder(),
-                GradientChooser(facade, facade.num_params),
+                objective=objective,
+                constraints=constraints,
+                vars_order=RandomOrder(),
+                vars_chooser=GradientChooser(facade=facade, num_params=facade.num_params, num_top=5),
             )
             try:
                 import optuna
@@ -203,6 +214,7 @@ def make_optimize_tools(ctx: dict) -> list:
                 success_rate=float(success_rate),
                 evals=int(evals),
                 max_time_sec=max_time_sec,
+                max_prov_evals=max_prov_evals,
                 provisions=provisions,
                 paths=paths,
             )
@@ -216,6 +228,7 @@ def make_optimize_tools(ctx: dict) -> list:
         service_set: str = "basic",
         max_time_sec: int = 300,
         max_runs: int = 1000,
+        max_prov_evals: int = 100,
     ) -> str:
         """Alias for propose_zone_development kept for area-based TPE service optimization wording."""
         return propose_zone_development.invoke({
@@ -224,9 +237,105 @@ def make_optimize_tools(ctx: dict) -> list:
             "service_set": service_set,
             "max_time_sec": max_time_sec,
             "max_runs": max_runs,
+            "max_prov_evals": max_prov_evals,
         })
 
-    return [suggest_target_blocks, propose_zone_development, optimize_zone_services]
+    @tool
+    def compute_scenario_provision(
+        scenario: dict[str, dict[str, float]] | None = None,
+        use_cached_solution: bool = True,
+        service_set: str = "basic",
+        accessibility_minutes: int = 15,
+        max_depth: int = 1,
+    ) -> str:
+        """Independently recompute service provision after adding scenario capacities by block_id."""
+        try:
+            base_blocks = ensure_blocks(state, data_dir).copy()
+            acc_mx = ensure_acc_mx(state, data_dir)
+            additions = _scenario_additions(state, scenario, use_cached_solution)
+            if not additions:
+                return "Ошибка: сценарий пуст. Передай {block_id: {service_type: added_capacity}} или сначала запусти propose_zone_development."
+
+            services = sorted({service for service_map in additions.values() for service in service_map})
+            if not services and service_set:
+                services = list(_available_service_weights(service_set, base_blocks, LandUse.RESIDENTIAL))
+            rows: list[dict[str, Any]] = []
+            errors: list[str] = []
+            for service in services:
+                cap_col = f"capacity_{service}"
+                if cap_col not in base_blocks.columns:
+                    errors.append(f"{service}: нет колонки {cap_col}")
+                    continue
+
+                before_state = {"blocks": base_blocks.copy(), "acc_mx": acc_mx}
+                after_blocks = base_blocks.copy()
+                for block_id, service_map in additions.items():
+                    if service not in service_map or block_id not in after_blocks.index:
+                        continue
+                    after_blocks.loc[block_id, cap_col] = (
+                        pd.to_numeric(pd.Series([after_blocks.loc[block_id, cap_col]]), errors="coerce").fillna(0).iloc[0]
+                        + float(service_map[service])
+                    )
+                after_state = {"blocks": after_blocks, "acc_mx": acc_mx}
+                try:
+                    from fp2mp_core.tools.blocksnet.provision import _compute_single_service_provision
+
+                    before = _compute_single_service_provision(
+                        before_state,
+                        data_dir,
+                        output_dir,
+                        service,
+                        _service_accessibility(service, accessibility_minutes),
+                        max_depth,
+                    )
+                    after = _compute_single_service_provision(
+                        after_state,
+                        data_dir,
+                        output_dir,
+                        service,
+                        _service_accessibility(service, accessibility_minutes),
+                        max_depth,
+                    )
+                    rows.append({"service_type": service, "before": before, "after": after})
+                except Exception as exc:
+                    errors.append(f"{service}: {exc}")
+
+            if not rows:
+                return "Ошибка: не удалось пересчитать сценарную обеспеченность. " + "; ".join(errors)
+
+            affected_ids = sorted(additions)
+            lines = [
+                f"Сценарная обеспеченность для block_id {affected_ids}:",
+                "| service | strong before->after | weak before->after | full before->after | partial before->after | missing before->after |",
+                "|---|---:|---:|---:|---:|---:|",
+            ]
+            verdict_parts = []
+            for row in rows:
+                before = row["before"]
+                after = row["after"]
+                service = row["service_type"]
+                lines.append(
+                    f"| {service} | {before['strong']:.3f}->{after['strong']:.3f} | "
+                    f"{before['weak']:.3f}->{after['weak']:.3f} | {before['full']}->{after['full']} | "
+                    f"{before['partial']}->{after['partial']} | {before['missing']}->{after['missing']} |"
+                )
+                verdict_parts.append(
+                    f"{service} strong {before['strong']:.3f}->{after['strong']:.3f}, "
+                    f"missing {before['missing']}->{after['missing']}"
+                )
+            lines.append(
+                "HYPOTHESES: claim: сценарий добавления ёмкости в "
+                f"block_id {affected_ids} улучшает обеспеченность; test: compute_scenario_provision; "
+                f"verdict: supported for block_id {affected_ids}: " + "; ".join(verdict_parts) + "."
+            )
+            if errors:
+                lines.append("Ошибки отдельных сервисов: " + "; ".join(errors))
+            state["scenario_provision_last"] = rows
+            return "\n".join(lines)
+        except Exception as exc:
+            return f"Ошибка сценарной обеспеченности: {exc}"
+
+    return [suggest_target_blocks, propose_zone_development, optimize_zone_services, compute_scenario_provision]
 
 
 def _parse_land_use(value: str) -> LandUse:
@@ -238,6 +347,17 @@ def _land_use_name(value: Any) -> str:
     if isinstance(value, LandUse):
         return value.name
     return str(value).split(".")[-1].upper()
+
+
+def _ensure_site_area(blocks):
+    if "geometry" not in blocks.columns:
+        return blocks
+    try:
+        projected = blocks.to_crs(blocks.estimate_utm_crs())
+        blocks["site_area"] = projected.geometry.area
+    except Exception:
+        blocks["site_area"] = blocks.geometry.area
+    return blocks
 
 
 def _valid_block_ids(block_ids: list[int], blocks) -> list[int]:
@@ -277,6 +397,58 @@ def _capacity_df(blocks, service_type: str) -> pd.DataFrame:
     df = blocks[[cap_col]].rename(columns={cap_col: "capacity"}).copy()
     df["capacity"] = pd.to_numeric(df["capacity"], errors="coerce").fillna(0).astype(int)
     return df
+
+
+def _service_accessibility(service_type: str, fallback: int) -> int:
+    try:
+        from blocksnet.config.service_types.config import SERVICE_TYPES
+
+        if service_type in SERVICE_TYPES.index:
+            value = SERVICE_TYPES.loc[service_type, "accessibility"]
+            return int(value) if pd.notna(value) else int(fallback)
+    except Exception:
+        pass
+    return int(fallback)
+
+
+def _scenario_additions(
+    state: dict,
+    scenario: dict[str, dict[str, float]] | None,
+    use_cached_solution: bool,
+) -> dict[int, dict[str, float]]:
+    additions: dict[int, dict[str, float]] = {}
+    if scenario:
+        for raw_block_id, service_map in scenario.items():
+            try:
+                block_id = int(raw_block_id)
+            except (TypeError, ValueError):
+                continue
+            additions.setdefault(block_id, {})
+            for service, raw_capacity in (service_map or {}).items():
+                try:
+                    capacity = float(raw_capacity)
+                except (TypeError, ValueError):
+                    continue
+                if capacity > 0:
+                    additions[block_id][str(service)] = additions[block_id].get(str(service), 0.0) + capacity
+    if additions or not use_cached_solution:
+        return {block_id: values for block_id, values in additions.items() if values}
+
+    services_df = state.get("zone_development_solution_services")
+    if not isinstance(services_df, pd.DataFrame) or services_df.empty:
+        return {}
+    for _idx, row in services_df.iterrows():
+        try:
+            block_id = int(row["block_id"])
+            service = str(row["service_type"])
+            capacity = float(row.get("capacity", row.get("count", 0)))
+        except (KeyError, TypeError, ValueError):
+            continue
+        if capacity <= 0:
+            continue
+        additions.setdefault(block_id, {})
+        additions[block_id][service] = additions[block_id].get(service, 0.0) + capacity
+    return additions
 
 
 def _numeric_metric(metric) -> pd.Series:
@@ -380,6 +552,7 @@ def _format_development_hypothesis(
     success_rate: float,
     evals: int,
     max_time_sec: int,
+    max_prov_evals: int,
     provisions: dict[str, Any],
     paths: dict[str, str],
 ) -> str:
@@ -407,13 +580,14 @@ def _format_development_hypothesis(
         f"Оптимизатор предложил: {services_summary}. "
         + (f"Распределение по кварталам: {block_summary}. " if block_summary else "")
         + (f"Оценка обеспеченности: {provision_summary}. " if provision_summary else "")
-        + f"Objective={best_val:.4f}, successful_trials={success_rate:.2f}, evals={evals}, timeout={max_time_sec}s. "
+        + f"verdict: TPE-hypothesis for block_id {ids} objective={best_val:.4f}, successful_trials={success_rate:.2f}, "
+        f"optimizer_runs={evals}, provision_eval_budget={max_prov_evals}, timeout={max_time_sec}s. "
         "Это эвристическая рекомендация TPE, а не нормативное решение.\n"
         "RESULT: Сохранены solution_services.csv, solution_area.csv, delta_demand.csv и карта предложений. "
         f"Артефакты: {artifact_summary}\n"
         "FOLLOW_UPS: NormativeAgent: проверить допустимость выбранного землепользования и размещения предложенных сервисов; "
         "WebSearchAgent: найти сопоставимые практики реализации такого набора сервисов; "
-        "BlocksNetAgent: при необходимости пересчитать service provision после уточнения сценария.\n"
+        "BlocksNetAgent: независимо пересчитать сценарий через compute_scenario_provision для проверки before/after provision.\n"
         "LIMITATIONS: Стохастический TPE; результат зависит от выбранных block_ids, весов сервисов, текущей матрицы доступности и ограничений BlocksNet."
     )
 
