@@ -232,11 +232,13 @@ def _blocksnet_metric_directives(base_text: str, slots_left: int, context_text: 
         return [
             f"{base_text}\n\n"
             "Цель: обоснуй, какие зоны и направления развития выглядят наиболее перспективными "
-            "по локальной модели города. Сам выбери измерения, которые нужны для проверки этого вывода, "
-            "при необходимости можешь сгенерировать и проверить гипотезу развития через оптимизатор "
-            "зоны и сценарный пересчёт обеспеченности, "
-            "и отдели проверенные гипотезы от непроверенных. Если появляются нормативные или внешние "
-            "вопросы, вынеси их в FOLLOW_UPS."
+            "по локальной модели города. Сначала измерь дефициты нужными метриками (выбор за тобой). "
+            "Затем для вывода «что и где строить» НЕ ограничивайся качественными рекомендациями: "
+            "подбери кварталы (suggest_target_blocks), получи измеренное предложение сервисов "
+            "(propose_zone_development) и проверь его эффект независимым сценарным пересчётом "
+            "(compute_scenario_provision) — приведи before/after обеспеченности и block_id. "
+            "Если оптимизатор по какой-то причине неприменим, явно объясни почему в LIMITATIONS. "
+            "Отдели проверенные гипотезы от непроверенных; нормативные/внешние вопросы вынеси в FOLLOW_UPS."
         ]
 
     directives = [
@@ -276,9 +278,18 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
         return _route_to_critic(state, iteration, reason="stagnation")
 
     # --- Get pending tasks ---
+    def _dispatch_rank(t: Task) -> int:
+        sq = t.get("sub_query_id", "")
+        if sq in ("sq_model_support", "sq_code_support"):
+            return 0
+        # Front BlocksNet self-test follow-ups so the generate->test loop closes in-budget.
+        if "#fu" in sq and t.get("assigned_agent") == "BlocksNetAgent":
+            return 0
+        return 1
+
     pending_tasks = sorted(
         [t for t in all_tasks if t.get("status") == "pending"],
-        key=lambda t: (0 if t.get("sub_query_id") in ("sq_model_support", "sq_code_support") else 1),
+        key=_dispatch_rank,
     )
     if not pending_tasks:
         # All tasks done — trigger Mediator if enough results, else go to Critic
@@ -491,6 +502,7 @@ def _llm_choose_agent(sq: dict, state: BlackBoard, exclude_agents: set[str] | No
     if not available_agents:
         return "WebSearchAgent"
 
+    sq_id = str(sq.get("sub_query_id", ""))
     sq_text = str(sq.get("text", ""))
     question = str(state.get("question", ""))
     modality = str(sq.get("search_modality", "any")).lower()
@@ -499,7 +511,15 @@ def _llm_choose_agent(sq: dict, state: BlackBoard, exclude_agents: set[str] | No
         "BlocksNetAgent" in available_agents
         and prefer_blocksnet_routing(question, sq_text, modality)
     )
-    if prefer_blocksnet:
+    # Hard preference only for the guaranteed model pass and for sub-queries that are themselves
+    # development/optimization tasks (BlocksNet's generative specialty). For plain metric sub-
+    # queries the preference is a hint and the LLM decides BlocksNet vs CodeSpatial, so CodeSpatial
+    # does the complementary geodata/extra-computation work instead of BlocksNet repeating metrics.
+    # The development check uses the SUB-QUERY's own text (not the global question) so a master-plan
+    # question does not force every sub-query onto BlocksNet.
+    is_development_sq = bool(_DEVELOPMENT_PROPOSAL_RE.search(sq_text))
+    hard_prefer_blocksnet = prefer_blocksnet and (sq_id == "sq_model_support" or is_development_sq)
+    if hard_prefer_blocksnet:
         return "BlocksNetAgent"
 
     model_context = ""
@@ -511,18 +531,17 @@ def _llm_choose_agent(sq: dict, state: BlackBoard, exclude_agents: set[str] | No
         model_context = (
             "\nLocal model context:\n"
             f"Локальная модель data/model покрывает локацию: {locality['display_name']}.\n"
-            "Если вопрос касается этой локации и просит метрики обеспеченности/"
-            "доступности/плотности/разнообразия/центральности или предложения "
-            "развития/оптимизации набора сервисов — предпочитай "
-            "BlocksNetAgent. Если вопрос про другое место или нужны свежие данные "
-            "OSM/веба — выбирай CodeSpatialAgent. Сопоставляй названия с учётом "
-            "языка и транслитерации.\n"
+            "Разделение ролей: BlocksNetAgent работает С локальной моделью — обеспеченность, "
+            "доступность, плотность/разнообразие/центральность и измеренные гипотезы развития "
+            "(оптимизатор зоны). CodeSpatialAgent делает всё, что НЕ в модели: подгрузку доп. "
+            "данных (OSM/веб-геоданные), геокодирование, дополнительные вычисления и анализ зон/"
+            "улиц/маршрутов, которых нет в модели. Сопоставляй названия с учётом языка/транслитерации.\n"
         )
     if local_match:
         model_context += (
-            "\nЭтот под-вопрос относится к локации локальной модели: для метрик "
-            "обеспеченности/доступности/плотности и предложений развития предпочитай "
-            "BlocksNetAgent; выбирай CodeSpatialAgent только если явно нужны свежие OSM/веб-геоданные.\n"
+            "\nЭтот под-вопрос относится к локации локальной модели. Если он про метрики/развитие "
+            "ПО модели — BlocksNetAgent; если он требует свежих OSM/веб-данных, новых вычислений или "
+            "работы с объектами вне модели — CodeSpatialAgent (он дополняет BlocksNet, а не дублирует).\n"
         )
 
     prompt = f"""\
@@ -558,7 +577,7 @@ Reply strictly as JSON:
             return agent
     except Exception:
         pass
-    if prefer_blocksnet:
+    if hard_prefer_blocksnet:
         return "BlocksNetAgent"
     if "WebSearchAgent" in available_agents:
         return "WebSearchAgent"  # safe default

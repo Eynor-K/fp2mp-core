@@ -13,7 +13,6 @@ from typing import Any
 from fp2mp_core.config import get_settings
 from fp2mp_core.redi import ReDIDecomposer, ReDIEnricher
 from fp2mp_core.state import BlackBoard, SubQuery, Task, WikiPage, board_message
-from fp2mp_core.text import prefer_blocksnet_routing
 from fp2mp_core.wiki.index import build_index
 from fp2mp_core.wiki.log import make_initial_log_page
 
@@ -92,11 +91,12 @@ def initialize_blackboard_node(state: BlackBoard) -> dict[str, Any]:
     for sq in sub_queries:
         modality = sq.get("search_modality", "any")
         agent = _modality_to_agent(modality)
-        # BlocksNet is primary by assignment for local-model spatial/development sub-queries;
-        # CodeSpatial complements it (fresh geodata, custom scenarios, off-model places).
-        if agent == "CodeSpatialAgent" and prefer_blocksnet_routing(
-            question, str(sq.get("text", "")), str(modality)
-        ):
+        # Only the dedicated local-model support sub-query is pre-assigned to BlocksNet (the
+        # guaranteed model pass). All other spatial sub-queries keep the modality default and are
+        # routed by the orchestrator's capability-aware LLM, so CodeSpatial handles complementary
+        # work (fresh OSM/web geodata, extra computation outside the model) instead of BlocksNet
+        # repeating the same metric battery.
+        if sq.get("sub_query_id") == "sq_model_support":
             agent = "BlocksNetAgent"
         tasks.append(
             Task(

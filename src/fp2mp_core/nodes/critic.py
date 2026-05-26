@@ -301,12 +301,13 @@ def _followup_task(source_sq: str, index: int, agent: str, directive: str, prior
     # Give follow-ups their own sub_query_id so the orchestrator's anti-duplicate logic does
     # not block re-engaging an agent that already answered the parent sub-query (this is what
     # lets a "BlocksNetAgent: re-test via compute_scenario_provision" follow-up return to
-    # BlocksNet and close the generate->test loop).
+    # BlocksNet and close the generate->test loop). BlocksNet self-tests are prioritized so the
+    # loop can close within the iteration budget instead of being starved by other tasks.
     return {
         "sub_query_id": f"{source_sq}#fu{index}",
         "assigned_agent": agent,
         "directive": directive,
-        "priority": priority,
+        "priority": "high" if agent == "BlocksNetAgent" else priority,
     }
 
 
