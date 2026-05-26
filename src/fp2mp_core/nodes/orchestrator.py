@@ -278,7 +278,7 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
     # --- Get pending tasks ---
     pending_tasks = sorted(
         [t for t in all_tasks if t.get("status") == "pending"],
-        key=lambda t: (0 if t.get("sub_query_id") == "sq_code_support" else 1),
+        key=lambda t: (0 if t.get("sub_query_id") in ("sq_model_support", "sq_code_support") else 1),
     )
     if not pending_tasks:
         # All tasks done — trigger Mediator if enough results, else go to Critic
@@ -307,29 +307,38 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
         sq_id = task.get("sub_query_id", "")
         sq = sub_query_index.get(sq_id, {})
         tried_agents = _tried_agents_for_sub_query(all_tasks, raw_data, sq_id)
-        if sq.get("search_modality") == "code":
-            code_agents = {"CodeSpatialAgent", "BlocksNetAgent"}
-            excluded = tried_agents | (_SPECIALIZED_AGENTS - code_agents)
-            agent = _llm_choose_agent(sq, state, exclude_agents=excluded)
+        # Triaged cross-agent follow-ups carry their own sub_query_id (not in the decomposition)
+        # and an agent chosen by the critic's capability-aware triage. Honor that assignment
+        # directly so the question reaches the intended specialist (and a "back to BlocksNet"
+        # follow-up can close the generate->test loop), without re-routing or anti-duplicate
+        # exclusion fighting the deliberate re-engagement.
+        is_followup = sq_id not in sub_query_index and task.get("assigned_agent") in _SPECIALIZED_AGENTS
+        if is_followup:
+            agent = task.get("assigned_agent")
         else:
-            agent = _llm_choose_agent(sq, state, exclude_agents=tried_agents)
-        # BlocksNet is primary by assignment for local-model spatial/development sub-queries:
-        # do not let the modality pre-assignment (CodeSpatial) override that preference.
-        prefer_bn = (
-            "BlocksNetAgent" not in tried_agents
-            and agent == "BlocksNetAgent"
-            and prefer_blocksnet_routing(
-                str(state.get("question", "")),
-                str(sq.get("text", "")),
-                str(sq.get("search_modality", "any")),
-                str(task.get("directive", "")),
+            if sq.get("search_modality") == "code":
+                code_agents = {"CodeSpatialAgent", "BlocksNetAgent"}
+                excluded = tried_agents | (_SPECIALIZED_AGENTS - code_agents)
+                agent = _llm_choose_agent(sq, state, exclude_agents=excluded)
+            else:
+                agent = _llm_choose_agent(sq, state, exclude_agents=tried_agents)
+            # BlocksNet is primary by assignment for local-model spatial/development sub-queries:
+            # do not let the modality pre-assignment (CodeSpatial) override that preference.
+            prefer_bn = (
+                "BlocksNetAgent" not in tried_agents
+                and agent == "BlocksNetAgent"
+                and prefer_blocksnet_routing(
+                    str(state.get("question", "")),
+                    str(sq.get("text", "")),
+                    str(sq.get("search_modality", "any")),
+                    str(task.get("directive", "")),
+                )
             )
-        )
-        if not prefer_bn and (
-            task.get("assigned_agent") in _SPECIALIZED_AGENTS
-            and task.get("assigned_agent") not in tried_agents
-        ):
-            agent = task.get("assigned_agent", agent)
+            if not prefer_bn and (
+                task.get("assigned_agent") in _SPECIALIZED_AGENTS
+                and task.get("assigned_agent") not in tried_agents
+            ):
+                agent = task.get("assigned_agent", agent)
 
         pair = (agent, sq_id)
         if pair in done_pairs:
@@ -350,7 +359,9 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
             directive_text += f"\n\nFocus on: {', '.join(domain_hints)}"
 
         directive_variants = [directive_text]
-        if agent == "BlocksNetAgent":
+        # Follow-up directives are already precise (refined per agent by the triage); do not
+        # fan them out into generic metric variants.
+        if agent == "BlocksNetAgent" and not is_followup:
             directive_variants = _blocksnet_metric_directives(
                 directive_text,
                 _MAX_DISPATCHES_PER_ROUND - len(dispatches),

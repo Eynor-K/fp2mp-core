@@ -64,6 +64,7 @@ def redi_decompose_node(state: BlackBoard) -> dict[str, Any]:
     sub_queries = decomposer(question)
     sub_queries = enricher.enrich_all(sub_queries)
     sub_queries = _ensure_code_spatial_sub_query(question, sub_queries)
+    sub_queries = _ensure_model_support_sub_query(question, sub_queries)
 
     return {
         "redi_decomposition": sub_queries,
@@ -189,6 +190,45 @@ def _ensure_code_spatial_sub_query(question: str, sub_queries: list[SubQuery]) -
         domain_hints=[],
     )
     return [code_sq, *sub_queries]
+
+
+def _ensure_model_support_sub_query(question: str, sub_queries: list[SubQuery]) -> list[SubQuery]:
+    """Guarantee one local-model (BlocksNet) pass when the question is about the modeled city.
+
+    The decomposer is non-deterministic and sometimes frames the spatial dimension as an
+    OSM/zoning question (CodeSpatial territory), which leaves BlocksNet unused even though a
+    full local model of the locality exists. This injects a dedicated model-support sub-query
+    whose intent is local-model metrics/development (no OSM/street tokens), so it is pre-assigned
+    to BlocksNet by initialize_blackboard. It is complementary to _ensure_code_spatial_sub_query
+    (which serves arbitrary/off-model places via OSM).
+    """
+    from fp2mp_core.text import model_locality_matches
+
+    if not model_locality_matches(question):
+        return sub_queries
+    if any(sq.get("sub_query_id") == "sq_model_support" for sq in sub_queries):
+        return sub_queries
+
+    text = (
+        "Проанализируй локальную модель города (data/model: кварталы, ёмкости сервисов, "
+        "население, предвычисленная матрица доступности) под исходный вопрос. Посчитай "
+        "обеспеченность сервисами, транспортную доступность, плотность/разнообразие/центральность "
+        "по кварталам и выдели дефициты с конкретными block_id. Если вопрос предполагает развитие, "
+        "сформулируй и проверь гипотезу — что и где строить — с измеримым эффектом на обеспеченность.\n"
+        f"Исходный вопрос: {question}"
+    )
+
+    model_sq = SubQuery(
+        sub_query_id="sq_model_support",
+        text=text,
+        intent_aspect="local model urban metrics and development",
+        search_modality="code",
+        independence=True,
+        enriched_variants=[],
+        keywords=[],
+        domain_hints=[],
+    )
+    return [model_sq, *sub_queries]
 
 
 def _extract_named_place(question: str) -> str | None:

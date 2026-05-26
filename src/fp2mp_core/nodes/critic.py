@@ -16,7 +16,8 @@ import re
 import uuid
 from typing import Any
 
-from fp2mp_core.llm import call_with_thinking
+from fp2mp_core.capabilities import AGENT_CAPABILITIES
+from fp2mp_core.llm import call_with_thinking, get_chat_model
 from fp2mp_core.nodes.blackboard import coverage_from_sub_queries, wiki_briefing
 from fp2mp_core.state import BlackBoard, CritiqueResult, Task, board_message
 from fp2mp_core.summarize import compress_text
@@ -111,13 +112,16 @@ def critic_node(state: BlackBoard) -> dict[str, Any]:
                 + " BlocksNet result was too thin for the urban metric task; requesting focused metrics."
             ).strip()
         else:
-            hypothesis_followups = _blocksnet_hypothesis_followups(state)
-            if hypothesis_followups and critique.get("action") == "CONTINUE":
-                critique["new_tasks"] = list(critique.get("new_tasks", [])) + hypothesis_followups
-                critique["reasoning"] = (
-                    str(critique.get("reasoning", ""))
-                    + " BlocksNet hypotheses exposed follow-up validation tasks."
-                ).strip()
+            hypothesis_candidates = _blocksnet_hypothesis_followups(state)
+            if hypothesis_candidates and critique.get("action") == "CONTINUE":
+                hypothesis_followups = _triage_followups(state, hypothesis_candidates)
+                if hypothesis_followups:
+                    critique["new_tasks"] = list(critique.get("new_tasks", [])) + hypothesis_followups
+                    critique["reasoning"] = (
+                        str(critique.get("reasoning", ""))
+                        + " BlocksNet hypotheses exposed follow-up validation tasks "
+                        "(validated and re-targeted per agent specialty)."
+                    ).strip()
 
     stop_flag = critique.get("force_stop", False) or critique.get("action") == "STOP"
 
@@ -263,6 +267,123 @@ def _blocksnet_hypothesis_followups(state: BlackBoard) -> list[dict[str, Any]]:
             })
             existing.add(key)
     return followups[:3]
+
+
+_SPECIALIZED_AGENTS = set(AGENT_CAPABILITIES.keys())
+
+
+def _capability_brief() -> str:
+    parts = []
+    for cap in AGENT_CAPABILITIES.values():
+        parts.append(
+            f"[{cap.name}] {cap.description}\n"
+            f"  Может: {'; '.join(cap.handles)}\n"
+            f"  Не может: {'; '.join(cap.cannot_do)}"
+        )
+    return "\n".join(parts)
+
+
+def _parse_json_array(text: str) -> list[dict[str, Any]]:
+    stripped = str(text or "").strip()
+    if stripped.startswith("```"):
+        stripped = stripped.strip("`")
+        if stripped.lower().startswith("json"):
+            stripped = stripped[4:]
+    start = stripped.find("[")
+    end = stripped.rfind("]")
+    if start == -1 or end == -1 or end < start:
+        raise ValueError("no JSON array found")
+    data = json.loads(stripped[start : end + 1])
+    return data if isinstance(data, list) else []
+
+
+def _followup_task(source_sq: str, index: int, agent: str, directive: str, priority: str) -> dict[str, Any]:
+    # Give follow-ups their own sub_query_id so the orchestrator's anti-duplicate logic does
+    # not block re-engaging an agent that already answered the parent sub-query (this is what
+    # lets a "BlocksNetAgent: re-test via compute_scenario_provision" follow-up return to
+    # BlocksNet and close the generate->test loop).
+    return {
+        "sub_query_id": f"{source_sq}#fu{index}",
+        "assigned_agent": agent,
+        "directive": directive,
+        "priority": priority,
+    }
+
+
+def _triage_followups(state: BlackBoard, candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Validate, re-target (capability-aware LLM routing), and rewrite cross-agent follow-ups.
+
+    The suggested agent prefix is treated only as a hint. For each candidate the LLM decides
+    whether it is genuinely needed and feasible, chooses the best-fit agent from the capability
+    cards, and rewrites the question precisely for that agent's specialty (e.g. it must not hand
+    internal tool names to the web agent). LLM routing is preserved — this is the router for
+    inter-agent questions, not a mechanical prefix map.
+    """
+    if not candidates:
+        return []
+
+    question = str(state.get("question", ""))
+    listing = "\n".join(
+        f"[{i}] (предложенный адресат: {c.get('assigned_agent', '?')}) {c.get('directive', '')}"
+        for i, c in enumerate(candidates)
+    )
+    prompt = (
+        "Ты — координатор межагентных вопросов в системе открытого QA. Тебе дан список follow-up "
+        "вопросов, которые один агент предложил адресовать другим. Для КАЖДОГО реши:\n"
+        "- keep: действительно ли этот вопрос нужен для ответа на исходный вопрос пользователя И "
+        "выполним выбранным агентом (отбрось избыточные, тривиальные или невыполнимые);\n"
+        "- agent: какой агент лучше всего его выполнит по возможностям ниже. Предложенный адресат — "
+        "лишь подсказка; выбирай сам и исправляй, если он не подходит;\n"
+        "- question: переформулируй вопрос ТОЧНО под специфику выбранного агента и его инструменты/данные, "
+        "конкретно и кратко. Убери детали, неуместные для него (например, НЕ передавай веб-агенту "
+        "внутренние имена инструментов вроде compute_scenario_provision; для BlocksNetAgent, наоборот, "
+        "формулируй задачу в терминах его модели — block_id, обеспеченность, сценарный пересчёт).\n\n"
+        f"Исходный вопрос пользователя: {question}\n\n"
+        f"Возможности агентов:\n{_capability_brief()}\n\n"
+        f"Follow-ups:\n{listing}\n\n"
+        "Верни СТРОГО JSON-массив объектов: "
+        '[{"index": <int>, "keep": <bool>, "agent": "<имя агента>", "question": "<переформулировка>", '
+        '"reason": "<кратко>"}]'
+    )
+
+    try:
+        response = get_chat_model(temperature=0.0).invoke(prompt)
+        text = response.content if hasattr(response, "content") else str(response)
+        decisions = _parse_json_array(text)
+    except Exception:
+        decisions = []
+
+    tasks: list[dict[str, Any]] = []
+    if decisions:
+        for item in decisions:
+            try:
+                idx = int(item.get("index"))
+            except (TypeError, ValueError):
+                continue
+            if idx < 0 or idx >= len(candidates) or not item.get("keep", False):
+                continue
+            agent = str(item.get("agent", "")).strip()
+            if agent not in _SPECIALIZED_AGENTS:
+                continue
+            question_text = str(item.get("question", "")).strip()
+            if not question_text:
+                question_text = str(candidates[idx].get("directive", "")).strip()
+            source_sq = str(candidates[idx].get("sub_query_id", ""))
+            tasks.append(
+                _followup_task(source_sq, idx, agent, question_text, candidates[idx].get("priority", "medium"))
+            )
+        return tasks[:3]
+
+    # Fallback: keep the candidates but still give them their own id so routing honors the
+    # suggested agent instead of silently defaulting to the web agent.
+    for i, c in enumerate(candidates):
+        agent = str(c.get("assigned_agent", "")).strip()
+        if agent not in _SPECIALIZED_AGENTS:
+            continue
+        tasks.append(
+            _followup_task(str(c.get("sub_query_id", "")), i, agent, str(c.get("directive", "")), c.get("priority", "medium"))
+        )
+    return tasks[:3]
 
 
 def _section(text: str, name: str) -> str:
