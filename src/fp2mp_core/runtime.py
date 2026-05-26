@@ -161,6 +161,7 @@ def write_logs(
     model: str,
     final_answer: str,
     tool_calls: list[dict[str, Any]],
+    agent_outputs: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     logger_data = ctx.logger.to_json()
     saved_files = collect_run_files(ctx.run_dir, logger_data["saved_files"])
@@ -171,6 +172,7 @@ def write_logs(
         "started_at": ctx.started_at,
         "finished_at": _now_iso(),
         "tool_calls": tool_calls or logger_data["tool_calls"],
+        "agent_outputs": agent_outputs or [],
         "saved_files": saved_files,
         "final_answer": final_answer,
     }
@@ -213,6 +215,22 @@ def _to_markdown(payload: dict[str, Any]) -> str:
                 obs=_md_cell(str(call.get("observation", ""))[:240]),
             )
         )
+    lines.extend(["", "## Agent Outputs"])
+    for output in payload.get("agent_outputs", []):
+        label = (
+            f"{output.get('agent', '')} / {output.get('type', '')} / "
+            f"{output.get('sub_query_id', '')}"
+        )
+        lines.extend([
+            "",
+            f"### {_md_cell(label)}",
+            f"- Confidence: `{output.get('confidence', 0.0)}`",
+            f"- Promotion: `{output.get('promotion', 'unknown')}`",
+            "",
+            "```text",
+            str(output.get("content", "")),
+            "```",
+        ])
     lines.extend(["", "## Saved Files"])
     by_kind: dict[str, list[dict[str, Any]]] = {}
     for item in payload.get("saved_files", []):

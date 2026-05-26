@@ -7,6 +7,7 @@ Optionally persists wiki to disk if WIKI_PERSIST_DIR is configured.
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from fp2mp_core.config import get_settings
@@ -34,6 +35,7 @@ COMMIT to a concrete, direct answer while showing high-quality reasoning.
 You receive:
 - The original question
 - Confirmed facts (with confidence scores and source attributions)
+- Measured local-model indicators, when available
 - A synthesis narrative from the MediatorAgent
 - Unresolved contradictions (if any)
 
@@ -47,9 +49,12 @@ Rules:
   conclusion. Commit; do not refuse, defer, or hedge the conclusion itself.
 - Support the answer with the confirmed facts and cite sources inline.
 - If confirmed facts include measured quantitative analytics, the "The case for it"
-  section must cite the numbers and any conclusions or development hypotheses that
-  depend on them. When measured facts conflict with external estimates, prefer the
-  measured facts and explicitly note the discrepancy.
+  section must cite concrete values and verified development hypotheses with their
+  verdicts and block_id references. When measured facts conflict with external
+  estimates, prefer the measured facts and explicitly note the discrepancy.
+- If "Measured local-model indicators" is present, it is authoritative: the
+  "The case for it" section MUST cite its concrete numbers and verified
+  hypotheses with block_id references. Prefer it over web/external estimates.
 - Keep all sections domain-neutral and factual.
 
 Write as a thoughtful expert would — a decision memo, not a graded checklist.
@@ -144,6 +149,85 @@ Return only the final markdown answer using the same memo section headers
 case for it; What's still uncertain; Where this reasoning could be wrong).
 """
 
+_NUMBER_RE = re.compile(r"[-+]?\d+(?:[.,]\d+)?")
+_FAILED_OBSERVATION_PREFIXES = ("Ошибка:", "Traceback", "Exception")
+_MEASURED_ENTRY_TYPES = {"blocksnet_result", "code_result"}
+
+
+def measured_indicators_digest(state: BlackBoard) -> str:
+    """Return exact measured values from raw agent/tool output without LLM compression."""
+    raw_data = state.get("raw_data", []) or []
+    entries = sorted(raw_data, key=lambda e: (e.get("iteration", 0), e.get("entry_id", "")))
+    observation_rows: list[str] = []
+    content_rows: list[str] = []
+    seen_observations: set[tuple[str, str]] = set()
+
+    for entry in entries:
+        entry_type = entry.get("type", "")
+        if entry_type not in _MEASURED_ENTRY_TYPES:
+            continue
+        prefix = (
+            f"{entry.get('agent', 'agent')}[{entry.get('sub_query_id', '?')}] "
+            f"conf={float(entry.get('confidence', 0.0)):.2f}"
+        )
+        for trace in entry.get("tool_trace") or []:
+            for step in trace.get("intermediate_steps") or []:
+                tool = str(step.get("tool", ""))
+                if not tool.startswith("compute_"):
+                    continue
+                observation = str(step.get("observation", "") or "").strip()
+                if not observation or observation.startswith(_FAILED_OBSERVATION_PREFIXES):
+                    continue
+                if not _NUMBER_RE.search(observation):
+                    continue
+                args = str(step.get("tool_input", ""))
+                key = (tool, args)
+                if key in seen_observations:
+                    continue
+                seen_observations.add(key)
+                observation_rows.append(
+                    f"- {prefix}: {tool}({args}) -> {_compact_line(observation, 900)}"
+                )
+
+        content = str(entry.get("content", "") or "")
+        for section_name, section_text in _extract_measured_sections(content).items():
+            if _NUMBER_RE.search(section_text) or "verdict" in section_text.lower() or "block_id" in section_text:
+                content_rows.append(
+                    f"- {prefix}: {section_name}: {_compact_line(section_text, 1200)}"
+                )
+
+    if not observation_rows and not content_rows:
+        return "No measured local-model indicators found."
+
+    parts = []
+    if observation_rows:
+        parts.append("Tool observations (primary source of measured numbers):")
+        parts.extend(observation_rows[:40])
+    if content_rows:
+        parts.append("Agent RESULT/HYPOTHESES excerpts:")
+        parts.extend(content_rows[:30])
+    return "\n".join(parts)
+
+
+def _extract_measured_sections(content: str) -> dict[str, str]:
+    names = ("RESULT", "HYPOTHESES")
+    pattern = re.compile(rf"^({'|'.join(names)}):\s*(.*)$", re.MULTILINE)
+    matches = list(pattern.finditer(content or ""))
+    sections: dict[str, str] = {}
+    for index, match in enumerate(matches):
+        name = match.group(1)
+        start = match.end()
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(content)
+        sections[name] = (match.group(2) + content[start:end]).strip()
+    return sections
+
+
+def _compact_line(text: str, limit: int) -> str:
+    text = " ".join(str(text).split())
+    if len(text) <= limit:
+        return text
+    return text[: limit - 1].rstrip() + "..."
+
 
 def final_synthesis_node(state: BlackBoard) -> dict[str, Any]:
     """LangGraph node — produces the final answer."""
@@ -178,12 +262,16 @@ def final_synthesis_node(state: BlackBoard) -> dict[str, Any]:
 
     contradictions = critique.get("contradictions", [])
     contradictions_str = "\n".join(f"- {c}" for c in contradictions) if contradictions else "None"
+    measured_digest = measured_indicators_digest(state)
 
     overall_conf = critique.get("overall_confidence", 0.0)
     iteration = state.get("iteration", 0)
 
     synthesis_prompt = f"""\
 Question: {question}
+
+Measured local-model indicators (authoritative - prefer over external/web estimates):
+{measured_digest}
 
 Confirmed facts:
 {facts_str or "No confirmed facts."}

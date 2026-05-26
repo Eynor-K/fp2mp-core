@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+from difflib import get_close_matches
+
 import pandas as pd
 from langchain_core.tools import tool
 from blocksnet.analysis.provision import competitive_provision, provision_strong_total, provision_weak_total, shared_provision
 from blocksnet.config.service_types.config import SERVICE_TYPES
+from blocksnet.enums import LandUse
 
 from fp2mp_core.tools.blocksnet.data import ensure_acc_mx, ensure_blocks
+from fp2mp_core.tools.blocksnet.optimize import _SERVICE_PRESETS
 from fp2mp_core.runtime import record_file
 from fp2mp_core.tools.blocksnet.viz import save_metric_map
 
@@ -15,12 +19,46 @@ def _service_df(state: dict, data_dir, service_type: str) -> pd.DataFrame | str:
     ensure_acc_mx(state, data_dir)
     cap_col = f"capacity_{service_type}"
     if cap_col not in blocks.columns:
-        return f"Ошибка: тип сервиса '{service_type}' не найден. Вызови list_service_types()."
+        return _unknown_service_message(blocks, service_type)
     service_df = blocks[["population", cap_col]].copy()
     service_df = service_df.rename(columns={cap_col: "capacity"}).fillna(0)
     service_df["capacity"] = service_df["capacity"].astype(int)
     service_df["population"] = service_df["population"].astype(int)
     return service_df
+
+
+def _available_services(blocks: pd.DataFrame) -> list[str]:
+    return sorted(c.replace("capacity_", "", 1) for c in blocks.columns if c.startswith("capacity_"))
+
+
+def _unknown_service_message(blocks: pd.DataFrame, service_type: str) -> str:
+    available = _available_services(blocks)
+    lowered = str(service_type).strip().lower()
+    presets = {"basic", "advanced", "comfort", "key"}
+    land_uses = {item.name.lower() for item in LandUse}
+    land_uses.update(str(item.value).lower() for item in LandUse)
+    close = get_close_matches(str(service_type), available, n=3, cutoff=0.25)
+    examples = ", ".join(available[:20]) + (" ..." if len(available) > 20 else "")
+
+    hint = ""
+    if lowered in presets:
+        hint = (
+            f"'{service_type}' похоже на пресет набора сервисов, а не на service_type. "
+            "Для ключевых сервисов вызови list_key_services() и передай конкретное имя сервиса."
+        )
+    elif lowered in land_uses:
+        hint = (
+            f"'{service_type}' похоже на тип землепользования, а не на service_type. "
+            "Для provision используй сервис из list_key_services() или list_service_types()."
+        )
+    else:
+        hint = "Используй точное имя сервиса из list_service_types() или list_key_services()."
+
+    suggestions = f" Ближайшие допустимые сервисы: {', '.join(close)}." if close else ""
+    return (
+        f"Ошибка: тип сервиса '{service_type}' не найден. {hint}{suggestions}\n"
+        f"Допустимые сервисы: {examples}"
+    )
 
 
 def _provision_column(df: pd.DataFrame) -> str:
@@ -41,48 +79,196 @@ def _service_demand(service_type: str) -> int | None:
     return None
 
 
+def _service_accessibility(service_type: str, fallback: int) -> int:
+    try:
+        if service_type in SERVICE_TYPES.index:
+            value = SERVICE_TYPES.loc[service_type, "accessibility"]
+            return int(value) if pd.notna(value) else int(fallback)
+    except Exception:
+        return int(fallback)
+    return int(fallback)
+
+
+def _preset_services(preset: str, blocks: pd.DataFrame) -> list[str]:
+    available = set(_available_services(blocks))
+    lowered = str(preset).strip().lower()
+    if lowered == "key":
+        return sorted(name for name in available if name in set(SERVICE_TYPES.index))
+    if lowered in _SERVICE_PRESETS:
+        return [name for name in _SERVICE_PRESETS[lowered] if name in available]
+    return []
+
+
+def _compute_single_service_provision(
+    state: dict,
+    data_dir,
+    output_dir,
+    service_type: str,
+    accessibility_minutes: int,
+    max_depth: int,
+) -> dict:
+    service_df = _service_df(state, data_dir, service_type)
+    if isinstance(service_df, str):
+        raise ValueError(service_df)
+    demand = _service_demand(service_type)
+    result = competitive_provision(
+        service_df,
+        state["acc_mx"],
+        accessibility_minutes,
+        demand=demand,
+        max_depth=max_depth,
+    )
+    blocks_prov = result[0] if isinstance(result, tuple) else result
+    if isinstance(result, tuple):
+        for index, item in enumerate(result[1:], start=1):
+            if isinstance(item, (pd.DataFrame, pd.Series)):
+                item.to_csv(output_dir / f"competitive_provision_{service_type}_links_{index}.csv")
+    csv_path = output_dir / f"competitive_provision_{service_type}.csv"
+    blocks_prov.to_csv(csv_path)
+    record_file(csv_path, "csv", meta={"tool": "compute_service_provision", "service_type": service_type})
+    state[f"competitive_provision_{service_type}"] = blocks_prov
+    save_metric_map(
+        ensure_blocks(state, data_dir),
+        blocks_prov,
+        f"competitive_provision_{service_type}",
+        output_dir,
+        f"Обеспеченность {service_type}",
+    )
+    strong = provision_strong_total(blocks_prov)
+    weak = provision_weak_total(blocks_prov)
+    col = _provision_column(blocks_prov)
+    values = pd.to_numeric(blocks_prov[col], errors="coerce").fillna(0)
+    return {
+        "service_type": service_type,
+        "accessibility_minutes": accessibility_minutes,
+        "strong": float(strong),
+        "weak": float(weak),
+        "full": int((values >= 1).sum()),
+        "partial": int(((values > 0) & (values < 1)).sum()),
+        "missing": int((values <= 0).sum()),
+    }
+
+
+def _compute_service_batch(
+    state: dict,
+    data_dir,
+    output_dir,
+    services: list[str],
+    preset_name: str,
+    accessibility_minutes: int,
+    max_depth: int,
+) -> str:
+    rows: list[dict] = []
+    errors: list[str] = []
+    for service in services:
+        threshold = _service_accessibility(service, accessibility_minutes)
+        try:
+            rows.append(
+                _compute_single_service_provision(
+                    state,
+                    data_dir,
+                    output_dir,
+                    service,
+                    threshold,
+                    max_depth,
+                )
+            )
+        except Exception as exc:
+            errors.append(f"{service}: {exc}")
+
+    if not rows:
+        return (
+            f"Ошибка: для набора '{preset_name}' не найдено доступных capacity_* сервисов."
+            + (f"\nОшибки: {'; '.join(errors)}" if errors else "")
+        )
+
+    summary_df = pd.DataFrame(rows)
+    csv_path = output_dir / f"competitive_provision_batch_{preset_name}.csv"
+    summary_df.to_csv(csv_path, index=False)
+    record_file(csv_path, "csv", meta={"tool": "compute_service_provision", "service_type": preset_name, "batch": True})
+
+    lines = [
+        f"Батч-обеспеченность набора '{preset_name}' ({len(rows)} сервисов):",
+        "| service | threshold_min | strong | weak | full_blocks | partial_blocks | missing_blocks | status |",
+        "|---|---:|---:|---:|---:|---:|---:|---|",
+    ]
+    for row in sorted(rows, key=lambda item: item["strong"]):
+        status = "слабая" if row["strong"] < 0.5 else "средняя" if row["strong"] < 0.75 else "сильная"
+        lines.append(
+            f"| {row['service_type']} | {row['accessibility_minutes']} | {row['strong']:.3f} | "
+            f"{row['weak']:.3f} | {row['full']} | {row['partial']} | {row['missing']} | {status} |"
+        )
+    if errors:
+        lines.append("Ошибки отдельных сервисов: " + "; ".join(errors))
+    lines.append(f"Сводный CSV: {csv_path}")
+    return "\n".join(lines)
+
+
 def make_provision_tools(ctx: dict) -> list:
     state = ctx["state"]
     data_dir = ctx["data_dir"]
     output_dir = ctx["output_dir"]
 
     @tool
-    def compute_service_provision(service_type: str, accessibility_minutes: int = 15, max_depth: int = 1) -> str:
-        """Вычисляет конкурентную обеспеченность населения конкретным типом сервиса."""
+    def compute_service_provision(service_type: str | list[str], accessibility_minutes: int = 15, max_depth: int = 1) -> str:
+        """Вычисляет конкурентную обеспеченность населения сервисом или набором key/basic/advanced/comfort."""
         try:
+            blocks = ensure_blocks(state, data_dir)
+            requested = str(service_type).strip().lower() if isinstance(service_type, str) else ""
+            batch_services = _preset_services(requested, blocks) if requested else []
+            if batch_services:
+                return _compute_service_batch(
+                    state,
+                    data_dir,
+                    output_dir,
+                    batch_services,
+                    requested,
+                    accessibility_minutes,
+                    max_depth,
+                )
+            if isinstance(service_type, list):
+                return _compute_service_batch(
+                    state,
+                    data_dir,
+                    output_dir,
+                    [str(item) for item in service_type],
+                    "custom",
+                    accessibility_minutes,
+                    max_depth,
+                )
             service_df = _service_df(state, data_dir, service_type)
             if isinstance(service_df, str):
                 return service_df
-            demand = _service_demand(service_type)
-            result = competitive_provision(service_df, state["acc_mx"], accessibility_minutes, demand=demand, max_depth=max_depth)
-            blocks_prov = result[0] if isinstance(result, tuple) else result
-            if isinstance(result, tuple):
-                for index, item in enumerate(result[1:], start=1):
-                    if isinstance(item, (pd.DataFrame, pd.Series)):
-                        item.to_csv(output_dir / f"competitive_provision_{service_type}_links_{index}.csv")
-            csv_path = output_dir / f"competitive_provision_{service_type}.csv"
-            blocks_prov.to_csv(csv_path)
-            record_file(csv_path, "csv", meta={"tool": "compute_service_provision", "service_type": service_type})
-            state[f"competitive_provision_{service_type}"] = blocks_prov
-            save_metric_map(ensure_blocks(state, data_dir), blocks_prov, f"competitive_provision_{service_type}", output_dir, f"Обеспеченность {service_type}")
-            strong = provision_strong_total(blocks_prov)
-            weak = provision_weak_total(blocks_prov)
-            col = _provision_column(blocks_prov)
-            values = pd.to_numeric(blocks_prov[col], errors="coerce").fillna(0)
+            summary = _compute_single_service_provision(
+                state,
+                data_dir,
+                output_dir,
+                str(service_type),
+                int(accessibility_minutes),
+                int(max_depth),
+            )
             return (
-                f"Обеспеченность сервисом '{service_type}' (порог {accessibility_minutes} мин):\n"
-                f"Суммарная сильная обеспеченность: {strong:.3f}\n"
-                f"Суммарная слабая обеспеченность: {weak:.3f}\n"
-                f"Полная обеспеченность: {int((values >= 1).sum())} кварталов, "
-                f"частичная: {int(((values > 0) & (values < 1)).sum())}, отсутствует: {int((values <= 0).sum())}."
+                f"Обеспеченность сервисом '{summary['service_type']}' (порог {summary['accessibility_minutes']} мин):\n"
+                f"Суммарная сильная обеспеченность: {summary['strong']:.3f}\n"
+                f"Суммарная слабая обеспеченность: {summary['weak']:.3f}\n"
+                f"Полная обеспеченность: {summary['full']} кварталов, "
+                f"частичная: {summary['partial']}, отсутствует: {summary['missing']}."
             )
         except Exception as exc:
             return f"Ошибка: {exc}"
 
     @tool
-    def compute_shared_provision(service_type: str, accessibility_minutes: int = 15) -> str:
+    def compute_shared_provision(service_type: str | list[str], accessibility_minutes: int = 15) -> str:
         """Вычисляет совместную обеспеченность населения сервисом в заданном пороге доступности."""
         try:
+            if service_type == "key":
+                blocks = ensure_blocks(state, data_dir)
+                service_type = [name for name in _available_services(blocks) if name in set(SERVICE_TYPES.index)][:6]
+            if isinstance(service_type, list):
+                return "\n\n".join(
+                    compute_shared_provision.invoke({"service_type": item, "accessibility_minutes": accessibility_minutes})
+                    for item in service_type
+                )
             service_df = _service_df(state, data_dir, service_type)
             if isinstance(service_df, str):
                 return service_df

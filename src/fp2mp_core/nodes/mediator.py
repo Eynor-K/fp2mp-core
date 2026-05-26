@@ -13,6 +13,7 @@ import uuid
 from typing import Any
 
 from fp2mp_core.llm import call_with_thinking
+from fp2mp_core.nodes.synthesis import measured_indicators_digest
 from fp2mp_core.state import BlackBoard, Citation, ConfirmedFact, WikiPage, board_message
 from fp2mp_core.summarize import compress_text
 
@@ -23,6 +24,7 @@ into a coherent, well-structured understanding of the question.
 You have access to:
 - All wiki pages produced by specialist agents (web, normative, code)
 - Confirmed facts already promoted to output
+- Measured local-model indicators extracted directly from raw tool observations
 
 Your tasks:
 1. AGREEMENTS: identify where multiple agents corroborate the same claim
@@ -38,8 +40,11 @@ Rules:
 - Only promote a fact to output if at least 2 independent sources agree OR confidence >= 0.75
 - Attribute each claim to its source agents
 - If facts include measured quantitative analytics from a local model, carry the key
-  numbers and derived hypotheses into synthesis_narrative. Prefer measured values
-  over external estimates when they conflict, and record the conflict in contradictions.
+  numbers and verified hypotheses (with verdicts, values, and block_id references)
+  into synthesis_narrative and new_facts. Prefer measured values over external
+  estimates when they conflict, and record the conflict in contradictions.
+- If the prompt includes "Measured local-model indicators", treat it as
+  authoritative and quote its exact values before relying on web estimates.
 
 Output format (JSON only):
 {
@@ -90,6 +95,7 @@ def mediator_node(state: BlackBoard) -> dict[str, Any]:
     sq_summary = "\n".join(
         f"- {sq['sub_query_id']}: {sq.get('text', '')}" for sq in sub_queries
     )
+    measured_digest = measured_indicators_digest(state)
 
     prompt = f"""\
 Original question sub-queries:
@@ -100,6 +106,9 @@ Wiki pages:
 
 Currently confirmed facts:
 {facts_summary or "None yet."}
+
+Measured local-model indicators (authoritative - prefer over external/web estimates):
+{measured_digest}
 
 Please synthesize the above into a coherent understanding, identify agreements and contradictions,
 and produce new confirmed facts where multiple sources agree.

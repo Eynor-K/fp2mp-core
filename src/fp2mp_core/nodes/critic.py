@@ -110,9 +110,9 @@ def critic_node(state: BlackBoard) -> dict[str, Any]:
                 str(critique.get("reasoning", ""))
                 + " BlocksNet result was too thin for the urban metric task; requesting focused metrics."
             ).strip()
-        elif critique.get("action") == "CONTINUE":
+        else:
             hypothesis_followups = _blocksnet_hypothesis_followups(state)
-            if hypothesis_followups:
+            if hypothesis_followups and critique.get("action") == "CONTINUE":
                 critique["new_tasks"] = list(critique.get("new_tasks", [])) + hypothesis_followups
                 critique["reasoning"] = (
                     str(critique.get("reasoning", ""))
@@ -209,10 +209,9 @@ def _blocksnet_metric_followups(state: BlackBoard, iteration: int) -> list[dict[
             "assigned_agent": "BlocksNetAgent",
             "directive": (
                 f"Доделай количественную проверку для под-вопроса: {text}\n"
-                "Не ограничивайся load_blocks/load_accessibility_matrix. Вызови list_key_services(), "
-                "затем минимум два профильных compute_* из разных семейств: обеспеченность сервисов, "
-                "доступность/связность, разнообразие/центральность или плотность. "
-                "Верни RESULT и REFLECTION с конкретными числами и block_id."
+                "Не ограничивайся обзором данных. Сформулируй ANALYSIS PLAN, сам выбери необходимые "
+                "семейства измерений из контекста и проверь выводы/гипотезы числами и block_id. "
+                "Верни RESULT, HYPOTHESES с verdict и REFLECTION."
             ),
             "priority": "high",
         })
@@ -231,9 +230,16 @@ def _blocksnet_hypothesis_followups(state: BlackBoard) -> list[dict[str, Any]]:
             continue
         content = entry.get("content", "")
         section = _section(content, "FOLLOW_UPS")
-        if not section:
+        lines = section.splitlines() if section else []
+        hypotheses = _section(content, "HYPOTHESES")
+        if hypotheses and "unverified" not in hypotheses.lower() and "verdict" in hypotheses.lower():
+            lines.append(
+                "NormativeAgent: проверить нормативную допустимость и ограничения для проверенных BlocksNet-гипотез развития: "
+                + compress_text(hypotheses, max_chars=500, focus="preserve verdicts, exact numbers, and block_id values")
+            )
+        if not lines:
             continue
-        for line in section.splitlines():
+        for line in lines:
             directive = line.strip().lstrip("-*").strip()
             if not directive:
                 continue
@@ -255,7 +261,7 @@ def _blocksnet_hypothesis_followups(state: BlackBoard) -> list[dict[str, Any]]:
 
 
 def _section(text: str, name: str) -> str:
-    names = ("RESULT", "REFLECTION", "HYPOTHESES", "NUMERIC SELF-CHECK", "FOLLOW_UPS", "CONFIDENCE", "LIMITATIONS")
+    names = ("ANALYSIS PLAN", "RESULT", "REFLECTION", "HYPOTHESES", "NUMERIC SELF-CHECK", "FOLLOW_UPS", "CONFIDENCE", "LIMITATIONS")
     pattern = re.compile(rf"^({'|'.join(re.escape(item) for item in names)}):\s*(.*)$", re.MULTILINE)
     matches = list(pattern.finditer(text or ""))
     for index, match in enumerate(matches):

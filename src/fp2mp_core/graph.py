@@ -201,7 +201,8 @@ def run(input: str, model: str, max_iterations: int | None = None) -> BaseState:
     final_answer = result.get("final_answer") or ""
     raw_data = result.get("raw_data", [])
     tool_calls = _collect_tool_calls(raw_data)
-    artifact_payload = write_logs(ctx, input, model, final_answer, tool_calls)
+    agent_outputs = _collect_agent_outputs(raw_data, result.get("output", []))
+    artifact_payload = write_logs(ctx, input, model, final_answer, tool_calls, agent_outputs)
 
     return BaseState(
         input=input,
@@ -231,3 +232,37 @@ def _collect_tool_calls(raw_data: list) -> list[dict]:
                     "observation": str(step.get("observation", ""))[:1000],
                 })
     return calls
+
+
+def _collect_agent_outputs(raw_data: list, output_facts: list | None = None) -> list[dict]:
+    """Collect final structured agent outputs for audit logs.
+
+    Tool traces show what was called; this preserves what the agent concluded
+    (ANALYSIS PLAN / RESULT / HYPOTHESES / etc.) so runs can be audited without
+    reconstructing conclusions from tool observations.
+    """
+    promoted_claims = [str(f.get("claim", "")) for f in output_facts or []]
+    content_types = {"blocksnet_result", "code_result", "mediator_synthesis"}
+    outputs: list[dict] = []
+    entries = sorted(raw_data, key=lambda e: (e.get("iteration", 0), e.get("entry_id", "")))
+    for entry in entries:
+        content = str(entry.get("content", "") or "").strip()
+        entry_type = entry.get("type", "")
+        if not content or entry_type not in content_types:
+            continue
+        promoted = any(
+            content[:200] in claim or claim[:200] in content
+            for claim in promoted_claims
+            if claim
+        )
+        outputs.append({
+            "entry_id": entry.get("entry_id", ""),
+            "agent": entry.get("agent", ""),
+            "sub_query_id": entry.get("sub_query_id", ""),
+            "iteration": entry.get("iteration", 0),
+            "type": entry_type,
+            "confidence": entry.get("confidence", 0.0),
+            "promotion": "promoted" if promoted else "not_promoted",
+            "content": content,
+        })
+    return outputs

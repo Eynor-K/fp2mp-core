@@ -11,6 +11,7 @@ from langchain_core.tools import BaseTool
 
 from fp2mp_core.config import get_settings
 from fp2mp_core.llm import get_chat_model
+from fp2mp_core.nodes.blackboard import wiki_briefing
 from fp2mp_core.runtime import get_run_dir
 from fp2mp_core.state import BlackBoard, RawEntry, board_message
 from fp2mp_core.tools.blocksnet import make_blocksnet_tools
@@ -30,47 +31,36 @@ _SYSTEM_PROMPT = """\
 2. Не останавливайся после загрузки данных. Сразу вызывай нужные compute_* под задачу.
 3. Допустимые типы сервисов бери из list_service_types(); нормативные demand/accessibility
    для ключевых сервисов бери из list_key_services(), а не угадывай.
+   compute_service_provision принимает конкретный сервис ИЛИ key/basic/advanced/comfort
+   (тогда считает батч по набору сервисов).
 4. PLAN должен ссылаться хотя бы на одну CARD id из Retrieved capability cards.
    Если ни одна карточка не подходит — вызови find_blocksnet_capability.
 5. Все результаты автоматически сохраняются в data/model/output.
 6. При ошибке инструмента объясни проблему и продолжай; не отказывайся от ответа.
-7. Нельзя завершать ответ без финального блока RESULT/REFLECTION/HYPOTHESES/NUMERIC SELF-CHECK/CONFIDENCE/LIMITATIONS.
+7. Нельзя завершать ответ без финального блока ANALYSIS PLAN/RESULT/REFLECTION/HYPOTHESES/NUMERIC SELF-CHECK/CONFIDENCE/LIMITATIONS.
 8. Если метрики указывают на открытые вопросы для проверки другими агентами, добавь FOLLOW_UPS.
 
-Выбор метрики:
-- обеспеченность/покрытие населения сервисом в N минут → compute_service_provision, не services_count;
-- совместное покрытие сервисом → compute_shared_provision;
-- доступность/связность → compute_mean_accessibility, compute_median_accessibility,
-  compute_max_accessibility, compute_connectivity;
-- доступность по землепользованию → compute_land_use_accessibility, compute_area_accessibility;
-- плотность/количество/колокация/разнообразие сервисов → compute_services_density,
-  compute_services_count, compute_services_collocation, compute_shannon_diversity;
-- центральность → compute_services_centrality, build_adjacency_graph, compute_population_centrality;
-- городская форма/освоенность → compute_density_indicators, compute_development_indicators.
-- гипотезы развития/что и где построить/смена землепользования в зоне → сначала
-  suggest_target_blocks, затем при явном запросе предложений propose_zone_development
-  или optimize_zone_services.
+Инвентарь инструментов: data для обзора модели и деталей block_id; network для доступности и связности;
+provision для обеспеченности сервисами; services для плотности, разнообразия, колокации и центральности;
+indicators для морфологии/освоенности; optimize для явных сценариев развития и подбора зоны.
 
-Меню инструментов:
-- data: load_blocks/load_accessibility_matrix для обзора; list_cached_data для кэша;
-  list_service_types/list_key_services для service_type и нормативов; get_block_info/get_analysis_results для деталей.
-- network: mean/median/max accessibility для времени доступности; connectivity для связности;
-  land_use/area accessibility для зон и площадно-взвешенной доступности.
-- provision: compute_service_provision для конкурентной обеспеченности; compute_shared_provision
-  для совместной обеспеченности.
-- services: density/count/collocation/Shannon diversity/centrality для сервисного каркаса.
-- indicators: density/development indicators и adjacency_graph для морфологии и смежности.
-- optimize: suggest_target_blocks для выбора зоны; propose_zone_development/optimize_zone_services для эвристической
-  TPE-гипотезы набора сервисов и землепользования. Инструмент тяжёлый: вызывай только
-  когда вопрос просит предложения или сценарий развития, а не для обычной диагностики.
+ANALYSIS PLAN обязателен до расчётов: для ЭТОЙ задачи и контекста сформулируй
+вопрос → информационные потребности → выбранные метрики/инструменты с обоснованием.
+Не вызывай compute_* до того, как объяснил, зачем эта метрика нужна для задачи.
+Если задача широкая, используй минимум 3 метрики разных семейств, но не делай лишних расчётов.
+
+Проверка гипотез: сформулировал гипотезу → выбери метрику/детализацию, которая её проверяет
+→ вызови compute_*, get_analysis_results(result_key) или get_block_info(block_id) → запиши verdict
+с конкретным числом и block_id. Непроверенные гипотезы помечай unverified и не выдавай как факт.
 
 Retrieved capability cards:
 {capability_cards}
 
 Финальный ответ должен быть ТОЛЬКО в таком формате:
+ANALYSIS PLAN: <для этой задачи/контекста: какие сведения нужны и какие метрики их дают, с обоснованием выбора каждой>
 RESULT: <ключевые числа модели с единицами и интерпретацией>
 REFLECTION: <лучшие/худшие кварталы, дефициты обеспеченности, связь метрик; цитируй числа и block_id>
-HYPOTHESES: <гипотезы развития из метрик: где добавить сервисы/зелень/уплотнение/смену функции; цитируй числа и block_id>
+HYPOTHESES: <список: claim / test / verdict. Verdict обязан опираться на фактический вывод инструмента, число и block_id; иначе unverified>
 NUMERIC SELF-CHECK: <диапазоны/единицы/санити-чек по числам>
 FOLLOW_UPS: <необязательные вопросы для следующих раундов; если агент очевиден, начни пункт с WebSearchAgent:, NormativeAgent:, CodeSpatialAgent: или BlocksNetAgent:>
 CONFIDENCE: <0.0-1.0>
@@ -87,7 +77,7 @@ def _build_agent(tools: list[BaseTool], capability_cards: str) -> AgentExecutor:
     llm = get_chat_model(temperature=0.0)
     prompt = ChatPromptTemplate.from_messages([
         ("system", _SYSTEM_PROMPT),
-        ("human", "Question: {input}"),
+        ("human", "Вопрос: {input}\n\nКонтекст (что уже известно от других агентов и какие пробелы):\n{context}"),
         MessagesPlaceholder("agent_scratchpad"),
     ]).partial(capability_cards=capability_cards)
     agent = create_tool_calling_agent(
@@ -107,6 +97,7 @@ def _build_agent(tools: list[BaseTool], capability_cards: str) -> AgentExecutor:
 def _parse_output(text: str, steps: list[dict[str, str]] | None = None) -> tuple[str, float, list[str]]:
     """Extract result, confidence, and limitations from agent output."""
     sections_map = _extract_sections(text)
+    analysis_plan = sections_map.get("ANALYSIS PLAN", "")
     result = sections_map.get("RESULT", "")
     reflection = sections_map.get("REFLECTION", "")
     hypotheses = sections_map.get("HYPOTHESES", "")
@@ -128,13 +119,23 @@ def _parse_output(text: str, steps: list[dict[str, str]] | None = None) -> tuple
     if not reflection:
         reflection = _build_reflection(text, steps or [])
 
+    unverified = False
+    if hypotheses:
+        hypotheses, unverified = _ensure_hypothesis_verdicts(hypotheses, steps or [])
+        if unverified:
+            limitations.append("Some BlocksNet hypotheses were not verified by tool output and are marked unverified.")
+
     compute_count = _successful_compute_count(steps or [])
     confidence = _confidence_from_steps(compute_count, bool(reflection))
+    if unverified:
+        confidence = min(confidence, 0.62)
     sections = []
-    if reflection:
-        sections.append(f"REFLECTION: {reflection}")
+    if analysis_plan:
+        sections.append(f"ANALYSIS PLAN: {analysis_plan}")
     if hypotheses:
         sections.append(f"HYPOTHESES: {hypotheses}")
+    if reflection:
+        sections.append(f"REFLECTION: {reflection}")
     if follow_ups:
         sections.append(f"FOLLOW_UPS: {follow_ups}")
     sections.append(f"RESULT: {result}")
@@ -144,7 +145,7 @@ def _parse_output(text: str, steps: list[dict[str, str]] | None = None) -> tuple
 
 
 def _extract_sections(text: str) -> dict[str, str]:
-    names = ("RESULT", "REFLECTION", "HYPOTHESES", "NUMERIC SELF-CHECK", "FOLLOW_UPS", "CONFIDENCE", "LIMITATIONS")
+    names = ("ANALYSIS PLAN", "RESULT", "REFLECTION", "HYPOTHESES", "NUMERIC SELF-CHECK", "FOLLOW_UPS", "CONFIDENCE", "LIMITATIONS")
     pattern = re.compile(rf"^({'|'.join(re.escape(name) for name in names)}):\s*(.*)$", re.MULTILINE)
     matches = list(pattern.finditer(text or ""))
     sections: dict[str, str] = {}
@@ -155,6 +156,47 @@ def _extract_sections(text: str) -> dict[str, str]:
         body = (match.group(2) + text[start:end]).strip()
         sections[name] = body
     return sections
+
+
+def _ensure_hypothesis_verdicts(hypotheses: str, steps: list[dict[str, str]]) -> tuple[str, bool]:
+    """Ensure hypotheses have verdicts grounded in tool output; mark unsafe ones unverified."""
+    if _has_verdict_with_number(hypotheses):
+        return hypotheses, False
+    verified = _build_hypothesis_verdicts(hypotheses, steps)
+    if verified and _has_verdict_with_number(verified):
+        return verified, False
+    suffix = "\n- verdict: unverified — нет достаточного фактического вывода инструмента с числом/block_id для проверки."
+    return hypotheses.rstrip() + suffix, True
+
+
+def _has_verdict_with_number(text: str) -> bool:
+    for line in (text or "").splitlines():
+        lowered = line.lower()
+        if "verdict" in lowered or "вердикт" in lowered or "подтверж" in lowered or "опроверг" in lowered:
+            if _NUMBER_RE.search(line):
+                return True
+    return False
+
+
+def _build_hypothesis_verdicts(hypotheses: str, steps: list[dict[str, str]]) -> str:
+    observations = [
+        f"{step.get('tool')}({step.get('tool_input')}): {step.get('observation')}"
+        for step in steps
+        if step.get("observation") and not str(step.get("observation", "")).startswith(_FAILURE_MARKERS)
+    ]
+    if not observations:
+        return ""
+    prompt = (
+        "Проверь гипотезы BlocksNet только по наблюдениям инструментов ниже. "
+        "Для каждой гипотезы верни claim / test / verdict. Verdict должен содержать конкретное число "
+        "или block_id из наблюдений; если проверить нечем, verdict: unverified. Не добавляй внешние данные.\n\n"
+        f"HYPOTHESES:\n{hypotheses[:2000]}\n\nOBSERVATIONS:\n" + "\n\n".join(observations)[:6000]
+    )
+    try:
+        response = get_chat_model(temperature=0.0).invoke(prompt)
+        return (response.content if hasattr(response, "content") else str(response)).strip()[:2000]
+    except Exception:
+        return ""
 
 
 def _successful_numeric_observation(steps: list[dict[str, str]]) -> str:
@@ -223,6 +265,14 @@ def _format_steps(steps: list[Any]) -> list[dict[str, str]]:
     return formatted
 
 
+def _selected_metrics(steps: list[dict[str, str]]) -> list[dict[str, str]]:
+    return [
+        {"tool": step.get("tool", ""), "tool_input": step.get("tool_input", "")}
+        for step in steps
+        if str(step.get("tool", "")).startswith("compute_")
+    ]
+
+
 def blocksnet_agent_node(state: BlackBoard) -> dict[str, Any]:
     """LangGraph node for BlocksNetAgent."""
     directives = state.get("orchestrator_directives", [])
@@ -236,18 +286,24 @@ def blocksnet_agent_node(state: BlackBoard) -> dict[str, Any]:
     trace: list[dict[str, Any]] = []
 
     for directive in my_directives:
-        question = directive.get("question", "")
+        directive_question = directive.get("question", "")
+        original_question = state.get("question", "")
+        question = original_question or directive_question
+        context = (
+            f"Директива оркестратора: {directive_question}\n\n"
+            f"Краткий бриф wiki/blackboard:\n{wiki_briefing(state, limit=1500)}"
+        )
         sq_id = directive.get("sub_query_id", "")
         settings = get_settings()
         tool_state: dict[str, Any] = {}
         output_dir = get_run_dir(settings.model_output_dir)
         tools = make_blocksnet_tools(tool_state, settings.model_data_dir, output_dir)
-        cards = retrieve_blocksnet_capabilities(question, k=4)
+        cards = retrieve_blocksnet_capabilities(f"{question}\n{directive_question}\n{context}", k=4)
         capability_context = format_blocksnet_cards(cards)
         executor = _build_agent(tools, capability_context)
 
         try:
-            result = executor.invoke({"input": question})
+            result = executor.invoke({"input": question, "context": context})
             output_text = result.get("output", "")
             intermediate_steps = _format_steps(result.get("intermediate_steps", []))
             answer, confidence, limitations = _parse_output(output_text, intermediate_steps)
@@ -260,6 +316,9 @@ def blocksnet_agent_node(state: BlackBoard) -> dict[str, Any]:
                 confidence=confidence,
                 tool_trace=[{
                     "directive": directive,
+                    "context": context[:1500],
+                    "analysis_plan": _extract_sections(output_text).get("ANALYSIS PLAN", "")[:1500],
+                    "selected_metrics": _selected_metrics(intermediate_steps),
                     "capability_cards": [card.get("id", "") for card in cards],
                     "raw_output": output_text[:400],
                     "intermediate_steps": intermediate_steps,
