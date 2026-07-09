@@ -38,6 +38,7 @@ coverage.xml
 # === IDEs ===
 .vscode/
 .idea/
+.obsidian/
 *.swp
 *.swo
 *~
@@ -66,6 +67,11 @@ tests/logs/
 
 # Stray wiki page files that land in project root
 *.meta.json
+
+# Wikiscribe output — never commit generated wiki pages
+wiki_pages/
+wiki_dump/
+wiki_scribe_out/
 
 # === LangChain / LangGraph cache ===
 .langchain.db

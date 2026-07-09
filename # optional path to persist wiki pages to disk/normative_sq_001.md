@@ -1,1 +1,0 @@
-No relevant regulatory findings were identified regarding the query "Test."
