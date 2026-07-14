@@ -14,7 +14,9 @@ from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import BaseTool, StructuredTool
 
+from fp2mp_core.ablation import get_ablation
 from fp2mp_core.llm import get_chat_model
+from fp2mp_core.nodes.agents.toolless import run_toolless
 from fp2mp_core.state import BlackBoard, Citation, RawEntry, board_message
 from fp2mp_core.tools.web_search import research_url_tool, web_search_tool
 
@@ -48,6 +50,17 @@ CONFIDENCE: <0.0-1.0>
 SOURCES: <comma-separated URLs>
 
 Do not write artificial Observation text. Tool outputs arrive automatically.
+"""
+
+_TOOLLESS_SYSTEM = """\
+You are the WebSearchAgent answering one sub-query without external tools.
+Answer only from your parametric knowledge. Do not invent sources; lower confidence
+when the answer cannot be supported from knowledge alone.
+
+Finish with this exact contract:
+ANSWER: <your factual answer>
+CONFIDENCE: <0.0-1.0>
+SOURCES: <comma-separated URLs, or empty>
 """
 
 _URL_RE = re.compile(r"https?://[^\s,)>\]]+")
@@ -174,7 +187,8 @@ def web_search_agent_node(state: BlackBoard) -> dict[str, Any]:
     if not my_directives:
         return {"raw_data": [], "agent_trace": [{"node": "web_search_agent", "skipped": True}]}
 
-    executor = _build_agent()
+    tools_enabled = get_ablation(state).tools
+    executor = _build_agent() if tools_enabled else None
     new_entries: list[RawEntry] = []
     trace: list[dict[str, Any]] = []
 
@@ -183,9 +197,13 @@ def web_search_agent_node(state: BlackBoard) -> dict[str, Any]:
         sq_id = directive.get("sub_query_id", "")
 
         try:
-            result = executor.invoke({"input": question})
-            output_text = result.get("output", "")
-            intermediate_steps = _format_steps(result.get("intermediate_steps", []))
+            if tools_enabled:
+                result = executor.invoke({"input": question})
+                output_text = result.get("output", "")
+                intermediate_steps = _format_steps(result.get("intermediate_steps", []))
+            else:
+                output_text = run_toolless(_TOOLLESS_SYSTEM, question, temperature=0.1)
+                intermediate_steps = []
             answer, confidence, citations = _parse_output(output_text, intermediate_steps)
 
             entry = board_message(
@@ -196,11 +214,15 @@ def web_search_agent_node(state: BlackBoard) -> dict[str, Any]:
                 sub_query_id=sq_id,
                 confidence=confidence,
                 citations=citations,
-                tool_trace=[{
-                    "directive": directive,
-                    "raw_output": output_text[:300],
-                    "intermediate_steps": intermediate_steps,
-                }],
+                tool_trace=(
+                    [{
+                        "directive": directive,
+                        "raw_output": output_text[:300],
+                        "intermediate_steps": intermediate_steps,
+                    }]
+                    if tools_enabled
+                    else []
+                ),
             )
             new_entries.append(entry)
             trace.append({"agent": "WebSearchAgent", "sq_id": sq_id, "confidence": confidence})

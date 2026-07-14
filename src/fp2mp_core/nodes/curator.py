@@ -15,6 +15,8 @@ from __future__ import annotations
 import uuid
 from typing import Any
 
+from fp2mp_core.ablation import get_ablation
+from fp2mp_core.nodes.entry_filters import is_failed_entry
 from fp2mp_core.redi.fusion import ReDIFusion
 from fp2mp_core.state import (
     BlackBoard,
@@ -66,10 +68,7 @@ def _get_processable(raw_data: list[RawEntry], current_iteration: int) -> list[R
 
 
 def _is_failed_entry(entry: RawEntry) -> bool:
-    content = entry.get("content", "").strip()
-    if not content:
-        return True
-    return content.startswith(_FAILED_CONTENT_PREFIXES)
+    return is_failed_entry(entry)
 
 
 def _should_promote(entry: RawEntry) -> bool:
@@ -110,6 +109,28 @@ def wiki_curator_node(state: BlackBoard) -> dict[str, Any]:
     prev_iteration = state.get("iteration", 0)
     iteration = prev_iteration + 1  # increment here
     raw_data = state.get("raw_data", [])
+    if not get_ablation(state).blackboard:
+        processable = _get_processable(raw_data, prev_iteration)
+        progress_delta = len(processable)
+        stagnation_count = 0 if progress_delta else state.get("stagnation_count", 0) + 1
+        curator_msg = board_message(
+            agent="WikiCurator",
+            iteration=iteration,
+            msg_type="curator_summary",
+            content=f"BlackBoard disabled. Processed {progress_delta} agent entries.",
+            confidence=1.0,
+        )
+        curator_msg["curated"] = True
+        return {
+            "raw_data": [curator_msg],
+            "iteration": iteration,
+            "stagnation_count": stagnation_count,
+            "progress_delta": progress_delta,
+            "current_stage": "curated_without_blackboard",
+            "agent_trace": [
+                {"node": "wiki_curator", "iteration": iteration, "curated": progress_delta}
+            ],
+        }
     current_wiki = dict(state.get("wiki", {}))
     sub_queries: list[SubQuery] = state.get("redi_decomposition", [])
     sq_index = {sq["sub_query_id"]: sq for sq in sub_queries}
@@ -178,7 +199,7 @@ def wiki_curator_node(state: BlackBoard) -> dict[str, Any]:
             )
 
     # --- Run ReDI Fusion ---
-    if processable:
+    if get_ablation(state).redi and processable:
         fusion_page = _fusion.fuse(raw_data, sub_queries)
         fusion_page["updated_at_iteration"] = iteration
         current_wiki["redi_fusion"] = fusion_page
@@ -280,6 +301,9 @@ def route_from_curator(state: BlackBoard) -> str:
 
     if iteration >= max_iterations:
         return "finish_ready"
+
+    if not get_ablation(state).blackboard:
+        return "continue"
 
     output = state.get("output", [])
     if output:

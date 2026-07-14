@@ -13,7 +13,9 @@ from typing import Any
 from langchain_classic.agents import AgentExecutor, create_react_agent
 from langchain_core.prompts import PromptTemplate
 
+from fp2mp_core.ablation import get_ablation
 from fp2mp_core.llm import get_chat_model
+from fp2mp_core.nodes.agents.toolless import run_toolless
 from fp2mp_core.state import BlackBoard, Citation, RawEntry, board_message
 from fp2mp_core.tools.vector_store import normative_vector_search_tool
 from fp2mp_core.tools.web_search import fetch_url_tool, normative_web_search_tool
@@ -61,6 +63,18 @@ Tool names: {tool_names}
 Question: {input}
 
 {agent_scratchpad}"""
+
+_TOOLLESS_SYSTEM = """\
+You are the NormativeLiteratureAgent answering one regulatory sub-query without
+external tools. Answer only from parametric knowledge. Do not fabricate legal
+citations or document sections; lower confidence if a requirement cannot be verified.
+
+Finish with this exact contract:
+ANSWER: <synthesized regulatory findings>
+CONFIDENCE: <0.0-1.0>
+SOURCES: <document names and/or URLs, or empty>
+CITATIONS: <exact quotes only when known, or empty>
+"""
 
 _TOOLS = [normative_vector_search_tool, normative_web_search_tool, fetch_url_tool]
 
@@ -146,7 +160,8 @@ def normative_agent_node(state: BlackBoard) -> dict[str, Any]:
     if not my_directives:
         return {"raw_data": [], "agent_trace": [{"node": "normative_agent", "skipped": True}]}
 
-    executor = _build_agent()
+    tools_enabled = get_ablation(state).tools
+    executor = _build_agent() if tools_enabled else None
     new_entries: list[RawEntry] = []
     trace: list[dict[str, Any]] = []
 
@@ -155,10 +170,14 @@ def normative_agent_node(state: BlackBoard) -> dict[str, Any]:
         sq_id = directive.get("sub_query_id", "")
 
         try:
-            result = executor.invoke({"input": question})
-            output_text = result.get("output", "")
+            if tools_enabled:
+                result = executor.invoke({"input": question})
+                output_text = result.get("output", "")
+                intermediate_steps = _format_steps(result.get("intermediate_steps", []))
+            else:
+                output_text = run_toolless(_TOOLLESS_SYSTEM, question, temperature=0.0)
+                intermediate_steps = []
             answer, confidence, citations = _parse_output(output_text)
-            intermediate_steps = _format_steps(result.get("intermediate_steps", []))
 
             entry = board_message(
                 agent="NormativeAgent",
@@ -168,11 +187,15 @@ def normative_agent_node(state: BlackBoard) -> dict[str, Any]:
                 sub_query_id=sq_id,
                 confidence=confidence,
                 citations=citations,
-                tool_trace=[{
-                    "directive": directive,
-                    "raw_output": output_text[:300],
-                    "intermediate_steps": intermediate_steps,
-                }],
+                tool_trace=(
+                    [{
+                        "directive": directive,
+                        "raw_output": output_text[:300],
+                        "intermediate_steps": intermediate_steps,
+                    }]
+                    if tools_enabled
+                    else []
+                ),
             )
             new_entries.append(entry)
             trace.append({"agent": "NormativeAgent", "sq_id": sq_id, "confidence": confidence})

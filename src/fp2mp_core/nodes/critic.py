@@ -15,6 +15,7 @@ import json
 import uuid
 from typing import Any
 
+from fp2mp_core.ablation import get_ablation
 from fp2mp_core.llm import call_with_thinking
 from fp2mp_core.nodes.blackboard import coverage_from_sub_queries, wiki_briefing
 from fp2mp_core.state import BlackBoard, CritiqueResult, Task, board_message
@@ -81,8 +82,23 @@ def critic_node(state: BlackBoard) -> dict[str, Any]:
     max_iterations = state.get("max_iterations", 6)
     stagnation = state.get("stagnation_count", 0)
 
+    if not get_ablation(state).critic:
+        has_pending = any(task.get("status") == "pending" for task in state.get("tasks", []))
+        if iteration >= max_iterations or stagnation >= 2 or not has_pending:
+            reason = "no pending tasks" if not has_pending else "deterministic limit reached"
+            critique = _build_force_stop_critique(state, reason)
+        else:
+            critique = CritiqueResult(
+                action="CONTINUE",
+                coverage=coverage_from_sub_queries(state),
+                overall_confidence=0.0,
+                reasoning="Deterministic critic: pending tasks remain.",
+                new_tasks=[],
+                contradictions=[],
+                force_stop=False,
+            )
     # --- Force stop (no LLM) ---
-    if iteration >= max_iterations:
+    elif iteration >= max_iterations:
         critique = _build_force_stop_critique(state, f"max_iterations={max_iterations} reached")
     elif stagnation >= 2:
         critique = _build_force_stop_critique(state, f"stagnation_count={stagnation} >= 2")

@@ -10,10 +10,11 @@ from __future__ import annotations
 import operator
 import uuid
 from datetime import datetime, timezone
-from typing import Annotated, Any
+from typing import Annotated, Any, NotRequired, TypedDict
 
 from langchain_core.messages import BaseMessage
-from typing_extensions import NotRequired, TypedDict
+
+from fp2mp_core.ablation import AblationConfig
 
 # ---------------------------------------------------------------------------
 # Leaf data types
@@ -171,6 +172,7 @@ def _merge_output(left: list[ConfirmedFact], right: list[ConfirmedFact]) -> list
 class BlackBoard(TypedDict, total=False):
     # Input
     question: str
+    ablation: NotRequired[AblationConfig]
 
     # ReDI decomposition
     redi_decomposition: list[SubQuery]
@@ -212,10 +214,15 @@ class BlackBoard(TypedDict, total=False):
 # ---------------------------------------------------------------------------
 
 
-def create_initial_state(question: str, max_iterations: int | None = None) -> BlackBoard:
+def create_initial_state(
+    question: str,
+    max_iterations: int | None = None,
+    ablation: AblationConfig | None = None,
+) -> BlackBoard:
     return BlackBoard(
         question=question,
         max_iterations=max_iterations,
+        ablation=ablation or AblationConfig(),
     )
 
 

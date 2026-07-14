@@ -10,7 +10,9 @@ import re
 import uuid
 from typing import Any
 
+from fp2mp_core.ablation import get_ablation
 from fp2mp_core.config import get_settings
+from fp2mp_core.nodes.entry_filters import usable_entries
 from fp2mp_core.redi import ReDIDecomposer, ReDIEnricher
 from fp2mp_core.state import BlackBoard, SubQuery, Task, WikiPage, board_message
 from fp2mp_core.wiki.index import build_index
@@ -54,6 +56,24 @@ def init_node(state: BlackBoard) -> dict[str, Any]:
 def redi_decompose_node(state: BlackBoard) -> dict[str, Any]:
     """Stage A + B: decompose question into sub-queries and enrich them."""
     question = state["question"]
+    if not get_ablation(state).redi:
+        sub_queries = [
+            SubQuery(
+                sub_query_id="sq_001",
+                text=question,
+                intent_aspect="",
+                search_modality="any",
+                independence=True,
+                enriched_variants=[],
+                keywords=[],
+                domain_hints=[],
+            )
+        ]
+        return {
+            "redi_decomposition": sub_queries,
+            "current_stage": "redi_disabled",
+            "agent_trace": [{"node": "redi_decompose", "sub_queries": ["sq_001"]}],
+        }
 
     decomposer = ReDIDecomposer()
     enricher = ReDIEnricher()
@@ -126,13 +146,15 @@ def initialize_blackboard_node(state: BlackBoard) -> dict[str, Any]:
         ),
     )
 
-    return {
+    result = {
         "tasks": tasks,
-        "wiki": {"index.md": index_page, "log.md": log_page},
         "raw_data": [init_message],
         "current_stage": "blackboard_ready",
         "iteration": 0,
     }
+    if get_ablation(state).blackboard:
+        result["wiki"] = {"index.md": index_page, "log.md": log_page}
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -277,6 +299,15 @@ def wiki_briefing(state: BlackBoard, limit: int = 3000) -> str:
 def coverage_from_sub_queries(state: BlackBoard) -> dict[str, str]:
     """Build coverage map: sub_query_id → "covered" | "partial" | "pending"."""
     sub_queries = state.get("redi_decomposition", [])
+    if not get_ablation(state).blackboard:
+        successful_sq_ids = {
+            entry.get("sub_query_id", "")
+            for entry in usable_entries(state.get("raw_data", []))
+        }
+        return {
+            sq["sub_query_id"]: "covered" if sq["sub_query_id"] in successful_sq_ids else "pending"
+            for sq in sub_queries
+        }
     output = state.get("output", [])
 
     coverage: dict[str, str] = {}

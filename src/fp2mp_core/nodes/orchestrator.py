@@ -18,6 +18,7 @@ from typing import Any
 
 from langgraph.types import Send
 
+from fp2mp_core.ablation import get_ablation
 from fp2mp_core.capabilities import AGENT_CAPABILITIES, AgentCapability
 from fp2mp_core.llm import get_chat_model
 from fp2mp_core.nodes.blackboard import wiki_briefing
@@ -207,7 +208,11 @@ def orchestrator_node(state: BlackBoard) -> dict[str, Any]:
             + result_counts.get("normative_findings", 0)
             + result_counts.get("code_result", 0)
         )
-        if agent_results >= 2 and "mediator_synthesis" not in result_counts:
+        if (
+            get_ablation(state).blackboard
+            and agent_results >= 2
+            and "mediator_synthesis" not in result_counts
+        ):
             return _dispatch_mediator(state, iteration)
         return _route_to_critic(state, iteration, reason="all_tasks_done")
 

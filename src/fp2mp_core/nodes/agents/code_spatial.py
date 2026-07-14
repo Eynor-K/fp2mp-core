@@ -17,7 +17,9 @@ from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import BaseTool, StructuredTool
 
+from fp2mp_core.ablation import get_ablation
 from fp2mp_core.llm import get_chat_model
+from fp2mp_core.nodes.agents.toolless import run_toolless
 from fp2mp_core.state import BlackBoard, RawEntry, board_message
 from fp2mp_core.tools.code_exec import (
     check_available_data_tool,
@@ -74,6 +76,17 @@ CONFIDENCE: <0.0-1.0>
 LIMITATIONS: <what this analysis cannot account for>
 
 Do not write artificial Observation text. Tool outputs arrive automatically.
+"""
+
+_TOOLLESS_SYSTEM = """\
+You are the CodeSpatialAgent answering one quantitative or spatial sub-query without
+code execution, data retrieval, or capability cards. Answer only from parametric
+knowledge. Do not claim measurements or calculations that you did not perform.
+
+Finish with this exact contract:
+RESULT: <direct answer or a clearly marked non-measured assessment>
+CONFIDENCE: <0.0-1.0>
+LIMITATIONS: <what cannot be verified without tools>
 """
 
 _BASE_TOOLS = [
@@ -239,20 +252,28 @@ def code_spatial_agent_node(state: BlackBoard) -> dict[str, Any]:
 
     new_entries: list[RawEntry] = []
     trace: list[dict[str, Any]] = []
+    tools_enabled = get_ablation(state).tools
 
     for directive in my_directives:
         question = directive.get("question", "")
         sq_id = directive.get("sub_query_id", "")
-        cards = retrieve_capabilities(question, k=4)
-        capability_context = format_capability_cards(cards)
-        executor = _build_agent(capability_context)
 
         try:
-            result = executor.invoke({"input": question})
-            output_text = result.get("output", "")
-            intermediate_steps = _format_steps(result.get("intermediate_steps", []))
+            cards = []
+            if tools_enabled:
+                cards = retrieve_capabilities(question, k=4)
+                capability_context = format_capability_cards(cards)
+                executor = _build_agent(capability_context)
+                result = executor.invoke({"input": question})
+                output_text = result.get("output", "")
+                intermediate_steps = _format_steps(result.get("intermediate_steps", []))
+            else:
+                output_text = run_toolless(_TOOLLESS_SYSTEM, question, temperature=0.0)
+                intermediate_steps = []
             answer, confidence, limitations = _parse_output(output_text)
-            fallback_observation = _successful_execution_observation(intermediate_steps)
+            fallback_observation = (
+                _successful_execution_observation(intermediate_steps) if tools_enabled else ""
+            )
             if fallback_observation and (not answer or not _NUMBER_RE.search(answer)):
                 answer = f"Measured code output: {fallback_observation}"
                 confidence = min(max(confidence, 0.3), 0.3)
@@ -261,7 +282,7 @@ def code_spatial_agent_node(state: BlackBoard) -> dict[str, Any]:
                     "content is based on the last successful tool output.",
                     "unverified scope: numeric self-check missing",
                 ]
-            elif not fallback_observation:
+            elif tools_enabled and not fallback_observation:
                 answer = (
                     "CodeSpatialAgent did not complete execution, but this remains "
                     "low-confidence augmentation. Plan: compute named-place network/"
@@ -282,12 +303,16 @@ def code_spatial_agent_node(state: BlackBoard) -> dict[str, Any]:
                 + (f"\nLimitations: {'; '.join(limitations)}" if limitations else ""),
                 sub_query_id=sq_id,
                 confidence=confidence,
-                tool_trace=[{
-                    "directive": directive,
-                    "capability_cards": [card.get("id", "") for card in cards],
-                    "raw_output": output_text[:400],
-                    "intermediate_steps": intermediate_steps,
-                }],
+                tool_trace=(
+                    [{
+                        "directive": directive,
+                        "capability_cards": [card.get("id", "") for card in cards],
+                        "raw_output": output_text[:400],
+                        "intermediate_steps": intermediate_steps,
+                    }]
+                    if tools_enabled
+                    else []
+                ),
             )
             new_entries.append(entry)
             trace.append({"agent": "CodeSpatialAgent", "sq_id": sq_id, "confidence": confidence})

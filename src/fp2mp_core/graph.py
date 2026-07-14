@@ -24,6 +24,7 @@ from __future__ import annotations
 from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
 
+from fp2mp_core.ablation import AblationConfig
 from fp2mp_core.llm import set_active_model
 from fp2mp_core.nodes.agents.code_spatial import code_spatial_agent_node
 from fp2mp_core.nodes.agents.normative import normative_agent_node
@@ -177,11 +178,16 @@ def _build_log(input: str, raw_data: list, final_answer: str) -> list:
     return log
 
 
-def run(input: str, model: str, max_iterations: int | None = None) -> BaseState:
+def run(
+    input: str,
+    model: str,
+    max_iterations: int | None = None,
+    ablation: AblationConfig | None = None,
+) -> BaseState:
     """Run the graph and return the fp2mp-baselines/eval state format."""
     set_active_model(model)
     compiled = build_graph()
-    initial = create_initial_state(input, max_iterations=max_iterations)
+    initial = create_initial_state(input, max_iterations=max_iterations, ablation=ablation)
     usage = TokenUsageAccumulator()
     result = compiled.invoke(initial, config={"callbacks": [usage]})
 

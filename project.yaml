@@ -1,0 +1,11 @@
+# Project marker for the /root/workflow indexer.
+name: fp2mp
+section: ITMO
+status: active
+summary: "Workflow-only — no TickTick mirror. By design (sync scope is Articles/ITMO/SSS)."
+tags: []
+wiki: ""
+updated: 2026-06-30
+ticktick_id: null
+ticktick_name: null
+ticktick_group: null

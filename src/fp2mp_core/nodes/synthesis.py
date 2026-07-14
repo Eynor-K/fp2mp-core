@@ -9,8 +9,10 @@ from __future__ import annotations
 
 from typing import Any
 
+from fp2mp_core.ablation import get_ablation
 from fp2mp_core.config import get_settings
 from fp2mp_core.llm import get_chat_model
+from fp2mp_core.nodes.entry_filters import is_failed_claim_text
 from fp2mp_core.state import BlackBoard
 
 _FAILED_CLAIM_PREFIXES = (
@@ -143,7 +145,25 @@ case for it; What's still uncertain; Where this reasoning could be wrong).
 def final_synthesis_node(state: BlackBoard) -> dict[str, Any]:
     """LangGraph node — produces the final answer."""
     question = state.get("question", "")
-    output_facts = [f for f in state.get("output", []) if not _is_failed_claim(f.get("claim", ""))]
+    if get_ablation(state).blackboard:
+        output_facts = [
+            f for f in state.get("output", []) if not is_failed_claim_text(f.get("claim", ""))
+        ]
+    else:
+        output_facts = [
+            {
+                "claim": entry.get("content", ""),
+                "confidence": entry.get("confidence", 0.0),
+                "source_agents": [entry.get("agent", "unknown")],
+                "citations": entry.get("citations", []),
+                "limitations": [],
+                "sub_query_id": entry.get("sub_query_id", ""),
+            }
+            for entry in state.get("raw_data", [])
+            if entry.get("type")
+            not in {"init", "orchestrator_directive", "curator_summary", "critique"}
+            and not is_failed_claim_text(entry.get("content", ""))
+        ]
     wiki = state.get("wiki", {})
     critique = state.get("critique", {})
 
@@ -221,7 +241,7 @@ def _response_text(response: Any) -> str:
 
 
 def _is_failed_claim(text: str) -> bool:
-    return str(text or "").strip().startswith(_FAILED_CLAIM_PREFIXES)
+    return is_failed_claim_text(text)
 
 
 def _run_synthesis_chain(llm: Any, synthesis_prompt: str) -> str:
