@@ -91,8 +91,12 @@ class ReDIFusion:
 
             additive_score = sum(s for _, s in top)
 
-            sections.append(f"\n## {sq_id}: {sq.get('text', '')}")
-            sections.append(f"Additive score: {additive_score:.3f} | Unique findings: {len(deduped)}\n")
+            sq_text = sq.get("text", "")
+            sections.append(f"\n## {sq_id}: {sq_text}")
+            sections.append(
+                f"Additive score: {additive_score:.3f} | "
+                f"Unique findings: {len(deduped)}\n"
+            )
             for i, (entry, score) in enumerate(top, 1):
                 agent = entry.get("agent", "?")
                 conf = entry.get("confidence", 0.0)

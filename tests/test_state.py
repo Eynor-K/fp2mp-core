@@ -5,7 +5,6 @@ from __future__ import annotations
 from fp2mp_core.nodes.blackboard import init_node
 from fp2mp_core.state import (
     ConfirmedFact,
-    RawEntry,
     Task,
     WikiPage,
     _merge_output,

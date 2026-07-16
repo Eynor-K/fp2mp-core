@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from fp2mp_core.state import create_initial_state
 
 
@@ -85,7 +83,7 @@ def test_full_loop_terminates_at_max_iterations(sub_queries):
 
 def test_final_answer_is_not_none_after_run(sub_queries):
     """After graph completes, final_answer must be set."""
-    from fp2mp_core.state import SubQuery, ConfirmedFact
+    from fp2mp_core.state import SubQuery
 
     mock_sub_queries = [
         SubQuery(sub_query_id="sq_001", text="Test?",
@@ -128,7 +126,9 @@ def test_final_answer_is_not_none_after_run(sub_queries):
         from fp2mp_core.graph import build_graph
         graph = build_graph()
 
-        initial = create_initial_state("What are the height limits near airports?", max_iterations=3)
+        initial = create_initial_state(
+            "What are the height limits near airports?", max_iterations=3
+        )
         result = graph.invoke(initial)
 
         assert result.get("final_answer") is not None

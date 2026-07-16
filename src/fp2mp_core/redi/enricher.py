@@ -59,7 +59,13 @@ class ReDIEnricher:
             }
         )
         text = response.content if hasattr(response, "content") else str(response)
-        text = text.strip().lstrip("```json").lstrip("```").rstrip("```").strip()
+        text = text.strip()
+        for fence in ("```json", "```"):
+            if text.startswith(fence):
+                text = text[len(fence):]
+            if text.endswith(fence):
+                text = text[: -len(fence)]
+        text = text.strip()
 
         data = json.loads(text)
         enriched = dict(sub_query)

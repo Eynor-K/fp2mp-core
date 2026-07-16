@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from fp2mp_core.nodes.blackboard import (
     coverage_from_sub_queries,
     wiki_briefing,
 )
-from fp2mp_core.state import ConfirmedFact, SubQuery, create_initial_state
+from fp2mp_core.state import ConfirmedFact, create_initial_state
 
 
 def test_coverage_returns_pending_when_no_output(sub_queries):

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from fp2mp_core.state import RawEntry, SubQuery, WikiPage, board_message
+from fp2mp_core.state import WikiPage, board_message
 from fp2mp_core.wiki.index import build_index, parse_index
 from fp2mp_core.wiki.log import append_log_entry, make_log_entry
 from fp2mp_core.wiki.maintenance import (
@@ -11,7 +11,6 @@ from fp2mp_core.wiki.maintenance import (
     prune_wiki,
 )
 from fp2mp_core.wiki.page import WikiPageBuilder, update_incoming_cross_refs
-
 
 # ---------------------------------------------------------------------------
 # WikiPageBuilder
@@ -198,7 +197,9 @@ def test_compute_relevance_scores_higher_for_sq_match(sub_queries):
         ),
     }
     result = compute_relevance_scores(wiki, sub_queries)
-    assert result["matching_page"]["relevance_score"] > result["nonmatching_page"]["relevance_score"]
+    matching = result["matching_page"]["relevance_score"]
+    nonmatching = result["nonmatching_page"]["relevance_score"]
+    assert matching > nonmatching
 
 
 # ---------------------------------------------------------------------------

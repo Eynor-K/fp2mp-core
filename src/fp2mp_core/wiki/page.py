@@ -10,7 +10,6 @@ Features:
 from __future__ import annotations
 
 import re
-import uuid
 
 from fp2mp_core.state import Citation, RawEntry, SubQuery, WikiPage
 

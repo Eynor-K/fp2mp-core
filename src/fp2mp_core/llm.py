@@ -11,7 +11,6 @@ from langchain_openai import ChatOpenAI
 
 from fp2mp_core.config import get_settings
 
-
 _active_model: str | None = None
 
 

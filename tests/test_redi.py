@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
-import pytest
-
-from fp2mp_core.redi.fusion import ReDIFusion, _jaccard, _deduplicate
-from fp2mp_core.state import RawEntry, SubQuery, board_message
-
+from fp2mp_core.redi.fusion import ReDIFusion, _deduplicate, _jaccard
+from fp2mp_core.state import board_message
 
 # ---------------------------------------------------------------------------
 # Fusion tests (no LLM needed — pure algorithmic)
