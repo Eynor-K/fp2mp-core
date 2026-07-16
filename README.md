@@ -190,10 +190,10 @@ pytest tests/test_state.py # один модуль
 Сравнение с бейзлайнами и оценка качества — в ноутбуке
 [`examples/benchmark_fp2mp.ipynb`](examples/benchmark_fp2mp.ipynb).
 
-- **Набор задач** — 60 ill-defined задач городского планирования (загружаются из репозитория `vasilstar97/fp2mp`).
+- **Набор задач** — 60 ill-defined задач городского планирования. Загружаются ноутбуком из репозитория `vasilstar97/fp2mp` (кэш кладётся в `data/benchmark/bench_solutions.json`).
 - **Solver** — `run(..., model="gpt-4o-mini", max_iterations=3)`.
 - **Судья** — внешний пакет `fp2mp-eval` (`FP2MPEval`, `model="openai/gpt-4.1"`, `temperature=0.5`, `n_judges=5`); рубрика из 8 измерений — [`reference_eval.md`](reference_eval.md).
-- **Кэш** — решения в `data/benchmark/solutions.json`, оценки в `data/benchmark/evaluations_fp2mp.json`; авто-инвалидизация по SHA256-сигнатуре `synthesis.py`.
+- **Кэш** — результаты собственных прогонов пишутся в `data/benchmark/solutions.json` и `data/benchmark/evaluations_fp2mp.json`; авто-инвалидизация по SHA256-сигнатуре `synthesis.py`. Эти файлы в `.gitignore` — регенерируются ноутбуком при каждом запуске.
 - Платные прогоны (`run()` и судья) запускает пользователь вручную.
 
 ## Примеры
@@ -252,7 +252,7 @@ fp2mp-core/
 │   └── ablation_plan.md
 ├── examples/                 # Ноутбук + CLI-сценарии
 ├── data/
-│   ├── benchmark/            # Входные задачи + кэш решений/оценок
+│   ├── benchmark/            # Только входные задачи (problems.json); кэши прогонов — в .gitignore
 │   └── tool_kb/              # Карточки инструментов (справочник)
 ├── .env.example
 ├── pyproject.toml

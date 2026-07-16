@@ -9,7 +9,10 @@
 | [`ablation/sanity_check.py`](ablation/sanity_check.py) | Smoke-импорт: проверяет, что `AblationConfig` и `run()` импортируются без ошибок (полезно после рефакторинга сигнатур). |
 | [`baseline_masterplan.py`](baseline_masterplan.py) | Один мастерплан-прогон (baseline: всё включено, без ablation-флагов). Используется для smoke-теста всей цепочки на конкретной задаче. Поддерживает `--model` и `--question` CLI-флаги. |
 | [`notebook/ablation/ablation.ipynb`](notebook/ablation/ablation.ipynb) | Ноутбук-зеркало `ablation/run_ablation.py`. Полезен, если хочется прогнать сценарии интерактивно и видеть результаты в Markdown-таблице. |
-| [`data/reference_solutions.json`](data/reference_solutions.json) | Опорные решения для sanity-check ноутбука бенчмарка. |
+
+> **Примечание:** `data/reference_solutions.json` (опорные baseline для
+> [`benchmark_fp2mp.ipynb`](benchmark_fp2mp.ipynb)) был удалён из репозитория —
+> он регенерируется ноутбуком из `vasilstar97/fp2mp` при первом запуске.
 
 ## Что куда писать (run artifacts)
 
