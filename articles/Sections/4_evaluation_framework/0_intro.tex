@@ -1,0 +1,9 @@
+We introduce FP2MP-Eval, an evaluation protocol for ill-defined problems where no ground-truth solution is available.
+Instead of comparing outputs to a reference answer, we assess (i) the quality of reasoning and problem handling and (ii) the internal consistency of the generated solutions.
+To this end, we adopt an LLM-as-a-judge (LLMaJ) approach inspired by prior work on model-based evaluation, in particular G-Eval, which demonstrated the effectiveness of GPT-4-based evaluators \cite{liu2023g}.
+
+Building on the recent work on evaluating ill-defined tasks in LLMs \cite{zhou2026evaluating}, we move away from collapsing model outputs into a single scalar and instead adopt a multi-dimensional evaluation-paradigm. This reflects the inherent structure of ill-defined problems, where solution quality cannot be fully captured by a single correctness criterion.
+
+From a cognitive perspective, Kitchener's reflective judgement model \cite{kitchner1983cognition} distinguishes between well-defined and ill-defined problems based on the presence of epistemic monitoring processes, when solving an ill-defined problems requires reasoning about the legitimacy and justification of a solution, rather than merely producing an answer.
+
+This notion is further supported by Schraw and Dennison \cite{schraw1995cognitive}, who describe epistemic monitoring as a metacognitive process in which individuals evaluate and regulate the validity of their own reasoning.

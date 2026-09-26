@@ -1,0 +1,27 @@
+\subsection{Validation Setup}
+
+To assess the stability and adequacy of the proposed evaluation framework, we conducted a validation experiment using LLM-generated solutions for a set of ill-defined urban planning tasks.
+
+We selected three language models representing different capability levels:
+
+\begin{itemize}
+    \item deepseek-v4-pro (DeepSeek) - a strong frontier-level model,
+    \item gpt-4o-mini (OpenAI) - a medium capability model,
+    \item phi-4-mini-instruct (Microsoft) - a lower-capability lightweight model.
+\end{itemize}
+
+The benchmark problem set was constructed by combining a set of $6$ urban locations (see Table \ref{table:urban_locations}) with the first $5$ ill-defined questions (see Table \ref{table:ill-defined_questions}).
+Each problem instance was generated using template function $T$:
+
+\[
+p_k = p_{i,j} = T(location_i, question_j)
+\]
+
+where $location_i$ denotes a location instance, $question_j$ denotes an ill-defined urban planning question, and $T$ constructs a natural language prompt using a fixed template (see Appendix \ref{appendix:problem_template})
+This resulted in total of $|P| = 6 \times 5 = 30$ distinct ill-defined problems.
+
+For each problem $p_k$, every model $M_q$ generated an independent solution $s_{k,q}$ resulting in $30 \times 3 = 90$ problem-solution pairs $(p_k, s_{k,q})$.
+
+Each problem-solution pair $(p_k, s_{k,q})$ was evaluated across $5$ evaluation runs resulting in $90 \times 5 = 450$ evaluation vectors $x_r^{(p_k, s_{k,q})}$.
+
+The validation pipeline and all experimental artifacts are publicly available in the \textbf{FP2MP-Eval} repository\footnote{\url{https://github.com/vasilstar97/fp2mp-eval}}, allowing full reproduction of the validation setup and results.

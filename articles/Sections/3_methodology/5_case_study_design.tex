@@ -1,0 +1,76 @@
+\subsection{\highlight{Demonstration} Design}
+
+In addition to aggregated benchmark evaluation, we conduct a single demonstration aimed at answering the question of how the system actually reasons.
+Since the master planning task is weakly formalized and lacks a ground-truth solution, the value of the demonstration lies in evaluating the final output, the traceable reasoning chain, and the supporting evidence.
+
+\subsubsection{Motivation}
+
+While the proposed FP2MP-Eval evaluation framework captures the distribution of performance quality, it obscures the underlying mechanisms.
+In contrast, the demonstration renders the blackboard state, capability routing, and critic loop observable within a single open-ended task.
+This enables a qualitative explanation of gains in reflective dimensions (problem framing, justification, metacognition, and uncertainty handling) through a concrete, inspectable example rather than relying solely on aggregate numerical scores.
+
+\subsubsection{Testbed and Data}
+
+The testbed is \textbf{Gatchina}, a city in the Leningrad Oblast (28.76 km$^2$), located 42 km from Saint Petersburg.
+The city combines a strong historical and cultural structure with a medium scale and a partially mono-functional residential layout, making it a realistic weakly formalized planning context where heritage, spatial, regulatory, and socio-economic evidence must be jointly considered.
+
+The local dataset is based on BlocksNet\footnote{\url{https://github.com/aimclub/blocksnet}} and consists of 351~blocks (approx.\ 83,320 inhabitants), a precomputed $351 \times 351$ accessibility matrix, and 46~types of urban services.
+The land use composition includes 211~residential blocks, 50~commercial, 34~recreational, 21~transport-related, 19~industrial, 9~special-purpose, and 7~other blocks. 
+
+Open data is obtained from OpenStreetMap via \texttt{osmnx} and web search, ensuring that domain-specific knowledge is incorporated into the responses rather than relying solely on general model priors.
+
+\subsubsection{Task and Configuration}
+
+The \textbf{query} is defined as "Create a master plan for the city of Gatchina" as an open-ended formulation with no ground-truth solution and multiple competing objectives (heritage preservation, service accessibility, transport connectivity, and economic development).
+The base model is gpt-5.5, configured with up to seven iterations ($max\_iterations=7$) and the full FP2MP agent pool (Table~\ref{table:demonstration_agents}).
+The run is executed under the same fail-open setup and expert memo format as the baselines.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lll}
+\hline
+\textbf{Agent} & \textbf{Capability} & \textbf{Subquery Modality} \\
+\hline
+BlocksNet   & Spatial-quantitative diagnostics over the local city model & model-support \\
+CodeSpatial & Computation and geospatial analysis via executable code & code \\
+WebSearch   & Factual and empirical web search & web \\
+Normative   & Norms, standards, legal and heritage status & normative \\
+\hline
+\end{tabular}
+\caption{FP2MP executor agent pool in the demonstration run. The orchestrator, mediator, and critic are control nodes and do not invoke tools.}
+\label{table:demonstration_agents}
+\end{table}
+
+\subsubsection{BlocksNet Agent}
+
+The main executor in the demonstration is the domain-specific \textbf{BlocksNetAgent}, a ReAct-based urban analytics agent operating over a local digital city model.
+Unlike the three general-purpose instrumental agents, it is specialized in spatial-quantitative diagnostics and is equipped with approximately thirty tools grouped into families (Table~\ref{table:blocksnet_tools}).
+Before computation, the agent is required to produce an \texttt{ANALYSIS PLAN} referencing at least one verified capability card (CARD).
+It concludes its reasoning using a fixed schema: \texttt{RESULT} / \texttt{REFLECTION} / \texttt{HYPOTHESES} / \texttt{NUMERIC SELF-CHECK} / \texttt{CONFIDENCE} / \texttt{LIMITATIONS}.
+Delegating deterministic operations to executable models rather than textual reasoning ensures traceability of numerical evidence and robustness against spatial hallucinations.
+
+\begin{table}[ht]
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{p{2.7cm} X X}
+\hline
+\textbf{Family} & \textbf{Tools (examples)} & \textbf{Purpose} \\
+\hline
+Capabilities and cache & \texttt{find\_blocksnet\_capability}, \texttt{list\_service\_types}, \texttt{list\_key\_services}, \texttt{list\_cached\_data}, \texttt{get\_analysis\_results} & Retrieval of verified CARD recipes; service inventories; reuse of previously computed results \\[2pt]
+Model loading & \texttt{load\_blocks}, \texttt{load\_accessibility\_matrix}, \texttt{build\_adjacency\_graph} & Loading blocks, the $351 \times 351$ accessibility matrix, and adjacency graph construction \\[2pt]
+Accessibility and centrality & \texttt{compute\_mean\_accessibility} (and variants \texttt{median}/\texttt{max}/\texttt{area}/\texttt{land\_use}), \texttt{compute\_connectivity}, \texttt{compute\_population\_centrality}, \texttt{compute\_services\_centrality} & Spatial accessibility and network roles of blocks; separation of service and population centers \\[2pt]
+Services and provision & \texttt{compute\_service\_provision}, \texttt{compute\_services\_count}, \texttt{compute\_services\_density}, \texttt{compute\_services\_collocation}, \texttt{compute\_shared\_provision}, \texttt{compute\_scenario\_provision} & Service deficits under walking-time thresholds and before/after scenario validation \\[2pt]
+Morphology and land use & \texttt{compute\_density\_indicators}, \texttt{compute\_development\_indicators}, \texttt{compute\_shannon\_diversity} & Built density (FSI/GSI/MXI), development potential, and functional diversity \\[2pt]
+Block inspection & \texttt{get\_block\_info} & Land-use composition and population at block level \\[2pt]
+Scenario and optimization & \texttt{suggest\_target\_blocks}, \texttt{propose\_zone\_development}, \texttt{optimize\_zone\_services} & Selection of candidate blocks and generation of development hypotheses (Bayesian optimization via TPE/Optuna) \\[2pt]
+Visualization & \texttt{render\_metric\_map} & Block-level metric visualizations \\
+\hline
+\end{tabularx}
+\caption{Domain-specific toolset of the BlocksNet agent (over the local city model), grouped by functional families.}
+\label{table:blocksnet_tools}
+\end{table}
+
+\subsubsection{Observation Protocol}
+
+The system is fully instrumented: logs capture (i) ReDI decomposition into subqueries with modality annotations and the orchestrator’s routing decisions; (ii) every tool invocation with agent identity, tool name, arguments, and observations; (iii) structured agent outputs with confidence scores and blackboard progression status (\emph{promoted}/\emph{not\_promoted}); (iv) critic-injected follow-up tasks; and (v) generated artifacts (maps, figures, CSV tables).

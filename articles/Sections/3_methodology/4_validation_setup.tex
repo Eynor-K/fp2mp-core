@@ -1,0 +1,123 @@
+\subsection{Validation Setup}
+
+For validation experiments, we use the deepseek-v4-flash large language model across all agents and baselines, with a fixed temperature of $0.5$ unless otherwise specified.
+All baselines and FP2MP implementations are developed using the LangGraph and LangChain Python libraries.
+
+FP2MP operates with a global budget of up to three iterations ($max\_iterations = 3$).
+For executor agents, we set the following parameters:
+\begin{itemize}
+    \item \textbf{WebSearchAgent}: $temperature=0.1$, $max\_iterations=6$;
+    \item \textbf{NormativeAgent}: $temperature=0.0$, $max\_iterations=8$;
+    \item \textbf{CodeSpatialAgent}: $temperature=0.0$, $max\_iterations=8$.
+\end{itemize}
+
+We evaluate all systems using the proposed FP2MP-Eval protocol (Section~\ref{section:evaluation_framework}) as the primary evaluation metric for ill-defined tasks.
+
+\subsubsection{Tools Implementation}
+
+The tools are implemented as LangChain wrapper functions and attached to the corresponding ReAct executors. The orchestrator, curator, mediator, and critic do not invoke external tools, but instead operate directly on the blackboard state.
+Each executor is assigned a small, focused set of tools rather than a shared pool, which is precisely what enables capability-based routing.
+A summary is provided in Table~\ref{table:tools}.
+
+\begin{table}[ht]
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{l | X X}
+\hline
+\textbf{Tool} & \textbf{Purpose} & \textbf{Implementation} \\
+\midrule
+\multicolumn{3}{c}{\textbf{WebSearchAgent}}\\
+\midrule
+\texttt{web\_search\_tool}   & Web search over a query & Tavily (advanced) with fallback to DuckDuckGo (\texttt{ddgs}); automatic query paraphrasing when results are blocked or empty \\[2pt]
+\texttt{research\_url\_tool}  & Deep reading of 1--3 top links & Main text extraction (\texttt{trafilatura}/\texttt{readability}) + LLM distillation into evidence notes (claims, numbers, quotes, \texttt{source\_url}, constraints); protection against repeated URL reads \\
+\midrule
+\multicolumn{3}{c}{\textbf{NormativeAgent}}\\
+\midrule
+\texttt{normative\_vector\_search\_tool} & Semantic search over a local corpus of regulations & RAG using ChromaDB; multilingual embeddings \texttt{MiniLM-L12-v2}; chunks 800/100, top-$k$=4; source/page included in metadata \\[2pt]
+\texttt{normative\_web\_search\_tool}    & Web search for regulatory documents & Wrapper over \texttt{web\_search\_tool} with domain hints (standards/laws/regulations) \\[2pt]
+\texttt{fetch\_url\_tool}                 & Citation verification on a page & Page download and text extraction (first 3000 characters) \\
+\midrule
+\multicolumn{3}{c}{\textbf{CodeSpatialAgent}}\\
+\midrule
+\texttt{run\_validated\_python}        & Validated Python execution & AST safety pre-check + API existence check + \texttt{ruff}/pyflakes; backend E2B sandbox or \texttt{subprocess}; allowed: \texttt{osmnx}, \texttt{geopandas}, \texttt{shapely}, \texttt{geopy}, \texttt{networkx}, \texttt{pandas}, \texttt{numpy}, \texttt{matplotlib}; forbidden: \texttt{subprocess}/\texttt{eval}/\texttt{exec}/\texttt{os.system} \\[2pt]
+\texttt{find\_capability\_tool}        & Code recipe retrieval & Extraction of verified capability cards (CARD): libraries, I/O contract, common pitfalls \\[2pt]
+\texttt{inspect\_api\_tool}            & API hallucination control & Signature and docstring inspection of an installed object by dotted name \\[2pt]
+\texttt{check\_available\_data\_tool}  & Local data inventory & Listing of files in \texttt{DATA\_DIR} \\[2pt]
+\texttt{list\_available\_libraries\_tool} & Environment inspection & List of installed libraries by category \\
+\hline
+\end{tabularx}
+\caption{Tools of FP2MP executor agents.}
+\label{table:tools}
+\end{table}
+
+The implementation of the tools is guided by two design choices.
+First, every external channel has a fallback mechanism (Tavily $\to$ DuckDuckGo, local RAG $\to$ web search, E2B $\to$ \texttt{subprocess}), and when a source becomes unavailable, the tool returns an explicit marker for confidence reduction rather than failing outright.
+Second, executable code undergoes safety checks, API existence verification, and static analysis with \texttt{ruff} and \texttt{pyflakes} prior to execution, while web pages are distilled into structured evidence notes rather than treated as raw text.
+In this way, delegating deterministic operations to executable code and source extraction provides evidence traceability and robustness against hallucinations.
+
+\subsubsection{Baselines}
+
+We compare FP2MP against six LLM-based baselines of increasing complexity, covering the main architectural families in contemporary LLM-MAS literature: single-agent inference (Single-Agent), explicit reasoning (Chain-of-Thought), reasoning with tool use (ReAct), refinement via a critic (Actor-Critic), ensemble voting (Majority Voting), and deliberative multi-agent collaboration (Multi-Agent Debate).
+Table \ref{table:baselines} summarizes their architectural properties.
+Single-Agent, Chain-of-Thought, and ReAct are single-agent configurations differing only in reasoning and tool-use components. Actor-Critic adds a two-node generator-critic refinement loop ($max\_iterations = 1$).
+Majority Voting ensembles three independent runs ($num\_agents = 3$) with no inter-agent communication.
+Multi-Agent Debate uses three agents with three communication rounds before final aggregation ($num\_agents = 3$, $max\_iterations = 3$).
+
+In the ReAct setting, the baseline is additionally equipped with the following tools from Table \ref{table:tools}:
+
+\begin{itemize}
+    \item \texttt{run\_validated\_python},
+    \item \texttt{list\_available\_libraries\_tool},
+    \item \texttt{check\_available\_data\_tool},
+    \item \texttt{fetch\_url\_tool},
+    \item \texttt{web\_search\_tool}.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\small
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lccccccc}
+\hline
+\textbf{Baseline} &
+\textbf{Multi-agent} &
+\textbf{Reasoning} &
+\textbf{Tool calling} &
+\textbf{Iterative refinement} &
+\textbf{Aggregation} &
+\textbf{Communication} &
+\textbf{Shared memory} \\
+\hline
+
+Single-agent          & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ \\
+Chain-of-Thought      & $\times$ & $\checkmark$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ \\
+ReAct                 & $\times$ & $\checkmark$ & $\checkmark$ & $\times$ & $\times$ & $\times$ & $\times$ \\
+Actor-Critic          & $\times$ & $\checkmark$ & $\times$ & $\checkmark$ & $\times$ & $\times$ & $\times$ \\
+Majority Voting       & $\checkmark$ & $\times$ & $\times$ & $\times$ & $\checkmark$ & $\times$ & $\times$ \\
+Multi-Agent Debate    & $\checkmark$ & $\checkmark$ & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\times$ \\
+FP2MP                 & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+
+\hline
+\end{tabular}
+}
+\caption{Architectural comparison of baseline methods across key properties of LLM-agent systems.}
+\label{table:baselines}
+\end{table}
+
+\subsubsection{Source Code}
+
+The implementation of FP2MP and all experimental pipelines is publicly available and organized across a set of repositories to ensure reproducibility and modularity.
+The main entry point is the \textbf{FP2MP repository}\footnote{\url{https://github.com/vasilstar97/fp2mp}}, which contains the full experimental pipeline, including problems construction, baseline execution, and results aggregation.
+In addition, the project is structured into the following components:
+
+\begin{itemize}
+    \item \textbf{fp2mp-core}: implementation of the proposed FP2MP multi-agent architecture.
+    \item \textbf{fp2mp-eval}: multi-dimensional LLM-as-a-judge evaluation framework used for scoring model outputs.
+    \item \textbf{fp2mp-baselines}: implementations of all baseline LLM and LLM-MAS methods used in experiments.
+\end{itemize}
+
+All repositories follow a unified configuration format and are designed to be interoperable through a shared OpenAI-compatible API interface.
+Experimental results reported in this paper can be reproduced by following the setup instructions provided in the main repository.
+
+Generative AI tools (OpenAI ChatGPT, Claude, Codex) were used during the implementation to assist with software development tasks, including code generation, debugging, and refactoring.
+All generated code was subsequently reviewed, modified where necessary, and validated by the authors.

@@ -1,0 +1,6 @@
+\subsection{Interpretability of Gains}
+
+Our quantitative results (see Table \ref{table:evaluation_results}) show that FP2MP substantially outperforms all baselines in metacognition (5.00 ± 0.00) and uncertainty handling (4.74 ± 0.45), while being competitive in coherence and decomposition.
+The case study with Gatchina (see Section \ref{subsection:demonstration}) illustrates the mechanism behind this improvement: the three-level blackboard  (raw data $\rightarrow$ wiki pages $\rightarrow$ confirmed facts) decouples agent communication from fixed debate rounds.
+Unlike Multi-Agent Debate, where agents exchange messages without persistent memory, FP2MP accumulates verifiable evidence (e.g., \texttt{compute\_service\_provision} showing clinic provision value increase from 0.295 to 0.833).
+The Critic node then injects follow-up tasks based on gaps (e.g., mismatch between service centrality in block 136 and population centrality in block 331), not on superficial disagreement.

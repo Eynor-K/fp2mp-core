@@ -1,0 +1,16 @@
+\subsection{Problem Formulation}
+
+We model the generation process of solutions for ill-defined urban planning problems as a stochastic function:
+
+\[
+s_{p,q} \sim M_q(p)
+\]
+
+where:
+\begin{itemize}
+    \item $M_q$ denotes a language model-based baseline method with fixed decoding parameters,
+    \item $p \in P$ denotes an ill-defined urban planning problem,
+\end{itemize}
+
+Due to computational constraints, we draw a single sample per $(p, M_q)$ pair.
+Thus, each observed solution corresponds to one realization from the underlying generation distribution induced by the baseline method.

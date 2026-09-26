@@ -1,0 +1,13 @@
+\subsection{Limitations}
+
+We acknowledge several limitations:
+
+\begin{itemize}
+    \item \textbf{Single case study}: The Gatchina analysis (see Section \ref{subsection:demonstration}) illustrates mechanism but does not provide statistical evidence. The adaptive depth claim rests on one complex brief without a paired simple counterpart.
+    \item \textbf{Data preparation overhead}: The BlocksNet agent used in our case study relies on a pre‑computed block-network city model. While this model is built from open data sources, replicating it for a new city requires substantial data engineering.
+    \item \textbf{External data failures}: In the case study, Wikipedia returned 403 Forbidden, some normative URLs were broken, and an Overpass query was rejected. The system degraded gracefully but with reduced completeness.
+    \item \textbf{Evaluation limitations}: Our LLM-as-a-judge approach suffers from two constraints. First, absolute scores are judge-dependent (gpt-4.1), though relative ordering across models is stable. Second, and more fundamentally, the evaluation assesses only the final solution artifact, not the quality of the underlying reasoning process. Aspects such as how the system navigates ambiguity, revises hypotheses, or recovers from dead ends are not directly captured by the current protocol.
+    \item \highlight{\textbf{Dependence on the underlying LLM}}: Although all methods were evaluated using the same underlying language model, the absolute performance of FP2MP may vary with the capabilities of the selected LLM. The proposed framework is model-independent, but its effectiveness assumes modern models capable of long-context reasoning and reliable tool use. Evaluating FP2MP across multiple LLM families remains future work.
+    \item \highlight{\textbf{Lack of human-in-the-loop evaluation}}: FP2MP-Eval provides criterion-level scores together with supporting evidence and commentary, but does not currently incorporate domain experts into the evaluation.
+    As a result, the framework evaluates solutions through an automated protocol without interactive expert involvement.
+\end{itemize}

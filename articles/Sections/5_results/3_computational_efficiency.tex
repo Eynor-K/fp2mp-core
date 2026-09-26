@@ -1,0 +1,68 @@
+\subsection{\highlight{Computational Efficiency}}
+
+\subsubsection{Token Consumption}
+
+We further analyze the computational cost of different baselines by measuring token consumption across input, output and total tokens. The results are reported in Table \ref{table:token_consumption}. Values are reported as mean token consumption over all problem instances. Standard deviation is omitted due to aggregation-level logging constraints.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lccc}
+\hline
+\textbf{Baseline} & \textbf{Input tokens} & \textbf{Output tokens} & \textbf{Total tokens} \\
+\hline
+Single-agent & 20 & 2130 & 2151 \\
+Chain-of-thought & 1444 & 2904 & 4349 \\
+Actor-Critic & 4572 & 6865 & 11438 \\
+ReAct & 292244 & 11876 & 304121 \\
+Majority Voting & 5201 & 8527 & 13728 \\
+Debate & 54285 & 27717 & 82003 \\
+FP2MP & 111323 & 29150 & 140474 \\
+\hline
+\end{tabular}
+\caption{Token consumption across baselines (mean values over 60 problem instances).}
+\label{table:token_consumption}
+\end{table}
+
+The computational analysis reveals substantial differences in cost across baselines.
+Single-Agent and Chain-of-Thought exhibit the lowest token consumption due to their direct generation structure, while iterative and multi-agent approaches entail significantly higher computational overhead.
+
+Among the evaluated methods, ReAct demonstrates the highest token consumption, primarily due to repeated reasoning-action-observation cycles and extensive interaction with external tools.
+Debate also require substantial computational resources since multiple agents iteratively refine and exchange intermediate solutions.
+
+FP2MP exhibits higher computational cost compared to simpler baselines, reflecting the complexity of blackboard-based coordination and tool calling mechanism.
+However, this additional cost is accompanied by improved performance across reflective reasoning dimensions, suggesting a trade-off between computational efficiency and reasoning quality in ill-defined problem solving.
+
+\subsubsection{\highlight{API and Tool Calls}}
+
+We report the mean number of API and external tool calls across all baselines and FP2MP variants in Table \ref{table:api_tool_calls}.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lcc}
+\hline
+\textbf{Baseline} & \textbf{API calls}& \textbf{Tool calls}\\
+\hline
+Single-agent & 1.0 ± 0.0& 0.0 ± 0.0\\
+Chain-of-thought & 2.0 ± 0.0& 0.0 ± 0.0\\
+Actor-Critic & 3.0 ± 0.0& 0.0 ± 0.0\\
+ReAct & 18.88 ± 16.21& 32.63 ± 17.64\\
+Majority Voting & 4.0 ± 0.0& 0.0 ± 0.0\\
+Debate & 13.0 ± 0.0& 0.0 ± 0.0\\
+FP2MP & 66.07 ± 13.21& 42.82 ± 11.82\\
+\hline
+FP2MP (w/o blackboard) & 99.7 ± 10.86& 67.38 ± 9.83\\
+FP2MP (w/o critic) & 62.83 ± 11.24& 41.07 ± 10.16\\
+FP2MP (w/o ReDI) & 42.32 ± 14.56& 27.15 ± 11.09\\
+FP2MP (w/o tools) & 13.55 ± 1.85& 0.0 ± 0.0\\
+\hline
+\end{tabular}
+\caption{\highlight{Number of API and external tool calls} across baselines and FP2MP variants (mean ± std over 60 problem instances).}
+\label{table:api_tool_calls}
+\end{table}
+
+The results show that simpler baselines require substantially fewer interactions, while ReAct incurs additional overhead due to its iterative tool-augmented reasoning process.
+FP2MP requires the largest number of API and tool calls among the evaluated methods, reflecting its multi-agent coordination and iterative tool use.
+The ablation results further show that removing the blackboard increases the number of interactions, suggesting that centralized coordination can reduce the number of agent interactions.
+In contrast, removing ReDI or tool access substantially reduces the number of calls, while removing the critic has a comparatively small effect on overall interaction volume.

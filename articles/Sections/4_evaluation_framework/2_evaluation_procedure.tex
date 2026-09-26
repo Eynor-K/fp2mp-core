@@ -1,0 +1,25 @@
+\subsection{Evaluation Procedure} \label{subsection:evaluation_procedure}
+
+Following prior LLM-as-a-judge frameworks such as G-Eval, which demonstrated strong evaluation performance using OpenAI's GPT-4, we employ GPT-4.1, a newer model from the same family, for all evaluation runs.
+
+The evaluation framework is implemented using the LangChain Python library. We use a structured output approach in which the evaluation model receives the predefined evaluation criteria (see Appendix \ref{appendix:structured_output}) along with a standardized evaluation prompt template (see Appendix \ref{appendix:evaluation_prompt}). To account for stochasticity in LLM generation while preserving response diversity, the temperature parameter is set to $0.5$ for all evaluation runs. 
+
+Each problem-solution pair $(p, s)$ is evaluated across $m$ independent runs to reduce possible variance from stochastic LLM generation. 
+Each run produces scores for $n$ evaluation criteria using a 5-point Likert scale.
+In addition to the score, the evaluator also returns a structured justification consisting of evidence and commentary for each criterion.
+
+Let $C = \{c_1, c_2, \dots, c_n\}$ denote the set of evaluation criteria.
+For a given problem $p$, solution $s$, and run $r$, we define the evaluation vector as:
+\[
+\mathbf{x}_{r}^{(p,s)} = \left[x_{1,r}^{(p,s)}, x_{2,r}^{(p,s)}, \dots, x_{n,r}^{(p,s)} \right]
+\]
+
+We aggregate evaluations across runs by computing the mean score for each criterion:
+\[
+\bar{x}_{i}^{(p,s)} = \frac{1}{m} \sum_{r=1}^{m} x_{i,r}^{(p,s)}
+\]
+
+The aggregated evaluation vector is defined as:
+\[
+\bar{\mathbf{x}}^{(p,s)} = \left[\bar{x}_{1}^{(p,s)}, \bar{x}_{2}^{(p,s)}, \dots, \bar{x}_{n}^{(p,s)} \right]
+\]

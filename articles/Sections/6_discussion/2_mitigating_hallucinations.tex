@@ -1,0 +1,11 @@
+\subsection{Mitigating Hallucinations}
+
+A notable finding is that FP2MP does not achieve the highest knowledge integration score (3.77 $\pm$ 0.55 vs. ReAct’s 4.67 $\pm$ 0.47).
+We attribute this to a design trade-off: ReAct explicitly externalizes retrieved text, while FP2MP delegates deterministic operations to executable code and tool use (CodeSpatialAgent, BlocksNetAgent).
+The case study shows 79\% of tool calls go to BlocksNet, producing verifiable numeric evidence (e.g., 45.59 min average accessibility).
+This makes FP2MP more robust to spatial hallucinations but less "verbally rich" in knowledge display.
+
+This design choice also enables extensibility as FP2MP does not require re-implementing domain logic.
+Any existing urban analytics tool can be integrated as a new agent.
+The orchestrator will automatically route relevant subqueries, and the blackboard will curate its outputs alongside other agents.
+BlocksNetAgent serves as a concrete demonstration of this pattern.

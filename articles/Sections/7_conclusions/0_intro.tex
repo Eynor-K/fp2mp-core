@@ -1,0 +1,12 @@
+This paper addressed the mismatch between LLM-MAS capabilities and evaluation paradigms designed for well-defined problems.
+We proposed FP2MP, a blackboard-based multi-agent architecture for solving ill-defined urban problems.
+The proposed architecture operationalises problem-solving as iterative uncertainty reduction through decomposition, shared memory, specialised tool-augmented agents, and a critic-driven closed loop.
+
+We also introduced FP2MP-Eval, a multi-dimensional LLM-as-a-judge evaluation protocol for ill-defined settings.
+The evaluation protocol covers problem structuring, solution quality, and reflective reasoning.
+Validation confirmed high inter-rater reliability (ICC > 0.82) and sensitivity to model capability differences.
+
+Quantitatively, FP2MP outperformed seven baselines on metacognition (5.00 $\pm$ 0.00) and uncertainty handling (4.74 $\pm$ 0.45), while remaining competitive on coherence and decomposition.
+A case study on Gatchina revealed adaptive collaboration depth: 300 tool calls across 17 dispatch segments, autonomous follow-up injection by the critic, and verifiable evidence promotion.
+
+Future work should focus on four directions: systematic evaluation of adaptive depth across diverse problems, ablation studies to isolate component contributions, human-in-the-loop integration for expert oversight, and process-oriented evaluation of reasoning quality.

@@ -1,0 +1,87 @@
+\subsection{Problems Construction}
+
+We construct a benchmark of ill-defined urban planning problems by combining a set of urban locations $L=\{l_1,l_2,\dots,l_n\}$ with a set of ill-defined urban planning questions $Q=\{q_1,q_2,\dots,q_m\}$.
+The set of urban locations is presented in Table \ref{table:urban_locations} and the set of ill-defined questions is presented in Table \ref{table:ill-defined_questions}.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l|llllX}
+\hline
+\textbf{ID} & \textbf{Location}  & \textbf{Country} & \textbf{Continent} & \textbf{Population} & \hl{\textbf{Justification}} \\
+\hline
+$l_1$ & Amsterdam  &  The Netherlands & Europe & 0.9 million & Coastal European capital representing mature urban systems with high-density development challenges\\
+\midrule
+$l_2$ & Singapore  &  Singapore & Southeast Asia & 6.2 million & Dense island city-state representing long-term urban planning\\
+\midrule
+$l_3$ & Kemerovo  &  Russia & Asia & 0.5 million & Inland city representing post-industrial transformation challenges\\
+\midrule
+$l_4$ & Helsinki  &  Finland & Europe & 0.7 million & Northern coastal city representing climate adaptation and sustainable urban development\\
+\midrule
+$l_5$ & Tashkent  &  Uzbekistan & Central Asia & 3.2 million & Rapidly growing Central Asian city representing metropolitan expansion challenges\\
+\midrule
+$l_6$ & Minsk  &  Belarus & Europe & 2.0 million & Large landlocked European city representing centralized urban development patterns\\
+\hline
+\end{tabularx}
+\caption{Urban locations used for problems construction.}
+\label{table:urban_locations}
+\end{table}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l | X X}
+\hline
+\textbf{ID} & \textbf{Question} & \textbf{Justification} \\
+\hline
+$q_1$ & Develop a regional mobility strategy balancing public transport efficiency, suburban accessibility, and environmental sustainability. & Infrastructure development objectives (transport, greenery, accessibility) \\
+
+\midrule
+
+$q_2$ & Design a waterfront redevelopment strategy resilient to climate risks and attractive for mixed urban uses. & Challenges of spatial development taking into account climate change \\
+
+\midrule
+
+$q_3$ & Revitalize shrinking neighborhoods while preventing social displacement and economic decline. & Challenges of spatial development according to the goals of socio-economic development \\
+
+\midrule
+
+$q_4$ & Create a governance framework for coordinating fragmented metropolitan municipalities. & Challenges of city management, project implementation and operation \\
+
+\midrule
+
+$q_5$ & Reduce spatial inequality in access to green spaces, education, and healthcare services. & Infrastructure development objectives according to the goals of socio-economic development \\
+
+\midrule
+
+$q_6$ & Increase urban resilience to demographic aging while maintaining economic productivity and social vitality. & Objectives of the strategy for the economic development of the city while preserving the population \\
+
+\midrule
+
+$q_7$ & Transform abandoned industrial districts into productive urban spaces. & Challenges of spatial development with economic development \\
+
+\midrule
+
+$q_8$ & Design a downtown densification strategy while preserving livability. & Objectives of the spatial compression strategy based on infrastructural diversity \\
+
+\midrule
+
+$q_9$ & Develop a city branding strategy balancing tourism and local identity. & Objectives of attracting investments and finding a balance between the interests of local residents and tourists \\
+
+\midrule
+
+$q_{10}$ & Propose a strategy for the preservation or renewal of cultural heritage sites. & Challenges of architectural and planning solutions \\
+\hline
+\end{tabularx}
+\caption{Ill-defined urban planning questions used for problems construction.}
+\label{table:ill-defined_questions}
+\end{table}
+
+Problems are generated using a template function $T(l, q)$, where $T$ constructs a natural language prompt by concatenating a location and a question using a fixed prompt template (see Appendix \ref{appendix:problem_template}):
+
+\[
+P = \{ T(l, q) \mid l \in L,\; q \in Q \}
+\]
+
+The resulting benchmark consists of $|P| = |L| \cdot |Q| = n \cdot m = 60$ problem instances.
+Each problem instance $p \in P$ can be indexed as $p_{i,j} = T(l_i, q_j)$.

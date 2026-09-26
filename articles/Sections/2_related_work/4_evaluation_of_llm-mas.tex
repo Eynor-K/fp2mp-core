@@ -1,0 +1,29 @@
+\subsection{Evaluation of LLM-MAS}
+
+Evaluation of large language models and LLM-MAS spans a wide range of benchmarks designed primarily for well-defined problems. These benchmarks cover diverse domains, including:
+
+\begin{itemize}
+    \item Question answering: Qasper \cite{dasigi2021dataset}, MuSiQue \cite{trivedi2022musique}, NarrativeQA \cite{kovcisky2018narrativeqa}, 2WikiMQA \cite{ho2020constructing}.
+    \item General knowledge evaluation: MMLU \cite{hendrycks2020measuring}.
+    \item Reasoning tasks: ARC-Challenge \cite{clark2018think}, GPQA \cite{rein2023gpqa}, BIG-Bench HARD \cite{suzgun2023challenging}.
+    \item Mathematical problem solving: GSM8K \cite{cobbe2021training}, MATH \cite{hendrycks2021measuring}.
+    \item Domain-specific applications: MedQA \cite{jin2021disease}, PubMedQA \cite{jin2019pubmedqa}, DDXPlus \cite{fansi2022ddxplus}, MIMIC-CXR \cite{johnson2019mimic}, PlanBench \cite{valmeekam2023planbench}.
+\end{itemize}
+
+In addition to general-purpose benchmarks, many application domains define custom evaluation datasets. These include datasets for spatial analysis tasks \cite{lin2025shapefilegpt, luo2026geojson}, as well as expert-curated question answering datasets grounded in domain knowledge \cite{kalyuzhnaya2025llm}.
+
+Despite their diversity, these benchmarks are primarily designed for well-defined tasks with fixed input-output structure and existing ground-truth. 
+Evaluation in this setting is typically objective and relies on exact match, multiple-choice accuracy, or other deterministic scoring functions. 
+This paradigm, however, does not generalize well to ill-defined problems where multiple valid solutions may exist and evaluation requires subjective judgment over reasoning quality and solution adequacy.
+
+To address these limitations, recent LLM-as-a-judge approaches such as G-Eval \cite{liu2023g} and CheckEval \cite{lee2025checkeval} propose decomposing evaluation into structured, predefined criteria, enabling more flexible and interpretable evaluation protocols. 
+
+\highlight{The evaluation paradigm is also evolving} toward more agentic forms of judging.
+Recent work on Agent-as-a-Judge incorporates planning, tool use, memory, and multi-agent collaboration into the evaluation process, suggesting that complex agentic systems may require evaluators with capabilities beyond conventional single-pass LLM judging \cite{you2026agent}.
+For example, CollabEval employs multiple evaluator agents that independently assess outputs, discuss their judgments, and produce a final evaluation, demonstrating the potential of multi-agent collaboration for improving LLM-as-a-judge reliability \cite{qian2026collabeval}.
+The need to assess intermediate agent behavior, interaction processes, and other dimensions of agent reliability is also emphasized \cite{yehudai2026survey}.
+
+Recent work has also begun exploring evaluation settings for ill-defined problems. PMC \cite{tian2025vcsearch} introduces a large-scale benchmark of mathematical problems with missing or contradictory conditions, explicitly targeting ill-defined scenarios where tasks may not admit a valid solution.
+Their results demonstrate that conventional reasoning methods exhibit a trade-off between solving accuracy and the ability to recognize unsolvable problems.
+More broadly, many modern LLM evaluation settings are inherently ill-defined \cite{zhou2026evaluating}.
+Existing scalar evaluation metrics often fail to provide interpretable diagnostic signals, highlighting the need for multi-dimensional evaluation protocols capable of capturing different aspects of solution quality.

@@ -1,0 +1,22 @@
+Urban planning involves complex decision-making processes that operate under multiple conflicting objectives such as sustainability, mobility, economic development, and social equity.
+Problems in this domain include transport network design \cite{owais2026transit, morozov2026one}, infrastructure placement \cite{fugaro2025multi, churiakova2025constrained}, and land use allocation \cite{xiao2025land, rahman2021multi}, all of which require reasoning over heterogeneous constraints and stakeholder preferences.
+
+In practice, many urban planning problems are weakly formalized and can be considered inherently ill-defined: they do not admit a single correct solution, lack a fixed procedural pipeline, and do not have a clearly specified objective function \cite{zhou2026evaluating}.
+Moreover, such problems require the integration of multimodal data sources, including spatial and statistical data, analytical reports, regulatory and urban planning documents, as well as common knowledge that is difficult to fully formalize or represent in structured form.
+In addition, the difficulty of collecting, integrating, and processing these heterogeneous data sources further increases the computational and operational complexity of decision-making processes.
+
+At the most comprehensive scale, the construction of an urban master plan can be viewed as a highly complex instance of such ill-defined decision-making, involving heterogeneous data sources, conflicting stakeholder objectives, ambiguous and evolving goals, and uncertainty regarding both appropriate methodological approaches and evaluation criteria \cite{rittel1973dilemmas}.
+
+This setting creates opportunities for large language models (LLMs) and multi-agent systems (LLM-MAS) built upon them, which have demonstrated strong capabilities in reasoning, planning, and tool use, making them promising candidates for supporting complex decision-making tasks.
+These capabilities are enabled by architectural properties such as role-based decomposition, iterative refinement, and inter-agent interaction \cite{yao2023react, han2025exploring}.
+
+However, their evaluation is still predominantly conducted on well-defined benchmarks with explicit ground truth and objective scoring functions \cite{hendrycks2020measuring, cobbe2021training}.
+This creates a fundamental mismatch between real-world ill-defined decision-making problems and existing evaluation paradigms for LLM-based systems.
+Current evaluation methods provide limited insight into the multi-dimensional nature of solution quality and often fail to capture or diagnose specific strengths and weaknesses of LLM-based system behaviors \cite{zhou2026evaluating}.
+
+Despite growing interest in LLM-based agents, evaluation frameworks in ill-defined settings remain relatively underexplored, particularly in the context of urban planning. We address these limitations by making the following contributions:
+
+\begin{itemize}
+    \item \textbf{FP2MP}: an LLM-MAS architecture for solving ill-defined urban planning problems.
+    \item \textbf{FP2MP-Eval}: a multi-dimensional LLM-as-a-judge evaluation framework designed to assess reasoning quality, structuring ability, and reflective behavior of LLM-MAS in ill-defined settings.
+\end{itemize}

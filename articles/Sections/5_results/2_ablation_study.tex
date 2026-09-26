@@ -1,0 +1,38 @@
+\subsection{\highlight{Ablation Study}}
+
+To assess the contribution of the main architectural components of FP2MP, we conduct an ablation study by independently removing the blackboard, critic, ReDI mechanism, and external tool access.
+These components were selected since they represent the key mechanisms responsible for agent coordination, reflection, routing, and external information acquisition, respectively. The results are reported in Table \ref{table:ablation_study}.
+
+\begin{table}[h]
+\centering
+\small
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lccccc}
+\hline
+\textbf{Criterion} & \textbf{FP2MP}& \textbf{W/o blackboard}& \textbf{W/o critic}& \textbf{W/o ReDI}& \textbf{W/o tools}\\
+\hline
+Coherence & 4.39 ± 0.52
+& 4.3 ± 0.46& 4.46 ± 0.51& 4.4 ± 0.5& 4.46 ± 0.5\\
+Decomposition & 4.15 ± 0.47
+& 4.09 ± 0.41& 4.18 ± 0.47& 4.0 ± 0.55& 4.22 ± 0.44\\
+Diversity & 3.55 ± 0.54& 3.69 ± 0.52& 3.62 ± 0.53& 3.5 ± 0.56& 3.86 ± 0.4\\
+Framing & 4.58 ± 0.49& 4.45 ± 0.52& 4.6 ± 0.53& 4.52 ± 0.57& 4.58 ± 0.49\\
+Justification & 4.36 ± 0.56& 4.17 ± 0.49& 4.38 ± 0.59& 4.31 ± 0.58& 4.25 ± 0.47\\
+Knowledge Integration & 3.77 ± 0.55
+& 3.94 ± 0.45& 3.79 ± 0.53& 3.69 ± 0.64& 4.24 ± 0.47\\
+Metacognition & 5.00 ± 0.00& 5.0 ± 0.0& 5.0 ± 0.0& 5.0 ± 0.0& 4.99 ± 0.11\\
+Uncertainty Handling & 4.74 ± 0.45& 4.71 ± 0.46& 4.81 ± 0.39& 4.77 ± 0.43& 4.66 ± 0.47\\
+\hline
+\end{tabular}
+}
+\caption{\highlight{Ablation study} of FP2MP components across all evaluation criteria (mean ± std over 60 problem instances).}
+\label{table:ablation_study}
+\end{table}
+
+The ablation results indicate that the contribution of FP2MP components is dimension-dependent rather than uniform across the evaluation criteria.
+Removing the blackboard produces the clearest reductions in coherence, decomposition, framing, and justification, suggesting that blackboard-based coordination primarily supports structured and coherent reasoning.
+Removing ReDI leads to smaller but consistent reductions across several dimensions.
+
+In contrast, removing the critic does not substantially reduce performance and even slightly improves several criteria, indicating a limited contribution under the current evaluation setting.
+Similarly, removing external tool access improves diversity and knowledge integration, while producing only minor changes in the remaining dimensions.
+Overall, the results suggest that the blackboard and ReDI primarily contribute to the organization of reasoning, whereas the critic and tool use do not uniformly translate into higher evaluation scores.

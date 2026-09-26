@@ -1,0 +1,8 @@
+\subsection{Adaptive Collaboration Depth}
+
+Unlike fixed-round debate (3 rounds in our baseline), FP2MP exhibits adaptive depth.
+In the case study, the system performed 17 dispatch segments over 300 tool calls, with BlocksNet returning six times.
+The key episode was the critic injecting \texttt{sq\_model\_support\#fu2} after detecting an uncovered aspect (service-population centrality mismatch).
+This demonstrates that the combination of blackboard and critic enables problem-driven computational effort, not a predetermined interaction pattern.
+For simpler queries, the same loop would terminate earlier.
+This property is not present in voting or actor-critic baselines.

@@ -1,0 +1,72 @@
+\subsection{\highlight{Digital Models and Urban Twins} in Smart City Management}
+
+The information support of smart city management processes is based on the development of an information model of the city and its processes \cite{x1}.
+These models may vary in their degree of digital maturity and can be applied across different management horizons, as shown in Table \ref{table:maturity}.
+At present, six stages can be distinguished based on the degree of integration of information and digital technologies into smart city management.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabularx}{\textwidth}{X | X | X | X}
+\hline
+& \textbf{Operational}& \textbf{Operations management}& \textbf{Strategic}\\
+\hline
+Form of management problem formulation& Task (SMART)& Project& Goals and target indicators\\
+\cline{1-4}
+Stage 1 “Informatization”
+& \multirow{2}{=}{Industry-specific operational support systems (ERP)}
+& \multirow{2}{=}{Project management systems (PMS)}
+& Information and analytical support systems based on statistical reporting\\
+\cline{1-1}\cline{4-4}
+Stage 2 “Automation”
+&
+&
+& BI systems, including automated generation of standard reports\\
+\cline{1-4}
+Stage 3 “Digitalization”& Systems incorporating city digital twins \cite{x2}& Digital project modeling systems (BIM, GIS)& Digital modeling of cities \cite{x5}\\
+\cline{1-4}
+Stage 4 “Intelligentization”& Digital twins with AI components \cite{x8}& Digital project models with AI components& Digital city modeling with predictive AI models \cite{x4,x6}\\
+\cline{1-4}
+Stage 5 “Autonomization”& Digital twins with humans completely excluded from the management of individual processes \cite{x12}& -& Digital models with AI-based adjustment of forecasts based on the current situation \cite{x10}\\
+\cline{1-4}
+Stage 6 “Generalization”& -& -& Automation of city goal-setting based on its role within the socio-economic system\\
+\hline
+\end{tabularx}
+\caption{Levels of intelligent maturity in smart city management.}
+\label{table:maturity}
+\end{table}
+
+The initial stages are \emph{informatization} and \emph{automation}, within which sector-specific information systems are developed.
+These systems operate predominantly autonomously and support management tasks within individual sectors, such as transportation \cite{x3}, environmental management \cite{x7}, logistics, security \cite{x2}, and construction \cite{x4}.
+At the early stages of informatization, the focus is primarily on operational and tactical management, owing to the greater degree of formalization of these processes.
+Strategic planning is carried out primarily by experts based on fixed datasets.
+A classic example is UrbanSim \cite{x5}, an urban development modeling system developed by Paul Waddell.
+The platform is designed to analyze the interrelationships between land use, transportation processes, and environmental factors.
+UrbanSim integrates models of population distribution, employment, development, changes in land value, and transportation accessibility, thereby enabling the dynamic forecasting of the spatial development of a territory \cite{x5}.
+The system has been applied in modeling the Eugene–Springfield, Honolulu, and Salt Lake City metropolitan areas.
+
+The \emph{digitalization} stage involves the creation of a digital representation of the object of management.
+For sector-specific systems, the object of representation is the respective sectoral processes; at the operational level, it is projects; and for strategic planning, it is the city as a whole.
+It should be noted that, at the operational level, the integration of individual systems gives rise to so-called city digital twins \cite{x2}, which are used to monitor the current operational situation.
+At the strategic level, however, it is more appropriate to refer to digital city models, which support the development of long-term urban development plans.
+
+The \emph{intelligentization} stage is characterized by the partial replacement of human decision-making by artificial intelligence (AI) models.
+At present, such systems have the greatest impact in operational and, to a lesser extent, tactical activities, owing to the availability of the data required for model training \cite{x4}.
+In design tasks, AI is being integrated into computer-aided design (CAD) systems \cite{x5}.
+At the same time, the use of AI in digital city modeling for strategic management is primarily aimed at predicting the effects of proposed decisions \cite{x6,x10}.
+One of the best-known examples of an integrated digital environment is the Virtual Singapore project, a national digital twin of Singapore \cite{x9}.
+It is a highly detailed three-dimensional model of the city-state integrated with topographic and real-time operational data on buildings, infrastructure, population mobility, and environmental parameters.
+The platform is used to model urban development scenarios, support transportation management, and prepare for emergency situations \cite{x9}.
+A key feature of the project is the use of a unified collaborative environment for government agencies, research organizations, and businesses.
+
+Problem formulation at all levels remains the least formalized component of the management process and consists primarily in defining the set of target indicators and their target values.
+
+\emph{Autonomization} involves the exclusion of humans from the management of individual processes.
+At the strategic planning level, this may manifest itself in adjusting the long-term forecast of the city's development based on the current situation \cite{x12}.
+
+The final stage, \emph{generalization}, involves integrating cities with intelligent systems.
+This is meaningful primarily in terms of better profiling the city's development goals based on information about the current state and development dynamics of other cities.
+
+It can be seen that goal-setting remains the least formalized task.
+It involves formulating goals as natural-language narratives and their native interpretation in the form of target indicators \cite{x13}.
+At the same time, the long-term success of a city's development depends on the quality of its goal-setting, which necessitates the development of appropriate methods already at the early stages of \emph{digitalization}.
